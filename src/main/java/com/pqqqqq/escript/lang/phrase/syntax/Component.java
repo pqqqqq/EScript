@@ -113,6 +113,7 @@ public interface Component {
      */
     class ArgumentComponent implements Component {
         private final String name;
+        private final boolean sequence;
 
         /**
          * Creates a new argument component
@@ -121,11 +122,23 @@ public interface Component {
          * @return the new instance
          */
         public static ArgumentComponent from(String name) {
-            return new ArgumentComponent(name);
+            return new ArgumentComponent(name, true);
         }
 
-        private ArgumentComponent(String name) {
+        /**
+         * Creates a new argument component
+         *
+         * @param name the name of the argument
+         * @param sequence whether to sequence the component at runtime
+         * @return the new instance
+         */
+        public static ArgumentComponent from(String name, boolean sequence) {
+            return new ArgumentComponent(name, sequence);
+        }
+
+        private ArgumentComponent(String name, boolean sequence) {
             this.name = name;
+            this.sequence = sequence;
         }
 
         /**
@@ -134,6 +147,15 @@ public interface Component {
          */
         public String getName() {
             return name;
+        }
+
+        /**
+         * Whether to sequence the argument at runtime or not
+         *
+         * @return true if should sequence
+         */
+        public boolean doSequence() {
+            return sequence;
         }
 
         @Override

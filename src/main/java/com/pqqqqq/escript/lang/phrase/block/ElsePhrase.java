@@ -54,10 +54,8 @@ public class ElsePhrase implements Phrase {
         boolean condition = ctx.getLiteral("Condition", true).asBoolean();
         if ((phrase instanceof IfPhrase || phrase instanceof ElsePhrase) && !previousResult && condition) {
             ctx.executeBlock();
-        } else {
-            return Result.success(true);
         }
 
-        return Result.success(condition);
+        return Result.success(condition || previousResult);
     }
 }

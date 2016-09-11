@@ -49,6 +49,7 @@ public class Syntax {
      * Compiles a new syntax string, based on the following principles:
      * <li>Each {@link Component component} is separated by a whitespace character</li>
      * <li>If there is a dollar sign '$' at the start, it is treated as a {@link Component.ArgumentComponent argument}
+     * <li>If there is a up sign '^' at the start, it is treated as a argument, but one which should not be resolved
      * <li>Otherwise, it is treated as a {@link Component.TextComponent text component}
      * <li>If there is a question mark '?' at the end, it is wrapped in a {@link Component.OptionalComponent optional component}
      * <li>If there is a asterisk '*' at the end, it is wrapped in an {@link Component.IfComponent if component}
@@ -72,11 +73,13 @@ public class Syntax {
 
             if (stringComponent.endsWith("*")) {
                 wrap = Component.Wrap.IF; // Make if
-                stringComponent = stringComponent.substring(0, stringComponent.length() - 1); // Trim question mark
+                stringComponent = stringComponent.substring(0, stringComponent.length() - 1); // Trim asterisk
             }
 
             if (stringComponent.startsWith("$")) { // $ = argument
                 components.add(wrap.wrap(Component.ArgumentComponent.from(stringComponent.substring(1))));
+            } else if (stringComponent.startsWith("^")) { // ^ = argument no resolve
+                components.add(wrap.wrap(Component.ArgumentComponent.from(stringComponent.substring(1), false)));
             } else {
                 components.add(wrap.wrap(Component.TextComponent.from(stringComponent.split("\\|")))); // Split by pipe (ors)
             }
@@ -105,7 +108,7 @@ public class Syntax {
      * @param line the line
      * @return a {@link Map map} of strargs, or {@link Optional#empty()} if there was no match
      */
-    public Optional<Map<String, String>> matches(Line line) {
+    public Optional<Map<Component, String>> matches(Line line) {
         return matches(line.getLine());
     }
 
@@ -115,7 +118,7 @@ public class Syntax {
      * @param line the line
      * @return a {@link Map map} of strargs, or {@link Optional#empty()} if there was no match
      */
-    public Optional<Map<String, String>> matches(String line) {
+    public Optional<Map<Component, String>> matches(String line) {
         // Check colon first
         if (colon) {
             if (line.endsWith(":")) {
@@ -125,7 +128,7 @@ public class Syntax {
             }
         }
 
-        Map<String, String> map = new HashMap<>();
+        Map<Component, String> map = new HashMap<>();
         LinkedList<Component> compQueue = new LinkedList<>(Arrays.asList(getComponents())); // Create linked list
         Deque<String> stringQueue = new ArrayDeque<>(Arrays.asList(StringUtils.from(line).parseSplit(" "))); // String split deque
 
@@ -133,7 +136,7 @@ public class Syntax {
         boolean lastMatch = false;
 
         while ((component = compQueue.poll()) != null) { // Poll, not pop, for no errors
-            Optional<Map<String, String>> match = matchesLoad(component, compQueue, stringQueue, lastMatch);
+            Optional<Map<Component, String>> match = matchesLoad(component, compQueue, stringQueue, lastMatch);
 
             if (match == null) { // Null just means the optional didn't match, just track it
                 lastMatch = false;
@@ -150,8 +153,8 @@ public class Syntax {
         return !stringQueue.isEmpty() ? Optional.empty() : Optional.of(map);
     }
 
-    private Optional<Map<String, String>> matchesLoad(Component component, LinkedList<Component> compQueue, Deque<String> stringQueue, boolean lastMatch) {
-        Map<String, String> map = new HashMap<>(1); // Should only be one entry, or zero
+    private Optional<Map<Component, String>> matchesLoad(Component component, LinkedList<Component> compQueue, Deque<String> stringQueue, boolean lastMatch) {
+        Map<Component, String> map = new HashMap<>(1); // Should only be one entry, or zero
 
         if (component.isArgument()) { // Arguments should continue until the next component matches
             String stringComponent = stringQueue.poll(); // We're okay to poll
@@ -166,7 +169,7 @@ public class Syntax {
                 stringComponent += " " + stringQueue.poll(); // Poll it out
             }
 
-            map.put(((Component.ArgumentComponent) component).getName(), stringComponent);
+            map.put(component, stringComponent);
         } else if (component.isOptional()) {
             String stringComponent = stringQueue.peek(); // Just peek first, remove if okay
 
@@ -176,7 +179,13 @@ public class Syntax {
                 return null; // The null here is just to track that the optional didn't match, it will be dealt with above
             }
         } else if (component.isIf()) {
-            return lastMatch ? matchesLoad(((Component.IfComponent) component).getComponent(), compQueue, stringQueue, true) : null;
+            String stringComponent = stringQueue.peek(); // Just peek first, remove if okay
+
+            if (stringComponent != null && component.matches(stringComponent) && lastMatch) { // It's okay for stringComponent to be null (just don't throw anything)
+                map.putAll(matchesLoad(((Component.IfComponent) component).getComponent(), compQueue, stringQueue, true).orElseGet(HashMap::new));
+            } else {
+                return null;
+            }
         } else {
             String stringComponent = stringQueue.poll(); // We're okay to poll
             if (!component.matches(stringComponent)) {

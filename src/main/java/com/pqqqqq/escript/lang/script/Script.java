@@ -1,7 +1,6 @@
 package com.pqqqqq.escript.lang.script;
 
 import com.pqqqqq.escript.lang.data.variable.Environment;
-import com.pqqqqq.escript.lang.exception.EScriptException;
 import com.pqqqqq.escript.lang.exception.FailedLineException;
 import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.exception.state.ESRuntimeException;
@@ -10,9 +9,7 @@ import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.line.RunVessel;
 import com.pqqqqq.escript.lang.phrase.Result;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,7 +25,7 @@ public class Script extends Environment {
     private final RawScript rawScript;
     private final Properties properties;
 
-    private final Set<RunVessel> ranVessels = new HashSet<>();
+    private final List<RunVessel> ranVessels = new ArrayList<>();
 
     /**
      * Creates a new script instance from the {@link RawScript raw script} it represents
@@ -75,11 +72,11 @@ public class Script extends Environment {
     }
 
     /**
-     * Gets a {@link Set set} of {@link RunVessel run vessels} that have been executed
+     * Gets a {@link List list} of {@link RunVessel run vessels} that have been executed
      *
      * @return the set of run vessels
      */
-    public Set<RunVessel> getRanVessels() {
+    public List<RunVessel> getRanVessels() {
         return ranVessels;
     }
 
@@ -90,7 +87,7 @@ public class Script extends Environment {
      * @return the run vessel, or {@link Optional#empty()}
      */
     public Optional<RunVessel> getVesselAtTab(int tab) {
-        return ranVessels.stream().filter(vessel -> vessel.getContext().getLine().getTabulations() == tab).findFirst(); // Reduce lambda gets the last instance of this
+        return ranVessels.stream().filter(vessel -> vessel.getContext().getLine().getTabulations() == tab).reduce((first, second) -> second); // Get last by reducing
     }
 
     /**

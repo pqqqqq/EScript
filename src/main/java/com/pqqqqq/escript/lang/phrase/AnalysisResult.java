@@ -1,5 +1,7 @@
 package com.pqqqqq.escript.lang.phrase;
 
+import com.pqqqqq.escript.lang.phrase.syntax.Component;
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class AnalysisResult {
     private final Phrase phrase;
-    private final Map<String, String> strargs;
+    private final Map<Component, String> strargs;
 
     /**
      * Creates a new analysis result
@@ -19,7 +21,7 @@ public class AnalysisResult {
      * @param phrase the {@link Phrase phrase}
      * @param strargs the strargs {@link Map map}
      */
-    public AnalysisResult(Phrase phrase, Map<String, String> strargs) {
+    public AnalysisResult(Phrase phrase, Map<Component, String> strargs) {
         this.phrase = phrase;
         this.strargs = strargs;
     }
@@ -38,7 +40,7 @@ public class AnalysisResult {
      *
      * @return the map
      */
-    public Map<String, String> getStrargs() {
+    public Map<Component, String> getStrargs() {
         return strargs;
     }
 }

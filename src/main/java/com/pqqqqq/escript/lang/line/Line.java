@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.line;
 
+import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.Sequencer;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
 import com.pqqqqq.escript.lang.exception.UnknownPhraseException;
@@ -8,12 +9,11 @@ import com.pqqqqq.escript.lang.file.RawScript;
 import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Phrases;
+import com.pqqqqq.escript.lang.phrase.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.util.string.StringUtils;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,8 +31,8 @@ public class Line {
     private final Set<Line> lineBlock;
 
     private final Phrase phrase;
-    private final Map<String, String> strargs;
-    private final Map<String, DatumContainer> containers = new HashMap<>();
+    private final Map<Component, String> strargs;
+    private final Map<Component, DatumContainer> containers = new HashMap<>();
 
     /**
      * Creates a new {@link Builder builder} instance
@@ -47,7 +47,7 @@ public class Line {
         this(rawScript, line, lineNumber, tabulations, analysis.getPhrase(), analysis.getStrargs(), lineBlock);
     }
 
-    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<String, String> strargs, Set<Line> lineBlock) {
+    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<Component, String> strargs, Set<Line> lineBlock) {
         this.rawScript = rawScript;
         this.line = StringUtils.from(line).trim(); // Trim line
         this.lineNumber = lineNumber;
@@ -56,7 +56,16 @@ public class Line {
         this.strargs = strargs;
         this.lineBlock = lineBlock;
 
-        this.strargs.forEach((k, v) -> this.containers.put(k, Sequencer.instance().sequence(v))); // Populate containers
+        this.strargs.forEach((k, v) -> {
+            DatumContainer container = k.isArgument() && ((Component.ArgumentComponent) k).doSequence() ? Sequencer.instance().sequence(v) : Literal.fromObject(v);
+            this.containers.put(k, container);
+
+            /*if (k.isArgument() && ((Component.ArgumentComponent) k).doResolve()) {
+                this.containers.put(k, container);
+            } else {
+                this.containers.put(k, new UnresolvableContainer(container));
+            }*/
+        }); // Populate containers
     }
 
     /**
@@ -140,7 +149,13 @@ public class Line {
      * @return the strarg
      */
     public Optional<String> getStrarg(String group) {
-        return Optional.ofNullable(strargs.get(group));
+        for (Map.Entry<Component, String> entry : this.strargs.entrySet()) {
+            if (entry.getKey().isArgument() && ((Component.ArgumentComponent) entry.getKey()).getName().equalsIgnoreCase(group)) {
+                return Optional.of(entry.getValue());
+            }
+        }
+
+        return Optional.empty();
     }
 
     /**
@@ -150,10 +165,16 @@ public class Line {
      * @return the datum container
      */
     public Optional<DatumContainer> getContainer(String group) {
-        return Optional.ofNullable(containers.get(group));
+        for (Map.Entry<Component, DatumContainer> entry : this.containers.entrySet()) {
+            if (entry.getKey().isArgument() && ((Component.ArgumentComponent) entry.getKey()).getName().equalsIgnoreCase(group)) {
+                return Optional.of(entry.getValue());
+            }
+        }
+
+        return Optional.empty();
     }
 
-    protected Map<String, DatumContainer> getContainers() { // Context needs this
+    protected Map<Component, DatumContainer> getContainers() { // Context needs this
         return containers;
     }
 

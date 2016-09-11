@@ -2,6 +2,7 @@ package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.line.Line;
+import com.pqqqqq.escript.lang.phrase.syntax.Component;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 import com.pqqqqq.escript.lang.registry.RegistryEntry;
 import com.pqqqqq.escript.lang.script.Script;
@@ -70,7 +71,7 @@ public interface Phrase extends RegistryEntry {
      */
     default Optional<AnalysisResult> matches(String line) {
         for (Syntax syntax : getSyntaxes()) {
-            Optional<Map<String, String>> match = syntax.matches(line);
+            Optional<Map<Component, String>> match = syntax.matches(line);
 
             if (match.isPresent()) {
                 return Optional.of(new AnalysisResult(this, match.get()));

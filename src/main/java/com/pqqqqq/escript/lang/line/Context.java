@@ -3,7 +3,7 @@ package com.pqqqqq.escript.lang.line;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
 import com.pqqqqq.escript.lang.exception.MissingGroupException;
-import com.pqqqqq.escript.lang.phrase.Result;
+import com.pqqqqq.escript.lang.phrase.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -26,14 +26,14 @@ public class Context {
     private final Script script;
     private final Line line;
 
-    private final Map<String, Literal> resolvedLiterals = new HashMap<>();
+    private final Map<Component, Literal> resolvedLiterals = new HashMap<>();
 
     protected Context(Script script, Line line) {
         this.script = script;
         this.line = line;
 
         // Populate literals
-        for (Map.Entry<String, DatumContainer> entry : line.getContainers().entrySet()) {
+        for (Map.Entry<Component, DatumContainer> entry : line.getContainers().entrySet()) {
             this.resolvedLiterals.put(entry.getKey(), entry.getValue().resolve(this)); // Resolve each
         }
     }
@@ -63,7 +63,13 @@ public class Context {
      * @return the literal
      */
     public Optional<Literal> getOptionalLiteral(String group) {
-        return Optional.ofNullable(resolvedLiterals.get(group));
+        for (Map.Entry<Component, Literal> entry : this.resolvedLiterals.entrySet()) {
+            if (entry.getKey().isArgument() && ((Component.ArgumentComponent) entry.getKey()).getName().equalsIgnoreCase(group)) {
+                return Optional.of(entry.getValue());
+            }
+        }
+
+        return Optional.empty();
     }
 
     /**
