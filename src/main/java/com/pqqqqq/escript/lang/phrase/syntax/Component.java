@@ -113,6 +113,7 @@ public interface Component {
      */
     class ArgumentComponent implements Component {
         private final String name;
+        private final boolean resolve;
         private final boolean sequence;
 
         /**
@@ -122,22 +123,35 @@ public interface Component {
          * @return the new instance
          */
         public static ArgumentComponent from(String name) {
-            return new ArgumentComponent(name, true);
+            return new ArgumentComponent(name, true, true);
         }
 
         /**
          * Creates a new argument component
          *
          * @param name the name of the argument
+         * @param resolve whether to resolve the component at runtime
+         * @return the new instance
+         */
+        public static ArgumentComponent from(String name, boolean resolve) {
+            return new ArgumentComponent(name, resolve, true);
+        }
+
+        /**
+         * Creates a new argument component
+         *
+         * @param name the name of the argument
+         * @param resolve whether to resolve the component at runtime
          * @param sequence whether to sequence the component at runtime
          * @return the new instance
          */
-        public static ArgumentComponent from(String name, boolean sequence) {
-            return new ArgumentComponent(name, sequence);
+        public static ArgumentComponent from(String name, boolean resolve, boolean sequence) {
+            return new ArgumentComponent(name, resolve, sequence);
         }
 
-        private ArgumentComponent(String name, boolean sequence) {
+        private ArgumentComponent(String name, boolean resolve, boolean sequence) {
             this.name = name;
+            this.resolve = resolve;
             this.sequence = sequence;
         }
 
@@ -147,6 +161,15 @@ public interface Component {
          */
         public String getName() {
             return name;
+        }
+
+        /**
+         * Whether to resolve the argument at runtime or not
+         *
+         * @return true if should resolve
+         */
+        public boolean doResolve() {
+            return resolve;
         }
 
         /**

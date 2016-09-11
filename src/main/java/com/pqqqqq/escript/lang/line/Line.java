@@ -31,8 +31,8 @@ public class Line {
     private final Set<Line> lineBlock;
 
     private final Phrase phrase;
-    private final Map<Component, String> strargs;
-    private final Map<Component, DatumContainer> containers = new HashMap<>();
+    private final Map<Component.ArgumentComponent, String> strargs;
+    private final Map<Component.ArgumentComponent, DatumContainer> containers = new HashMap<>();
 
     /**
      * Creates a new {@link Builder builder} instance
@@ -47,7 +47,7 @@ public class Line {
         this(rawScript, line, lineNumber, tabulations, analysis.getPhrase(), analysis.getStrargs(), lineBlock);
     }
 
-    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<Component, String> strargs, Set<Line> lineBlock) {
+    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<Component.ArgumentComponent, String> strargs, Set<Line> lineBlock) {
         this.rawScript = rawScript;
         this.line = StringUtils.from(line).trim(); // Trim line
         this.lineNumber = lineNumber;
@@ -57,14 +57,8 @@ public class Line {
         this.lineBlock = lineBlock;
 
         this.strargs.forEach((k, v) -> {
-            DatumContainer container = k.isArgument() && ((Component.ArgumentComponent) k).doSequence() ? Sequencer.instance().sequence(v) : Literal.fromObject(v);
+            DatumContainer container = k.doSequence() ? Sequencer.instance().sequence(v) : Literal.fromObject(v);
             this.containers.put(k, container);
-
-            /*if (k.isArgument() && ((Component.ArgumentComponent) k).doResolve()) {
-                this.containers.put(k, container);
-            } else {
-                this.containers.put(k, new UnresolvableContainer(container));
-            }*/
         }); // Populate containers
     }
 
@@ -149,8 +143,8 @@ public class Line {
      * @return the strarg
      */
     public Optional<String> getStrarg(String group) {
-        for (Map.Entry<Component, String> entry : this.strargs.entrySet()) {
-            if (entry.getKey().isArgument() && ((Component.ArgumentComponent) entry.getKey()).getName().equalsIgnoreCase(group)) {
+        for (Map.Entry<Component.ArgumentComponent, String> entry : this.strargs.entrySet()) {
+            if (entry.getKey().getName().equalsIgnoreCase(group)) {
                 return Optional.of(entry.getValue());
             }
         }
@@ -165,8 +159,8 @@ public class Line {
      * @return the datum container
      */
     public Optional<DatumContainer> getContainer(String group) {
-        for (Map.Entry<Component, DatumContainer> entry : this.containers.entrySet()) {
-            if (entry.getKey().isArgument() && ((Component.ArgumentComponent) entry.getKey()).getName().equalsIgnoreCase(group)) {
+        for (Map.Entry<Component.ArgumentComponent, DatumContainer> entry : this.containers.entrySet()) {
+            if (entry.getKey().getName().equalsIgnoreCase(group)) {
                 return Optional.of(entry.getValue());
             }
         }
@@ -174,7 +168,7 @@ public class Line {
         return Optional.empty();
     }
 
-    protected Map<Component, DatumContainer> getContainers() { // Context needs this
+    protected Map<Component.ArgumentComponent, DatumContainer> getContainers() { // Context needs this
         return containers;
     }
 

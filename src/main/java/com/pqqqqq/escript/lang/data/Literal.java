@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.data;
 
 import com.pqqqqq.escript.lang.data.container.expression.ArithmeticContainer;
+import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.util.string.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -247,9 +248,12 @@ public class Literal implements Datum {
             case "true":
             case "yes":
                 return TRUE;
-            default:
+            case "false":
+            case "no":
                 return FALSE;
         }
+
+        throw new FormatException(asString() + " cannot be formatted into a boolean.");
     }
 
     // Arithmetic

@@ -26,15 +26,19 @@ public class Context {
     private final Script script;
     private final Line line;
 
-    private final Map<Component, Literal> resolvedLiterals = new HashMap<>();
+    private final Map<Component.ArgumentComponent, Literal> resolvedLiterals = new HashMap<>();
 
     protected Context(Script script, Line line) {
         this.script = script;
         this.line = line;
 
         // Populate literals
-        for (Map.Entry<Component, DatumContainer> entry : line.getContainers().entrySet()) {
-            this.resolvedLiterals.put(entry.getKey(), entry.getValue().resolve(this)); // Resolve each
+        for (Map.Entry<Component.ArgumentComponent, DatumContainer> entry : line.getContainers().entrySet()) {
+            if (entry.getKey().doResolve()) { // Check if should be resolved
+                this.resolvedLiterals.put(entry.getKey(), entry.getValue().resolve(this)); // Resolve each
+            } else {
+                this.resolvedLiterals.put(entry.getKey(), Literal.EMPTY);
+            }
         }
     }
 
@@ -63,8 +67,8 @@ public class Context {
      * @return the literal
      */
     public Optional<Literal> getOptionalLiteral(String group) {
-        for (Map.Entry<Component, Literal> entry : this.resolvedLiterals.entrySet()) {
-            if (entry.getKey().isArgument() && ((Component.ArgumentComponent) entry.getKey()).getName().equalsIgnoreCase(group)) {
+        for (Map.Entry<Component.ArgumentComponent, Literal> entry : this.resolvedLiterals.entrySet()) {
+            if (entry.getKey().getName().equalsIgnoreCase(group)) {
                 return Optional.of(entry.getValue());
             }
         }
@@ -111,6 +115,52 @@ public class Context {
      */
     public Literal getLiteral(String group) {
         return getOptionalLiteral(group).orElseThrow(() -> new MissingGroupException("Group could not be found: \"%s\"", group));
+    }
+
+    /**
+     * Gets the {@link DatumContainer container} for the given group
+     *
+     * @param group the group
+     * @return the container, or {@link Optional#empty()}
+     */
+    public Optional<DatumContainer> getOptionalContainer(String group) {
+        return getLine().getContainer(group);
+    }
+
+    /**
+     * <pre>
+     * Gets the {@link DatumContainer container} for the given group
+     * If no container is found in that group, a {@link com.pqqqqq.escript.lang.exception.MissingGroupException missing group exception (MGE)} is thrown
+     * </pre>
+     *
+     * @param group the group
+     * @return the container
+     */
+    public DatumContainer getContainer(String group) {
+        return getOptionalContainer(group).orElseThrow(() -> new MissingGroupException("Group could not be found: \"%s\"", group));
+    }
+
+    /**
+     * Gets the strarg for the given group
+     *
+     * @param group the group
+     * @return the container, or {@link Optional#empty()}
+     */
+    public Optional<String> getOptionalStrarg(String group) {
+        return getLine().getStrarg(group);
+    }
+
+    /**
+     * <pre>
+     * Gets the strarg for the given group
+     * If no strarg is found in that group, a {@link com.pqqqqq.escript.lang.exception.MissingGroupException missing group exception (MGE)} is thrown
+     * </pre>
+     *
+     * @param group the group
+     * @return the container
+     */
+    public String getStrarg(String group) {
+        return getOptionalStrarg(group).orElseThrow(() -> new MissingGroupException("Group could not be found: \"%s\"", group));
     }
 
     // CONVENIENCE LITERALS \\

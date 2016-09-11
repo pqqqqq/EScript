@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
  * String utilities
  */
 public class StringUtils {
-    private static final String OUTSIDE_QUOTE_PATTERN = "(?=([^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)";
     private final String string;
 
     /**
@@ -91,15 +90,6 @@ public class StringUtils {
         //return TextSerializers.formattingCode('&').replaceCodes(getString(), TextSerializers.LEGACY_FORMATTING_CODE);
 
         //return str.replaceAll("&([0-9a-fA-FkKlLmMnNoOrR])", "§$1");
-    }
-
-    /**
-     * Turns this string into a pattern that matches this outside of a quote
-     *
-     * @return the string pattern
-     */
-    public String getOutsideQuotePattern() {
-        return Pattern.quote(string) + OUTSIDE_QUOTE_PATTERN;
     }
 
     /**

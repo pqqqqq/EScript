@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class AnalysisResult {
     private final Phrase phrase;
-    private final Map<Component, String> strargs;
+    private final Map<Component.ArgumentComponent, String> strargs;
 
     /**
      * Creates a new analysis result
@@ -21,7 +21,7 @@ public class AnalysisResult {
      * @param phrase the {@link Phrase phrase}
      * @param strargs the strargs {@link Map map}
      */
-    public AnalysisResult(Phrase phrase, Map<Component, String> strargs) {
+    public AnalysisResult(Phrase phrase, Map<Component.ArgumentComponent, String> strargs) {
         this.phrase = phrase;
         this.strargs = strargs;
     }
@@ -40,7 +40,7 @@ public class AnalysisResult {
      *
      * @return the map
      */
-    public Map<Component, String> getStrargs() {
+    public Map<Component.ArgumentComponent, String> getStrargs() {
         return strargs;
     }
 }

@@ -71,7 +71,7 @@ public interface Phrase extends RegistryEntry {
      */
     default Optional<AnalysisResult> matches(String line) {
         for (Syntax syntax : getSyntaxes()) {
-            Optional<Map<Component, String>> match = syntax.matches(line);
+            Optional<Map<Component.ArgumentComponent, String>> match = syntax.matches(line);
 
             if (match.isPresent()) {
                 return Optional.of(new AnalysisResult(this, match.get()));

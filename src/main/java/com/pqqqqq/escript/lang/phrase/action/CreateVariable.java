@@ -47,7 +47,7 @@ public class CreateVariable implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        String name = ctx.getLiteral("Name").asString();
+        String name = ctx.getStrarg("Name");
         Literal value = ctx.getLiteral("Value", (Object) null);
 
         ctx.getScript().create(name, value);
