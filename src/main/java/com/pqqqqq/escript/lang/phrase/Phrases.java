@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.phrase.action.CreateVariable;
+import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
 import com.pqqqqq.escript.lang.phrase.action.MessagePhrase;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
 import com.pqqqqq.escript.lang.phrase.block.ElsePhrase;
@@ -28,7 +28,7 @@ public class Phrases extends Registry<Phrase> {
     // ACTIONS
     public static final Phrase PRINT = PrintPhrase.instance();
     public static final Phrase MESSAGE = MessagePhrase.instance();
-    public static final Phrase CREATE_VARIABLE = CreateVariable.instance();
+    public static final Phrase CREATE_VARIABLE = VariablePhrase.instance();
 
     // GETTERS
     public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();

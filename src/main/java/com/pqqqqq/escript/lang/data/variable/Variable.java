@@ -15,19 +15,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A memory section that stores an instance of a {@link Datum}
  * </pre>
  *
- * @param <T> the datum type
  */
-public class Variable<T extends Datum> {
+public class Variable {
     private final String name;
     private final Environment environment;
-    private T value;
+    private Datum value;
 
     protected Variable(String name, Environment environment) {
         this(name, environment, null);
     }
 
-
-    protected Variable(String name, Environment environment, T value) {
+    protected Variable(String name, Environment environment, Datum value) {
         this.name = checkNotNull(name, "Name cannot be null.");
         this.environment = checkNotNull(environment, "Environment cannot be null.");
         setValue(value);
@@ -52,17 +50,21 @@ public class Variable<T extends Datum> {
     }
 
     /**
-     * Gets the generic {@link Datum} value
+     * Gets the {@link Datum datum} value
      *
-     * @return the varible's value
+     * @return the variable's value
      */
-    public T getValue() {
+    public Datum getValue() {
         return value;
     }
 
-    @SuppressWarnings("unchecked")
-    public void setValue(T value) {
-        this.value = Optional.ofNullable(value).orElse((T) Literal.EMPTY); // Fixed unchecked cast? How?
+    /**
+     * Sets the {@link Datum datum} value
+     *
+     * @param value the new value
+     */
+    public void setValue(Datum value) {
+        this.value = Optional.ofNullable(value).orElse(Literal.EMPTY); // Fixed unchecked cast? How?
     }
 
     @Override

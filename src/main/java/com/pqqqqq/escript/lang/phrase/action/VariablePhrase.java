@@ -5,22 +5,21 @@ import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
-import org.spongepowered.api.entity.living.player.Player;
 
 /**
  * Created by Kevin on 2016-08-31.
  *
  * <pre>
- * The create variable phrase, which will create a variable
+ * The variable phrase, which will create, or modify a variable
  * Examples:
- *      <code>create var with value "hello"
- *      create var with 1
- *      create var</code>
+ *      <code>set var to "hello"
+ *      set var</code>
  * </pre>
  */
-public class CreateVariable implements Phrase {
-    private static final CreateVariable INSTANCE = new CreateVariable();
+public class VariablePhrase implements Phrase {
+    private static final VariablePhrase INSTANCE = new VariablePhrase();
     private static final Syntax[] SYNTAXES = {
+            Syntax.compile("set|change|modify ^Name to $Value"),
             Syntax.compile("create ^Name with? value* $Value*")
 
             /*Pattern.compile("^(send(\\s+?))?(message|msg)(\\s+?)(?<Message>\\S+?)$", Pattern.CASE_INSENSITIVE),
@@ -33,11 +32,11 @@ public class CreateVariable implements Phrase {
      *
      * @return the instance
      */
-    public static CreateVariable instance() {
+    public static VariablePhrase instance() {
         return INSTANCE;
     }
 
-    private CreateVariable() {
+    private VariablePhrase() {
     }
 
     @Override
@@ -50,7 +49,7 @@ public class CreateVariable implements Phrase {
         String name = ctx.getStrarg("Name");
         Literal value = ctx.getLiteral("Value", (Object) null);
 
-        ctx.getScript().create(name, value);
+        ctx.getScript().createOrSet(name, value);
         return Result.success();
     }
 }

@@ -1,6 +1,5 @@
 package com.pqqqqq.escript.lang.data.container;
 
-import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.variable.Variable;
 import com.pqqqqq.escript.lang.line.Context;
@@ -29,7 +28,7 @@ public class VariableContainer implements DatumContainer {
     @Override
     public Literal resolve(Context ctx) {
         String name = variableName.resolve(ctx).asString();
-        Optional<Variable<? extends Datum>> variable = ctx.getScript().getVariable(name);
+        Optional<Variable> variable = ctx.getScript().getVariable(name);
 
         if (variable.isPresent()) {
             return variable.get().getValue().resolve(ctx); // Resolve value if necessary

@@ -15,7 +15,7 @@ import java.util.Set;
  * </pre>
  */
 public abstract class Environment {
-    private final Set<Variable<? extends Datum>> variables = new HashSet<>();
+    private final Set<Variable> variables = new HashSet<>();
 
     /**
      * Retrieves the {@link Variable} with the given name
@@ -23,7 +23,7 @@ public abstract class Environment {
      * @param name the name
      * @return the variable
      */
-    public Optional<Variable<? extends Datum>> getVariable(String name) {
+    public Optional<Variable> getVariable(String name) {
         return variables.stream().filter(variable -> variable.getName().equals(name)).findFirst();
     }
 
@@ -52,7 +52,7 @@ public abstract class Environment {
      * @param name the name
      * @return the new variable
      */
-    public Variable<Datum> create(String name) {
+    public Variable create(String name) {
         return create(name, null);
     }
 
@@ -61,12 +61,23 @@ public abstract class Environment {
      *
      * @param name the name
      * @param value the value
-     * @param <T> the datum type
+     *
      * @return the new variable
      */
-    public <T extends Datum> Variable<T> create(String name, T value) {
-        Variable<T> variable = new Variable<>(name, this, value);
+    public Variable create(String name, Datum value) {
+        Variable variable = new Variable(name, this, value);
         this.variables.add(variable);
         return variable;
+    }
+
+    public Variable createOrSet(String name, Datum value) {
+        Optional<Variable> variable = getVariable(name);
+
+        if (!variable.isPresent()) {
+            return create(name, value);
+        } else {
+            variable.get().setValue(value);
+            return variable.get();
+        }
     }
 }
