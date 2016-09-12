@@ -71,7 +71,15 @@ public class Sequencer {
         SplitSequence triple = StringUtils.from(strarg).parseNextSequence(LITERAL_DELIMITER_GROUPS); // Split into ordered triple segments
         if (triple == null || triple.getDelimiter() == null) { // Check if there's no split string
             // TODO logic needed!!
+
             // TODO Is it okay to have plain data and variables before phrases?
+            // TODO UPDATE: Don't think so
+
+            // Check if it's a phrase
+            Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg);
+            if (analysis.isPresent()) {
+                return new PhraseContainer(Literal.fromObject(strarg), analysis.get());
+            }
 
             // Check plain data
             Optional<Literal> literal = Literal.fromSequence(strarg);
@@ -82,12 +90,6 @@ public class Sequencer {
             // Check if it's a variable
             if (strarg.startsWith("$")) {
                 return new VariableContainer(Literal.fromObject(strarg.substring(1)));
-            }
-
-            // Check if it's a phrase
-            Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg);
-            if (analysis.isPresent()) {
-                return new PhraseContainer(Literal.fromObject(strarg), analysis.get());
             }
 
             // Otherwise, throw an error
