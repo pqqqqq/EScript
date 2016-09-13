@@ -133,7 +133,7 @@ public class Syntax {
 
         Map<Component.ArgumentComponent, String> map = new HashMap<>();
         LinkedList<Component> compQueue = new LinkedList<>(Arrays.asList(getComponents())); // Create linked list
-        Deque<String> stringQueue = new ArrayDeque<>(Arrays.asList(StringUtils.from(line).parseSplit(" "))); // String split deque
+        Deque<String> stringQueue = new ArrayDeque<>(StringUtils.from(line).parseSplit(" ")); // String split deque
 
         Component component;
         boolean lastMatch = false;

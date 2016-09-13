@@ -1,9 +1,6 @@
 package com.pqqqqq.escript.lang.data;
 
-import com.pqqqqq.escript.lang.data.container.ConditionContainer;
-import com.pqqqqq.escript.lang.data.container.DatumContainer;
-import com.pqqqqq.escript.lang.data.container.PhraseContainer;
-import com.pqqqqq.escript.lang.data.container.VariableContainer;
+import com.pqqqqq.escript.lang.data.container.*;
 import com.pqqqqq.escript.lang.data.container.expression.ArithmeticContainer;
 import com.pqqqqq.escript.lang.data.container.expression.ConditionalExpressionContainer;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
@@ -75,6 +72,13 @@ public class Sequencer {
             // TODO Is it okay to have plain data and variables before phrases?
             // TODO UPDATE: Don't think so
 
+            // Check if it's a list
+            if (strarg.startsWith("{") && strarg.endsWith("}")) {
+                List<DatumContainer> containers = new ArrayList<>();
+                StringUtils.from(strarg.substring(1, strarg.length() - 1)).parseSplit(",").stream().map(this::sequence).forEach(containers::add);
+                return new ListContainer(containers);
+            }
+
             // Check if it's a phrase
             Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg);
             if (analysis.isPresent()) {
@@ -104,11 +108,11 @@ public class Sequencer {
         }
 
         Optional<DatumContainer> parse(String strarg) {
-            String[] splitOr = StringUtils.from(strarg).parseSplit(" or "); // 'Or' takes precedence over 'and'
+            List<String> splitOr = StringUtils.from(strarg).parseSplit(" or "); // 'Or' takes precedence over 'and'
             List<List<ConditionalExpressionContainer>> mainExpressionList = new ArrayList<>();
 
             for (String orCondition : splitOr) {
-                String[] splitAnd = StringUtils.from(orCondition).parseSplit(" and ");
+                List<String> splitAnd = StringUtils.from(orCondition).parseSplit(" and ");
                 List<ConditionalExpressionContainer> andExpressionList = new ArrayList<>();
 
                 for (String condition : splitAnd) {
@@ -124,7 +128,7 @@ public class Sequencer {
                     String comparator = triple.getDelimiter();
 
                     ConditionalExpressionContainer container = new ConditionalExpressionContainer(leftSideLiteral, rightSideLiteral, comparator);
-                    if (splitAnd.length == 1 && splitOr.length == 1) { // If this is the only thing, return this alone
+                    if (splitAnd.size() == 1 && splitOr.size() == 1) { // If this is the only thing, return this alone
                         return Optional.of(container);
                     }
 

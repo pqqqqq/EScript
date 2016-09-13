@@ -1,12 +1,13 @@
 package com.pqqqqq.escript.lang.data;
 
+import com.google.common.collect.ImmutableList;
 import com.pqqqqq.escript.lang.data.container.expression.ArithmeticContainer;
 import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.util.string.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -25,6 +26,11 @@ public class Literal implements Datum {
      * A literal with an empty string - ""
      */
     public static final Literal EMPTY_STRING = new Literal("");
+
+    /**
+     * A literal with an empty list - {}
+     */
+    public static final Literal EMPTY_LIST = new Literal(ImmutableList.copyOf(new ArrayList<>()));
 
     /**
      * A literal with the boolean value true
@@ -52,12 +58,14 @@ public class Literal implements Datum {
      * The main purpose of this method's body is to reduce instances of Literals by using common ones
      * This method will make use of these public, final literals:
      *
-     *      EMPTY
-     *      EMPTY_STRING
-     *      TRUE
-     *      FALSE
-     *      ONE
-     *      TWO</pre>
+     *      {@link #EMPTY}
+     *      {@link #EMPTY_STRING}
+     *      {@link #EMPTY_LIST}
+     *      {@link #TRUE}
+     *      {@link #FALSE}
+     *      {@link #ZERO}
+     *      {@link #ONE}
+     *      </pre>
      *
      * @param value the value
      * @return the created (or referenced) literal instance
@@ -67,7 +75,9 @@ public class Literal implements Datum {
             return EMPTY;
         }
 
-        if (value instanceof String) {
+        if (value instanceof Literal) {
+            return (Literal) value; // No need to change anything
+        } else if (value instanceof String) {
             String string = (String) value;
 
             if (string.isEmpty()) {
@@ -75,22 +85,26 @@ public class Literal implements Datum {
             } else {
                 return new Literal(StringUtils.from(string).formatColour());
             }
-        }
-
-        if (value instanceof Boolean) {
+        } else if (value instanceof Boolean) {
             return (Boolean) value ? TRUE : FALSE;
-        }
-
-        if (value instanceof Integer || value instanceof Long || value instanceof Float) {
-            double number = Double.parseDouble(value.toString());
+        } else if (value instanceof Integer || value instanceof Long || value instanceof Float) { // Number formatting
+            return fromObject(Double.parseDouble(value.toString())); // Recursion, now as a double
+        } else if (value instanceof Double) {
+            Double number = (Double) value;
 
             if (number == 0D) {
                 return ZERO;
             } else if (number == 1D) {
                 return ONE;
-            } else {
-                return new Literal(number);
             }
+        } else if (value.getClass().isArray()) { // Check if the value is an array
+            return fromObject(Arrays.asList((Object[]) value)); // Recursion as a list
+        } else if (value instanceof Collection) { // Array formatting
+            Collection<?> collection = (Collection<?>) value;
+            List<Literal> list = new ArrayList<>();
+
+            collection.stream().map(Literal::fromObject).forEach(list::add);
+            return new Literal(ImmutableList.copyOf(list)); // Immutable, since literals are immutable as well
         }
 
         return new Literal(value);
@@ -101,7 +115,6 @@ public class Literal implements Datum {
             return Optional.of(EMPTY);
         }
 
-        // TODO unquoted strings?!
         // If there's quotes, it's a string
         if (literal.startsWith("\"") && literal.endsWith("\"")) {
             return Optional.of(Literal.fromObject(StringUtils.from(StringEscapeUtils.unescapeJava(literal.substring(1, literal.length() - 1))).formatColour()));
@@ -179,6 +192,15 @@ public class Literal implements Datum {
     }
 
     /**
+     * Checks if this literal is a list type
+     *
+     * @return true if a list
+     */
+    public boolean isList() {
+        return getValue().isPresent() && getValue().get() instanceof List;
+    }
+
+    /**
      * <pre>
      * Gets this literal as a string value.
      * This should always be successful, as strings are limitless.
@@ -205,13 +227,26 @@ public class Literal implements Datum {
     /**
      * <pre>
      * Attempts to get this literal as a boolean value
-     * This will not error, however anything other than "true" and "yes" will be false
+     * This may throw a {@link FormatException}
      * </pre>
      *
      * @return the boolean
      */
     public Boolean asBoolean() {
         return isBoolean() ? (Boolean) getValue().get() : parseBoolean().asBoolean();
+    }
+
+    /**
+     * <pre>
+     * Attempts to get this literal as a list value
+     * In general, this will just create a singleton list, or get the list as is
+     * </pre>
+     *
+     * @return the list
+     */
+    @SuppressWarnings("unchecked")
+    public List<Literal> asList() {
+        return isList() ? (List<Literal>) getValue().get() : parseList().asList();
     }
 
     private Literal parseString() { // Parses the value (no matter the value) into a literal with a string value
@@ -254,6 +289,14 @@ public class Literal implements Datum {
         }
 
         throw new FormatException(asString() + " cannot be formatted into a boolean.");
+    }
+
+    private Literal parseList() { // Attempts to parse the value into a literal with a list value
+        if (isEmpty()) {
+            return EMPTY_LIST;
+        }
+
+        return Literal.fromObject(Collections.singletonList(this)); // Create a singleton
     }
 
     // Arithmetic

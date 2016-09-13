@@ -150,9 +150,9 @@ public class StringUtils {
      * Parses a split of the specified string at the given delimiters, excluding quotes, round and square brackets
      *
      * @param delimiter the delimiter strings
-     * @return the split string array
+     * @return the split string {@link List list}
      */
-    public String[] parseSplit(String... delimiter) {
+    public List<String> parseSplit(String... delimiter) {
         List<String> list = new ArrayList<>();
 
         boolean quotes = false;
@@ -197,7 +197,8 @@ public class StringUtils {
         if (!builder.isEmpty()) {
             list.add(builder);
         }
-        return list.toArray(new String[list.size()]);
+
+        return list;
     }
 
     /**

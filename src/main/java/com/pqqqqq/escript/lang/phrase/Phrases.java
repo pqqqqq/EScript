@@ -4,10 +4,7 @@ import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.action.MessagePhrase;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
 import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
-import com.pqqqqq.escript.lang.phrase.block.CountPhrase;
-import com.pqqqqq.escript.lang.phrase.block.ElsePhrase;
-import com.pqqqqq.escript.lang.phrase.block.IfPhrase;
-import com.pqqqqq.escript.lang.phrase.block.WhilePhrase;
+import com.pqqqqq.escript.lang.phrase.block.*;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerHealth;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerName;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
@@ -40,6 +37,7 @@ public class Phrases extends Registry<Phrase> {
     public static final Phrase ELSE = ElsePhrase.instance();
     public static final Phrase WHILE = WhilePhrase.instance();
     public static final Phrase COUNT = CountPhrase.instance();
+    public static final Phrase FOR_EACH = ForEachPhrase.instance();
 
     // END REGISTRY \\
 
