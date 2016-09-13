@@ -32,14 +32,7 @@ public class Context {
         this.script = script;
         this.line = line;
 
-        // Populate literals
-        for (Map.Entry<Component.ArgumentComponent, DatumContainer> entry : line.getContainers().entrySet()) {
-            if (entry.getKey().doResolve()) { // Check if should be resolved
-                this.resolvedLiterals.put(entry.getKey(), entry.getValue().resolve(this)); // Resolve each
-            } else {
-                this.resolvedLiterals.put(entry.getKey(), Literal.EMPTY);
-            }
-        }
+        line.getContainers().entrySet().forEach(entry -> this.resolvedLiterals.put(entry.getKey(), entry.getKey().doResolve() ? entry.getValue().resolve(this) : Literal.EMPTY)); // Populate literals
     }
 
     /**

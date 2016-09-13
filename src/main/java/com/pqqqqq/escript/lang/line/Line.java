@@ -56,10 +56,7 @@ public class Line {
         this.strargs = strargs;
         this.lineBlock = lineBlock;
 
-        this.strargs.forEach((k, v) -> {
-            DatumContainer container = k.doSequence() ? Sequencer.instance().sequence(v) : Literal.fromObject(v);
-            this.containers.put(k, container);
-        }); // Populate containers
+        this.strargs.forEach((k, v) -> this.containers.put(k, k.doSequence() ? Sequencer.instance().sequence(v) : Literal.EMPTY)); // Populate containers
     }
 
     /**
