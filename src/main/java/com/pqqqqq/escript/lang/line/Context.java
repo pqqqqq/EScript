@@ -32,7 +32,7 @@ public class Context {
         this.script = script;
         this.line = line;
 
-        line.getContainers().entrySet().forEach(entry -> this.resolvedLiterals.put(entry.getKey(), entry.getKey().doResolve() ? entry.getValue().resolve(this) : Literal.EMPTY)); // Populate literals
+        line.getContainers().forEach((k, v) -> this.resolvedLiterals.put(k, k.doResolve() ? v.resolve(this) : Literal.EMPTY)); // Populate literals
     }
 
     /**
