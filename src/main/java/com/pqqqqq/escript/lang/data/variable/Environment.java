@@ -70,6 +70,13 @@ public abstract class Environment {
         return variable;
     }
 
+    /**
+     * Creates a variable with the given value, or if one already exists sets the preexisting one to that value
+     *
+     * @param name the name of the variable
+     * @param value the new value
+     * @return the variable, ensured to have the given value
+     */
     public Variable createOrSet(String name, Datum value) {
         Optional<Variable> variable = getVariable(name);
 
@@ -79,5 +86,15 @@ public abstract class Environment {
             variable.get().setValue(value);
             return variable.get();
         }
+    }
+
+    /**
+     * Creates a variable, or gets one if the given name if it already exists
+     *
+     * @param name the name
+     * @return the variable
+     */
+    public Variable createOrGet(String name) {
+        return getVariable(name).orElseGet(() -> create(name));
     }
 }

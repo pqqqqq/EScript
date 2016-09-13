@@ -364,4 +364,9 @@ public class Literal implements Datum {
     public Literal resolve(Context ctx) {
         return this; // Resolves itself
     }
+
+    @Override
+    public String toString() {
+        return asString();
+    }
 }

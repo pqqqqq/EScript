@@ -4,6 +4,7 @@ import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
 import com.pqqqqq.escript.lang.phrase.action.MessagePhrase;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
+import com.pqqqqq.escript.lang.phrase.block.CountPhrase;
 import com.pqqqqq.escript.lang.phrase.block.ElsePhrase;
 import com.pqqqqq.escript.lang.phrase.block.IfPhrase;
 import com.pqqqqq.escript.lang.phrase.block.WhilePhrase;
@@ -38,6 +39,7 @@ public class Phrases extends Registry<Phrase> {
     public static final Phrase IF = IfPhrase.instance();
     public static final Phrase ELSE = ElsePhrase.instance();
     public static final Phrase WHILE = WhilePhrase.instance();
+    public static final Phrase COUNT = CountPhrase.instance();
 
     // END REGISTRY \\
 

@@ -81,4 +81,13 @@ public class Variable {
     public int hashCode() { // Important for sets/maps
         return Objects.hashCode(this.name, this.environment); // Variables in different environments can have the same name
     }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this) // Easy toString
+                .add("Name", getName())
+                .add("Environment", getEnvironment().getClass().getName())
+                .add("Value", value.toString())
+                .toString();
+    }
 }
