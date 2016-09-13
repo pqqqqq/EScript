@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * A script line, characterised by its raw script, line contents, its line number, and its {@link Phrase}
  */
 public class Line {
@@ -127,10 +127,11 @@ public class Line {
 
     /**
      * Checks if this line should be run at {@link Script.State#RUNTIME runtime}
+     *
      * @return true if run at runtime
      */
     public boolean isRunAtRuntime() {
-        return  getPhrase().getRunState() == Script.State.RUNTIME;
+        return getPhrase().getRunState() == Script.State.RUNTIME;
     }
 
     /**

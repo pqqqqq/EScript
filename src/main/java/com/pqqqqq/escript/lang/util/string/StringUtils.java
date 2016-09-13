@@ -1,14 +1,11 @@
 package com.pqqqqq.escript.lang.util.string;
 
-import org.spongepowered.api.text.serializer.TextSerializers;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * String utilities
  */
 public class StringUtils {

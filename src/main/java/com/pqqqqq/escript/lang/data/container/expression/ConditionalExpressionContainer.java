@@ -176,6 +176,7 @@ public class ConditionalExpressionContainer extends ExpressionContainer {
 
         /**
          * Gets if this operator is negative (unequal, dissimilar, etc)
+         *
          * @return true if negative
          */
         public boolean isNegative() {

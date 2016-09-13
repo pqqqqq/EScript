@@ -14,7 +14,7 @@ import org.spongepowered.api.plugin.Plugin;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * The main plugin class
  */
 @Plugin(id = EScript.ID, name = EScript.NAME, version = EScript.VERSION, authors = EScript.AUTHORS, description = EScript.DESCRIPTION)

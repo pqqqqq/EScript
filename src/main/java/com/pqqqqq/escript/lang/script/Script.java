@@ -9,13 +9,15 @@ import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.line.RunVessel;
 import com.pqqqqq.escript.lang.phrase.Result;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <pre>
  * A script instance, usually formed from a {@link com.pqqqqq.escript.lang.file.RawScript raw script}
  * A script is also a {@link com.pqqqqq.escript.lang.data.variable.Variable variable} {@link Environment environment}
@@ -41,7 +43,7 @@ public class Script extends Environment {
      * Creates a new script instance from the {@link RawScript raw script} it represents and its {@link Properties properties}
      *
      * @param properties the properties
-     * @param rawScript the raw script
+     * @param rawScript  the raw script
      * @return the new instance
      */
     public static Script from(RawScript rawScript, Properties properties) {
@@ -92,6 +94,7 @@ public class Script extends Environment {
 
     /**
      * Executes the script's runtime lines
+     *
      * @return the {@link Result result}
      */
     public Result execute() {
@@ -131,6 +134,6 @@ public class Script extends Environment {
         /**
          * Runtime, which occurs whenever the script is triggered to run
          */
-        RUNTIME;
+        RUNTIME
     }
 }

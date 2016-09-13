@@ -26,7 +26,7 @@ public interface Result {
      * Creates a new {@link Success success} with the given return value
      *
      * @param value the return value
-     * @param <T> the return value type
+     * @param <T>   the return value type
      * @return the new success instance
      */
     static <T> Success<T> success(T value) {
@@ -111,7 +111,6 @@ public interface Result {
      * An unsuccessful {@link Result result}
      * Failures contain {@link Optional optional} {@link #getErrorMessage() error messages}
      * </pre>
-     *
      */
     final class Failure implements Result {
         private final Optional<String> errorMessage;
@@ -126,6 +125,7 @@ public interface Result {
 
         /**
          * Gets the error message of this failure
+         *
          * @return the {@link Optional optional} error message
          */
         public Optional<String> getErrorMessage() {

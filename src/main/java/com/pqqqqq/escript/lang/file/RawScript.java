@@ -1,8 +1,5 @@
 package com.pqqqqq.escript.lang.file;
 
-import com.pqqqqq.escript.lang.exception.EScriptException;
-import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
-import com.pqqqqq.escript.lang.exception.state.ESCompileTimeException;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.script.Properties;
 import com.pqqqqq.escript.lang.script.Script;
@@ -17,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * A raw script, characterised only by strings of lines, and a containing script file.
  */
 public class RawScript {
@@ -29,7 +26,7 @@ public class RawScript {
     /**
      * <p>Creates a new raw script instance from its {@link File script file}, and its contents.</p>
      *
-     * @param scriptFile the script file
+     * @param scriptFile     the script file
      * @param buildableLines the file's contents (in build form)
      * @return the new raw file instance
      */
@@ -59,6 +56,7 @@ public class RawScript {
 
     /**
      * Gets the raw script's {@link File script file}
+     *
      * @return the script file
      */
     public File getScriptFile() {
@@ -138,7 +136,7 @@ public class RawScript {
         /**
          * Adds the given line to the builder
          *
-         * @param line the line
+         * @param line   the line
          * @param number the line number
          * @return this builder, for chaining
          */

@@ -5,11 +5,9 @@ import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
-import java.util.regex.Pattern;
-
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <pre>
  * The print phrase, which outputs something to the console.
  * Examples:

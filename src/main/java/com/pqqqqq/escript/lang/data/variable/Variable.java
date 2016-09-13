@@ -10,11 +10,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * A memory section that stores an instance of a {@link Datum}
  * </pre>
- *
  */
 public class Variable {
     private final String name;

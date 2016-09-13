@@ -7,7 +7,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * The player name phrase, which gets the player's health
  * Some examples:

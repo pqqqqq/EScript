@@ -5,7 +5,9 @@ import com.pqqqqq.escript.lang.exception.state.ESCompileTimeException;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.util.string.StringUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,7 +15,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <p>A class dedicated to file lexing.</p>
  * <p>Returns formatted contents of files.</p>
  */
@@ -38,6 +40,7 @@ public class FileLexer {
 
     /**
      * Gets the {@link File file} this file lexer represents
+     *
      * @return the file
      */
     public File getFile() {

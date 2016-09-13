@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 /**
  * Created by Kevin on 2016-09-07.
- *
+ * <p>
  * <pre>
  * A syntax component, which must match and remove the head of a given string
  * </pre>
@@ -72,7 +72,6 @@ public interface Component {
      */
     enum Wrap {
         OPTIONAL() {
-
             @Override
             Component wrap(Component component) {
                 return OptionalComponent.from(component);
@@ -80,7 +79,6 @@ public interface Component {
         },
 
         IF() {
-
             @Override
             Component wrap(Component component) {
                 return IfComponent.from(component);
@@ -88,7 +86,6 @@ public interface Component {
         },
 
         NONE() {
-
             @Override
             Component wrap(Component component) {
                 return component;
@@ -106,7 +103,7 @@ public interface Component {
 
     /**
      * Created by Kevin on 2016-09-08.
-     *
+     * <p>
      * <pre>
      * An argument, which can have any value (as long as it follows the main syntax of the ES language)
      * </pre>
@@ -129,7 +126,7 @@ public interface Component {
         /**
          * Creates a new argument component
          *
-         * @param name the name of the argument
+         * @param name    the name of the argument
          * @param resolve whether to resolve the component at runtime
          * @return the new instance
          */
@@ -140,8 +137,8 @@ public interface Component {
         /**
          * Creates a new argument component
          *
-         * @param name the name of the argument
-         * @param resolve whether to resolve the component at runtime
+         * @param name     the name of the argument
+         * @param resolve  whether to resolve the component at runtime
          * @param sequence whether to sequence the component at runtime
          * @return the new instance
          */
@@ -157,6 +154,7 @@ public interface Component {
 
         /**
          * Gets the name of this argument
+         *
          * @return the name
          */
         public String getName() {
@@ -194,7 +192,7 @@ public interface Component {
 
     /**
      * Created by Kevin on 2016-09-08.
-     *
+     * <p>
      * <pre>
      * A {@link Component component} that wraps around another to indicate its optionality
      * </pre>
@@ -238,7 +236,7 @@ public interface Component {
 
     /**
      * Created by Kevin on 2016-09-07.
-     *
+     * <p>
      * <pre>
      * A plain text {@link Component component}
      * </pre>
@@ -333,22 +331,22 @@ public interface Component {
         private final Component[] components;
 
         *//**
-         * Creates a new hybrid component from an array of other {@link Component components}
-         *
-         * @param components the components
-         * @return the new hybrid instance
-         *//*
+     * Creates a new hybrid component from an array of other {@link Component components}
+     *
+     * @param components the components
+     * @return the new hybrid instance
+     *//*
         public static HybridComponent from(Component... components) {
             return new HybridComponent(components);
         }
 
         *//**
-         * Creates a new hybrid component from an array of other {@link Component components}
-         *
-         * @param optional whether this component is optional or not
-         * @param components the components
-         * @return the new hybrid instance
-         *//*
+     * Creates a new hybrid component from an array of other {@link Component components}
+     *
+     * @param optional whether this component is optional or not
+     * @param components the components
+     * @return the new hybrid instance
+     *//*
         public static Component from(boolean optional, Component... components) {
             HybridComponent hybridComponent = new HybridComponent(components);
             return optional ? OptionalComponent.from(hybridComponent) : hybridComponent;
@@ -359,10 +357,10 @@ public interface Component {
         }
 
         *//**
-         * Gets the array of represented {@link Component components}
-         *
-         * @return the components
-         *//*
+     * Gets the array of represented {@link Component components}
+     *
+     * @return the components
+     *//*
         public Component[] getComponents() {
             return components;
         }

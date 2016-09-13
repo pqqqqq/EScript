@@ -4,7 +4,7 @@ import com.pqqqqq.escript.lang.registry.Registry;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * A {@link Registry registry} of {@link Cause causes}
  */
 public class Causes extends Registry<Cause> {

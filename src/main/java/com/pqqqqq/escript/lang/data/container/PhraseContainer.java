@@ -20,7 +20,7 @@ public class PhraseContainer implements DatumContainer {
     /**
      * Creates a new {@link PhraseContainer} instance with the given phrase, and its {@link AnalysisResult analysis result}
      *
-     * @param phrase the phrase
+     * @param phrase   the phrase
      * @param analysis the analysis result
      */
     public PhraseContainer(Literal phrase, AnalysisResult analysis) {

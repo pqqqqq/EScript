@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <p>Finds files that are eligible as a script and sends them to the {@link FileLexer}</p>
  */
 public class FileSearcher {
@@ -17,6 +17,7 @@ public class FileSearcher {
 
     /**
      * Gets the main file searcher instance
+     *
      * @return the instance
      */
     public static FileSearcher instance() {
@@ -57,11 +58,11 @@ public class FileSearcher {
         Set<ScriptFile> files = new HashSet<>();
 
         for (File file : root.listFiles()) {
-              if (file.isDirectory()) {
-                  files.addAll(search(file));
-              } else if (ScriptPredicate.instance().test(file)) {
-                  files.add(ScriptFile.from(file));
-              }
+            if (file.isDirectory()) {
+                files.addAll(search(file));
+            } else if (ScriptPredicate.instance().test(file)) {
+                files.add(ScriptFile.from(file));
+            }
         }
 
         return files;

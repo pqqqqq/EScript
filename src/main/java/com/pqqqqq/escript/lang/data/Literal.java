@@ -10,7 +10,7 @@ import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * An immutable literal type - a type that does not need to be resolved
  */
 public class Literal implements Datum {

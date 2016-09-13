@@ -8,8 +8,9 @@ import java.util.List;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * A class that catalogues a given type
+ *
  * @param <T> the registry entry type
  */
 public abstract class Registry<T extends RegistryEntry> implements Iterable<T> {
@@ -37,6 +38,7 @@ public abstract class Registry<T extends RegistryEntry> implements Iterable<T> {
 
     /**
      * Gets the generic type's class
+     *
      * @return the type class
      */
     public Class<? extends T> getTypeClass() {

@@ -4,7 +4,7 @@ import org.spongepowered.api.entity.living.player.Player;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * A list of {@link Script script} properties for generic scripts
  * </pre>

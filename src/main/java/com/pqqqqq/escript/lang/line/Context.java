@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * A context is a bridge that connects a {@link Script script instance} to a given {@link Line line}
  * A context is to a line as a script is to a raw script (that is to say, the version at compile time vs the version at runtime)
@@ -76,7 +76,7 @@ public class Context {
      * </pre>
      *
      * @param group the group
-     * @param def the default {@link Supplier supplier}
+     * @param def   the default {@link Supplier supplier}
      * @return the literal
      */
     public Literal getLiteral(String group, Supplier<?> def) {
@@ -90,7 +90,7 @@ public class Context {
      * </pre>
      *
      * @param group the group
-     * @param def the default value
+     * @param def   the default value
      * @return the literal
      */
     public Literal getLiteral(String group, Object def) {

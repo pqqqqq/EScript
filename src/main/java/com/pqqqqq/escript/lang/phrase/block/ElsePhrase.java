@@ -11,7 +11,7 @@ import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <pre>
  * The else phrase, which runs its block if the other if/else if chain conditions are false
  * Examples:

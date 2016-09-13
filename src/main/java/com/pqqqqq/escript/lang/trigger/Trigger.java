@@ -7,7 +7,7 @@ import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * A trigger bridges a {@link RawScript raw script} to an array of {@link Cause cause}
  * </pre>

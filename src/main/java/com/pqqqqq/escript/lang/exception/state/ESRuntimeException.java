@@ -4,7 +4,7 @@ import com.pqqqqq.escript.lang.exception.EScriptException;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * Denotes an exception that occurred during run time
  */
 public class ESRuntimeException extends EScriptException {

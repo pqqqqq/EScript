@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * A file that contains scripts.
  */
 public class ScriptFile implements Iterable<RawScript> {
@@ -29,7 +29,7 @@ public class ScriptFile implements Iterable<RawScript> {
      * <p>Creates a new script file instance from the {@link File file's instance} and its containing {@link RawScript raw scripts}</p>
      * <p>If the set of raw scripts is already lexed, use {@link #from(File)}</p>
      *
-     * @param file the script file
+     * @param file    the script file
      * @param scripts the {@link Set} of scripts
      * @return the new script file instance
      */
@@ -44,6 +44,7 @@ public class ScriptFile implements Iterable<RawScript> {
 
     /**
      * Gets the {@link File script file}
+     *
      * @return the script file
      */
     public File getFile() {
@@ -52,6 +53,7 @@ public class ScriptFile implements Iterable<RawScript> {
 
     /**
      * Gets the {@link Set set} of {@link RawScript raw scripts}
+     *
      * @return the raw scripts
      */
     public Set<RawScript> getScripts() {

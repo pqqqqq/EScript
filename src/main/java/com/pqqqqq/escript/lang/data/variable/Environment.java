@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * An environment, where {@link Variable variables} can be stored
  * Environments are abstract, and therefore must be a superclass of some other class
@@ -49,6 +49,7 @@ public abstract class Environment {
 
     /**
      * Creates a new {@link Variable variable} with the given name
+     *
      * @param name the name
      * @return the new variable
      */
@@ -59,9 +60,8 @@ public abstract class Environment {
     /**
      * Creates a new {@link Variable} with the given name and value
      *
-     * @param name the name
+     * @param name  the name
      * @param value the value
-     *
      * @return the new variable
      */
     public Variable create(String name, Datum value) {
@@ -73,7 +73,7 @@ public abstract class Environment {
     /**
      * Creates a variable with the given value, or if one already exists sets the preexisting one to that value
      *
-     * @param name the name of the variable
+     * @param name  the name of the variable
      * @param value the new value
      * @return the variable, ensured to have the given value
      */

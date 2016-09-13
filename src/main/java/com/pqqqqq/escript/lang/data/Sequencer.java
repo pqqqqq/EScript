@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * The sequencer handles strargs from, generally from {@link Line#getStrarg(String)}
  * It compiles the argument into a compact {@link DatumContainer}, which can then be resolved at runtime

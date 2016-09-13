@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 /**
  * Created by Kevin on 2015-06-17.
- *
+ * <p>
  * An abstract {@link DatumContainer} which does something to two separate data containers based on the operator they are separated by
  */
 public abstract class ExpressionContainer implements DatumContainer {

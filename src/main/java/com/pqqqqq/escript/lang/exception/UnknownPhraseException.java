@@ -5,8 +5,9 @@ import com.pqqqqq.escript.lang.phrase.Phrases;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * Thrown when a {@link Line line} is unable to find its corresponding {@link com.pqqqqq.escript.lang.phrase.Phrase phrase}
+ *
  * @see Phrases#analyze(String)
  */
 public class UnknownPhraseException extends EScriptException {

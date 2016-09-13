@@ -4,8 +4,9 @@ import com.pqqqqq.escript.lang.line.Context;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * Thrown when a line fails to {@link Context#execute() execute}
+ *
  * @see com.pqqqqq.escript.lang.phrase.Result.Failure
  */
 public class FailedLineException extends EScriptException {

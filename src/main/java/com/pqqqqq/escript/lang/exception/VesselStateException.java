@@ -4,8 +4,9 @@ import com.pqqqqq.escript.lang.line.RunVessel;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * Thrown when a {@link RunVessel} is attempted to be run twice
+ *
  * @see RunVessel#run()
  */
 public class VesselStateException extends EScriptException {

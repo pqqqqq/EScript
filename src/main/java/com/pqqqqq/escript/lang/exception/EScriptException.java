@@ -2,7 +2,7 @@ package com.pqqqqq.escript.lang.exception;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * An exception from within EScript's internals
  */
 public class EScriptException extends RuntimeException {

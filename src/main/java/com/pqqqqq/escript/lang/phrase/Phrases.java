@@ -1,9 +1,9 @@
 package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
 import com.pqqqqq.escript.lang.phrase.action.MessagePhrase;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
+import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
 import com.pqqqqq.escript.lang.phrase.block.CountPhrase;
 import com.pqqqqq.escript.lang.phrase.block.ElsePhrase;
 import com.pqqqqq.escript.lang.phrase.block.IfPhrase;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * A registry of phrases
  */
 public class Phrases extends Registry<Phrase> {

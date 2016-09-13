@@ -1,7 +1,5 @@
 package com.pqqqqq.escript.lang.exception;
 
-import com.pqqqqq.escript.lang.data.Sequencer;
-
 /**
  * Created by Kevin on 2016-09-09.
  * Thrown when a block if or else if doesn't exist yet

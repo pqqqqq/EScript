@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * The {@link Predicate} and {@link FileFilter} for a script {@link File}
  */
 public class ScriptPredicate implements Predicate<File>, FileFilter {

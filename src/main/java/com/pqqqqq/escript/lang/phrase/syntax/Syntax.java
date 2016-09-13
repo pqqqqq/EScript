@@ -8,7 +8,7 @@ import java.util.*;
 
 /**
  * Created by Kevin on 2016-09-07.
- *
+ * <p>
  * <pre>
  * Defines the necessary syntax a {@link Phrase} must fulfill
  * </pre>
@@ -57,7 +57,7 @@ public class Syntax {
      * </pre>
      *
      * @param string the string
-     * @param colon whether the syntax needs a colon at the end
+     * @param colon  whether the syntax needs a colon at the end
      * @return the new syntax
      */
     public static Syntax compile(String string, boolean colon) {

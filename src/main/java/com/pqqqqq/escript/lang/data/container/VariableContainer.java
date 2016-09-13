@@ -8,7 +8,7 @@ import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * A {@link DatumContainer} that attempts to resolve a {@link Variable}
  * </pre>

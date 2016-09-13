@@ -8,7 +8,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <pre>
  * The variable phrase, which will create, or modify a variable
  * Examples:

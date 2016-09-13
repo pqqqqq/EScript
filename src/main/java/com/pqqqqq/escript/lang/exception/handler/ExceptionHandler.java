@@ -57,6 +57,7 @@ public class ExceptionHandler {
 
     /**
      * Logs a given message with the {@link #timestamp()} included, and flushes the stream right away
+     *
      * @param message the message to log
      * @see #log(Object)
      */

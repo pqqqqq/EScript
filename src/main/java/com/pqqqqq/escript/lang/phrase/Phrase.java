@@ -12,7 +12,7 @@ import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <pre>
  * A phrase denotes the action that will be performed by a given {@link Line line}
  * A phrase instance can be stored, and is considered to be a compiled line.

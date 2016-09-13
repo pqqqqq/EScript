@@ -5,6 +5,7 @@ import com.pqqqqq.escript.lang.data.Sequencer;
 /**
  * Created by Kevin on 2016-09-09.
  * Thrown when the {@link Sequencer sequencer} fails to recognize the given symbol
+ *
  * @see Sequencer#sequence(String)
  */
 public class UnknownSymbolException extends EScriptException {

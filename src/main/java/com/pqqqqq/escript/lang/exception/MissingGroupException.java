@@ -4,8 +4,9 @@ import com.pqqqqq.escript.lang.line.Context;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * Thrown when a {@link Context context} cannot find a {@link com.pqqqqq.escript.lang.data.Literal literal} for the given group
+ *
  * @see Context#getLiteral(String)
  */
 public class MissingGroupException extends EScriptException {

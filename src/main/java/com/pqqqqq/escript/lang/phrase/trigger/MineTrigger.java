@@ -8,11 +8,9 @@ import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.trigger.Causes;
 import com.pqqqqq.escript.lang.trigger.Trigger;
 
-import java.util.regex.Pattern;
-
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * <pre>
  * The mine trigger phrase, which fires when a player breaks a block.
  * Some ways of doing this:

@@ -4,7 +4,6 @@ import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.file.FileSearcher;
 import com.pqqqqq.escript.lang.file.RawScript;
 import com.pqqqqq.escript.lang.file.ScriptFile;
-import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.trigger.Causes;
 
 import java.util.HashSet;
@@ -12,7 +11,7 @@ import java.util.Set;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * The main language file
  */
 public class Main {

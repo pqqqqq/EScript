@@ -3,12 +3,10 @@ package com.pqqqqq.escript.lang.phrase;
 import com.pqqqqq.escript.lang.phrase.syntax.Component;
 
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Kevin on 2016-08-31.
- *
+ * <p>
  * An analysis result, containing a phrase and the pattern used to match it.
  */
 public class AnalysisResult {
@@ -18,7 +16,7 @@ public class AnalysisResult {
     /**
      * Creates a new analysis result
      *
-     * @param phrase the {@link Phrase phrase}
+     * @param phrase  the {@link Phrase phrase}
      * @param strargs the strargs {@link Map map}
      */
     public AnalysisResult(Phrase phrase, Map<Component.ArgumentComponent, String> strargs) {

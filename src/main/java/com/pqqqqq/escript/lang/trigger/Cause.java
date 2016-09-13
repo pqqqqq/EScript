@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * Created by Kevin on 2016-09-02.
- *
+ * <p>
  * <pre>
  * A cause is a type of action that occurs in minecraft
  * {@link Trigger Triggers} make use of causes, with any special properties attached
