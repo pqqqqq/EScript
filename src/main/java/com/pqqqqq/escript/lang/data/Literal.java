@@ -14,7 +14,7 @@ import java.util.Optional;
  * An immutable literal type - a type that does not need to be resolved
  */
 public class Literal implements Datum {
-    private final Optional<Object> value;
+    private final Object value;
 
     /**
      * An empty literal, where the value is null
@@ -130,15 +130,15 @@ public class Literal implements Datum {
     }
 
     private Literal(Object value) { // DO NOT USE (unless you are fromObject or fromSequence)
-        this.value = Optional.ofNullable(value);
+        this.value = value;
     }
 
     /**
-     * Gets the literal's value as a plain {@link Optional} object
+     * Gets the literal's value as a plain object
      *
      * @return the object
      */
-    public Optional<Object> getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -148,7 +148,7 @@ public class Literal implements Datum {
      * @return true if empty
      */
     public boolean isEmpty() {
-        return !getValue().isPresent();
+        return getValue() == null;
     }
 
     /**
@@ -157,7 +157,7 @@ public class Literal implements Datum {
      * @return true if a string
      */
     public boolean isString() {
-        return getValue().isPresent() && getValue().get() instanceof String;
+        return !isEmpty() && getValue() instanceof String;
     }
 
     /**
@@ -166,7 +166,7 @@ public class Literal implements Datum {
      * @return true if a number
      */
     public boolean isNumber() {
-        return getValue().isPresent() && getValue().get() instanceof Double;
+        return !isEmpty() && getValue() instanceof Double;
     }
 
     /**
@@ -175,7 +175,7 @@ public class Literal implements Datum {
      * @return true if a boolean
      */
     public boolean isBoolean() {
-        return getValue().isPresent() && getValue().get() instanceof Boolean;
+        return !isEmpty() && getValue() instanceof Boolean;
     }
 
     /**
@@ -187,7 +187,7 @@ public class Literal implements Datum {
      * @return the string
      */
     public String asString() {
-        return isString() ? (String) getValue().get() : parseString().asString();
+        return isString() ? (String) getValue() : parseString().asString();
     }
 
     /**
@@ -199,7 +199,7 @@ public class Literal implements Datum {
      * @return the number
      */
     public Double asNumber() {
-        return isNumber() ? (Double) getValue().get() : parseNumber().asNumber();
+        return isNumber() ? (Double) getValue() : parseNumber().asNumber();
     }
 
     /**
@@ -211,7 +211,7 @@ public class Literal implements Datum {
      * @return the boolean
      */
     public Boolean asBoolean() {
-        return isBoolean() ? (Boolean) getValue().get() : parseBoolean().asBoolean();
+        return isBoolean() ? (Boolean) getValue() : parseBoolean().asBoolean();
     }
 
     private Literal parseString() { // Parses the value (no matter the value) into a literal with a string value
@@ -228,7 +228,7 @@ public class Literal implements Datum {
             }
         }
 
-        return fromObject(getValue().get().toString());
+        return fromObject(getValue().toString());
     }
 
     private Literal parseNumber() { // Attempts to parse the value into a literal with a number value

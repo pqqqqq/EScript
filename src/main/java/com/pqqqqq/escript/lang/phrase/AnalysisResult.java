@@ -2,6 +2,7 @@ package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.phrase.syntax.Component;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,9 +10,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Kevin on 2016-08-31.
  *
+ * <pre>
  * An analysis result, containing a phrase and the pattern used to match it.
+ * An analysis is {@link Serializable serializable}
+ * </pre>
  */
-public class AnalysisResult {
+public class AnalysisResult implements Serializable {
     private final Phrase phrase;
     private final Map<Component.ArgumentComponent, String> strargs;
 

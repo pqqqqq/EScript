@@ -2,6 +2,7 @@ package com.pqqqqq.escript.lang.phrase.syntax;
 
 import com.pqqqqq.escript.lang.line.Line;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -109,9 +110,10 @@ public interface Component {
      *
      * <pre>
      * An argument, which can have any value (as long as it follows the main syntax of the ES language)
+     * Argument components are also {@link Serializable serializable}
      * </pre>
      */
-    class ArgumentComponent implements Component {
+    class ArgumentComponent implements Component, Serializable {
         private final String name;
         private final boolean resolve;
         private final boolean sequence;

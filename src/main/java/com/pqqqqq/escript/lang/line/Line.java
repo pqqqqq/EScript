@@ -13,6 +13,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.util.string.StringUtils;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,13 +23,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * A script line, characterised by its raw script, line contents, its line number, and its {@link Phrase}
  */
-public class Line {
+public class Line implements Serializable {
     private final RawScript rawScript;
     private final String line;
     private final int lineNumber;
     private final int tabulations;
 
-    private final Set<Line> lineBlock;
+    private final List<Line> lineBlock;
 
     private final Phrase phrase;
     private final Map<Component.ArgumentComponent, String> strargs;
@@ -43,11 +44,11 @@ public class Line {
         return new Builder();
     }
 
-    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, AnalysisResult analysis, Set<Line> lineBlock) {
+    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, AnalysisResult analysis, List<Line> lineBlock) {
         this(rawScript, line, lineNumber, tabulations, analysis.getPhrase(), analysis.getStrargs(), lineBlock);
     }
 
-    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<Component.ArgumentComponent, String> strargs, Set<Line> lineBlock) {
+    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<Component.ArgumentComponent, String> strargs, List<Line> lineBlock) {
         this.rawScript = rawScript;
         this.line = StringUtils.from(line).trim(); // Trim line
         this.lineNumber = lineNumber;
@@ -56,10 +57,7 @@ public class Line {
         this.strargs = strargs;
         this.lineBlock = lineBlock;
 
-        this.strargs.forEach((k, v) -> {
-            DatumContainer container = k.doSequence() ? Sequencer.instance().sequence(v) : Literal.fromObject(v);
-            this.containers.put(k, container);
-        }); // Populate containers
+        this.strargs.forEach((k, v) -> this.containers.put(k, (k.doSequence() ? Sequencer.instance().sequence(v) : Literal.EMPTY))); // Populate containers
     }
 
     /**
@@ -104,9 +102,9 @@ public class Line {
      * This will be empty unless this line is a root for the next tabulation.
      * </pre>
      *
-     * @return the line block {@link Set set}
+     * @return the line block {@link List list}
      */
-    public Set<Line> getLineBlock() {
+    public List<Line> getLineBlock() {
         return lineBlock;
     }
 
@@ -193,7 +191,7 @@ public class Line {
 
         private Optional<AnalysisResult> analysis = Optional.empty();
 
-        private Set<Line.Builder> lineBlock = new HashSet<>();
+        private List<Line.Builder> lineBlock = new ArrayList<>();
 
         private Builder() {
         }
@@ -285,7 +283,7 @@ public class Line {
             AnalysisResult analysis = this.analysis.orElse(Phrases.instance().analyze(line).orElseThrow(() -> new UnknownPhraseException("Unknown phrase for line: \"%s\"", line)));
 
             // Convert each line builder into a line
-            Set<Line> lineBlock = new HashSet<>();
+            List<Line> lineBlock = new ArrayList<>();
             this.lineBlock.stream().map(buildableLine -> buildableLine.script(this.rawScript).build()).forEach(lineBlock::add);
 
             return new Line(checkNotNull(this.rawScript, "You must specify a script."), checkNotNull(this.line, "You must specify a line string."), checkNotNull(this.lineNumber, "You must specify a line number."),

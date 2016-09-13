@@ -1,6 +1,9 @@
 package com.pqqqqq.escript.lang.file;
 
+import com.pqqqqq.escript.lang.compile.ScriptCompiler;
+
 import java.io.File;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -11,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * A file that contains scripts.
  */
-public class ScriptFile implements Iterable<RawScript> {
+public class ScriptFile implements Iterable<RawScript>, Serializable {
     private final File file;
     private final Set<RawScript> scripts;
 
@@ -22,7 +25,7 @@ public class ScriptFile implements Iterable<RawScript> {
      * @return the new script file instance
      */
     public static ScriptFile from(File file) {
-        return new ScriptFile(checkNotNull(file, "File cannot be null"), FileLexer.from(file).lex().scripts());
+        return from(checkNotNull(file, "File cannot be null"), FileLexer.from(file).lex().scripts());
     }
 
     /**
@@ -34,7 +37,9 @@ public class ScriptFile implements Iterable<RawScript> {
      * @return the new script file instance
      */
     public static ScriptFile from(File file, Set<RawScript> scripts) {
-        return new ScriptFile(checkNotNull(file, "File cannot be null"), checkNotNull(scripts, "Scripts cannot be null"));
+        ScriptFile scriptFile = new ScriptFile(checkNotNull(file, "File cannot be null"), checkNotNull(scripts, "Scripts cannot be null"));
+        ScriptCompiler.from(scriptFile).compile(); // Compile here
+        return scriptFile;
     }
 
     private ScriptFile(File file, Set<RawScript> scripts) {

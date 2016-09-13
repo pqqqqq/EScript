@@ -1,17 +1,14 @@
 package com.pqqqqq.escript.lang.file;
 
-import com.pqqqqq.escript.lang.exception.EScriptException;
-import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
-import com.pqqqqq.escript.lang.exception.state.ESCompileTimeException;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.script.Properties;
 import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.trigger.Trigger;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,11 +17,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * A raw script, characterised only by strings of lines, and a containing script file.
  */
-public class RawScript {
+public class RawScript implements Serializable {
     private final File scriptFile;
     private final List<Line> lines;
 
-    private Optional<Trigger> trigger; // TODO final?
+    private Trigger trigger; // TODO final?
 
     /**
      * <p>Creates a new raw script instance from its {@link File script file}, and its contents.</p>
@@ -79,11 +76,11 @@ public class RawScript {
      *
      * @return the trigger
      */
-    public Optional<Trigger> getTrigger() {
+    public Trigger getTrigger() {
         return trigger;
     }
 
-    public void setTrigger(Optional<Trigger> trigger) { // No javadocs on purpose, this shouldn't be used
+    public void setTrigger(Trigger trigger) { // No javadocs on purpose, this shouldn't be used
         this.trigger = trigger;
     }
 

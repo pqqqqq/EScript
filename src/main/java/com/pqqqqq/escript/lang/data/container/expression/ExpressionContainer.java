@@ -2,6 +2,7 @@ package com.pqqqqq.escript.lang.data.container.expression;
 
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
 
+import java.io.Serializable;
 import java.util.function.Predicate;
 
 /**
@@ -57,6 +58,6 @@ public abstract class ExpressionContainer implements DatumContainer {
     /**
      * Represents an operator in an expression that inherits from a String {@link Predicate}
      */
-    public interface ExpressionOperator extends Predicate<String> {
+    public interface ExpressionOperator extends Predicate<String>, Serializable {
     }
 }

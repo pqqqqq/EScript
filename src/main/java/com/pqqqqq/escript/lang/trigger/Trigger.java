@@ -3,7 +3,7 @@ package com.pqqqqq.escript.lang.trigger;
 import com.pqqqqq.escript.lang.file.RawScript;
 import com.pqqqqq.escript.lang.script.Properties;
 
-import java.util.Optional;
+import java.io.Serializable;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -12,13 +12,13 @@ import java.util.Optional;
  * A trigger bridges a {@link RawScript raw script} to an array of {@link Cause cause}
  * </pre>
  */
-public class Trigger {
+public class Trigger implements Serializable {
     private final RawScript rawScript;
     private final Cause[] causes;
 
     public static Trigger from(RawScript rawScript, Cause... causes) {
         Trigger trigger = new Trigger(rawScript, causes);
-        rawScript.setTrigger(Optional.of(trigger));
+        rawScript.setTrigger(trigger);
 
         // Add trigger to each cause
         for (Cause cause : causes) {
