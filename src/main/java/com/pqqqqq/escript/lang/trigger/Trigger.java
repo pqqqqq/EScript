@@ -96,7 +96,7 @@ public class Trigger {
      * @param properties the properties
      */
     public void trigger(Properties properties) {
-        if (getPredicate().test(properties)) {
+        if (properties == null || getPredicate().test(properties)) {
             rawScript.toScript(properties).execute();
         }
     }
