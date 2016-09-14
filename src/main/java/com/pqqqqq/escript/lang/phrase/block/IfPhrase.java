@@ -11,8 +11,8 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  * <pre>
  * The if phrase, which runs its block if the inner condition is true
  * Examples:
- *      <code>if 1 is 1:
- *      if "hello" is not "goodbye":</code>
+ *      <code>if 1 equals 1:
+ *      if "hello" is not equal to "goodbye":</code>
  * </pre>
  */
 public class IfPhrase implements Phrase {

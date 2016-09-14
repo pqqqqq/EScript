@@ -197,7 +197,6 @@ public class StringUtils {
         if (!builder.isEmpty()) {
             list.add(builder);
         }
-
         return list;
     }
 

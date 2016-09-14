@@ -19,7 +19,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 public class WhilePhrase implements Phrase {
     private static final WhilePhrase INSTANCE = new WhilePhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("while %Condition", true)
+            Syntax.compile("while #Condition", true)
     };
 
     /**

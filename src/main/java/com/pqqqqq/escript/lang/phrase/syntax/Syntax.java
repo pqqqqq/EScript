@@ -50,7 +50,7 @@ public class Syntax {
      * <li>Each {@link Component component} is separated by a whitespace character</li>
      * <li>If there is a dollar sign '$' at the start, it is treated as a {@link Component.ArgumentComponent argument}
      * <li>If there is a up sign '^' at the start, it is treated as a argument, but one which should not be sequenced
-     * <li>If there is a up sign '%' at the start, it is treated as a argument, but one which should not be resolved
+     * <li>If there is a pound sign '#' at the start, it is treated as a argument, but one which should not be resolved
      * <li>Otherwise, it is treated as a {@link Component.TextComponent text component}
      * <li>If there is a question mark '?' at the end, it is wrapped in a {@link Component.OptionalComponent optional component}
      * <li>If there is a asterisk '*' at the end, it is wrapped in an {@link Component.IfComponent if component}
@@ -81,7 +81,7 @@ public class Syntax {
                 components.add(wrap.wrap(Component.ArgumentComponent.from(stringComponent.substring(1))));
             } else if (stringComponent.startsWith("^")) { // ^ = argument no sequence
                 components.add(wrap.wrap(Component.ArgumentComponent.from(stringComponent.substring(1), false, false)));
-            } else if (stringComponent.startsWith("%")) { // % = argument no resolve
+            } else if (stringComponent.startsWith("#")) { // # = argument no resolve
                 components.add(wrap.wrap(Component.ArgumentComponent.from(stringComponent.substring(1), false)));
             } else {
                 components.add(wrap.wrap(Component.TextComponent.from(stringComponent.split("\\|")))); // Split by pipe (ors)
@@ -164,9 +164,14 @@ public class Syntax {
             Component nextComponent = compQueue.peek();
             String nextString;
 
+            main:
             while ((nextString = stringQueue.peek()) != null) {
-                if (nextComponent != null && nextComponent.matches(nextString)) {
-                    break;
+                for (Component testComp : compQueue) {
+                    if (testComp.matches(nextString)) { // Next component matches, ends the argument eating
+                        break main;
+                    } else if (!testComp.isOptional() && !testComp.isIf()) { // Not optional, continue argument eating
+                        break;
+                    }
                 }
 
                 stringComponent += " " + stringQueue.poll(); // Poll it out

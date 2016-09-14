@@ -1,13 +1,13 @@
 package com.pqqqqq.escript.lang.data;
 
-import com.pqqqqq.escript.lang.data.container.*;
-import com.pqqqqq.escript.lang.data.container.expression.ArithmeticContainer;
-import com.pqqqqq.escript.lang.data.container.expression.ConditionalExpressionContainer;
+import com.pqqqqq.escript.lang.data.container.DatumContainer;
+import com.pqqqqq.escript.lang.data.container.ListContainer;
+import com.pqqqqq.escript.lang.data.container.PhraseContainer;
+import com.pqqqqq.escript.lang.data.container.VariableContainer;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Phrases;
-import com.pqqqqq.escript.lang.util.string.SplitSequence;
 import com.pqqqqq.escript.lang.util.string.StringUtils;
 
 import java.util.ArrayList;
@@ -25,10 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * </pre>
  */
 public class Sequencer {
-    private static final String[][] LITERAL_DELIMITER_GROUPS = {{" + ", " - "}, {"*", "/", "%"}, {"^", "`"}}; // The +/- group is first since we want these split first, not last
-    private static final String[][] CONDITION_DELIMITER_GROUPS = {{"is not", "less than or equal to", "greater than or equal to", "dissimilar"}, {"is", "less than", "greater than", "similar"}}; // Different groups because of the crossing of delimiters
     private static final Sequencer INSTANCE = new Sequencer();
-    private final Condition conditionInstance = new Condition();
 
     /**
      * Gets the main sequencer instance
@@ -59,86 +56,36 @@ public class Sequencer {
             strarg = strarg.substring(1, strarg.length() - 1);
         }
 
-        // Check if it's a condition
-        Optional<DatumContainer> conditionLiteral = conditionInstance.parse(strarg);
-        if (conditionLiteral.isPresent()) {
-            return conditionLiteral.get();
+        // Check if it's a list
+        if (strarg.startsWith("{") && strarg.endsWith("}")) {
+            String braceTrimmed = strarg.substring(1, strarg.length() - 1).trim();
+            if (braceTrimmed.isEmpty()) { // More optimization here
+                return Literal.EMPTY_LIST;
+            }
+
+            List<DatumContainer> containers = new ArrayList<>();
+            StringUtils.from(braceTrimmed).parseSplit(",").stream().map(this::sequence).forEach(containers::add);
+            return new ListContainer(containers);
         }
 
-        SplitSequence triple = StringUtils.from(strarg).parseNextSequence(LITERAL_DELIMITER_GROUPS); // Split into ordered triple segments
-        if (triple == null || triple.getDelimiter() == null) { // Check if there's no split string
-            // TODO logic needed!!
-
-            // TODO Is it okay to have plain data and variables before phrases?
-            // TODO UPDATE: Don't think so
-
-            // Check if it's a list
-            if (strarg.startsWith("{") && strarg.endsWith("}")) {
-                List<DatumContainer> containers = new ArrayList<>();
-                StringUtils.from(strarg.substring(1, strarg.length() - 1)).parseSplit(",").stream().map(this::sequence).forEach(containers::add);
-                return new ListContainer(containers);
-            }
-
-            // Check if it's a phrase
-            Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg);
-            if (analysis.isPresent()) {
-                return new PhraseContainer(Literal.fromObject(strarg), analysis.get());
-            }
-
-            // Check plain data
-            Optional<Literal> literal = Literal.fromSequence(strarg);
-            if (literal.isPresent()) {
-                return literal.get();
-            }
-
-            // Check if it's a variable
-            if (strarg.startsWith("$")) {
-                return new VariableContainer(Literal.fromObject(strarg.substring(1)));
-            }
-
-            // Otherwise, throw an error
-            throw new UnknownSymbolException("Cannot recognize symbol/datum: %s", strarg);
+        // Check if it's a phrase
+        Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg);
+        if (analysis.isPresent()) {
+            return new PhraseContainer(Literal.fromObject(strarg), analysis.get());
         }
 
-        return new ArithmeticContainer(sequence(triple.getBeforeSegment()), sequence(triple.getAfterSegment()), triple.getDelimiter(), strarg);
-    }
-
-    class Condition {
-        private Condition() {
+        // Check plain data
+        Optional<Literal> literal = Literal.fromSequence(strarg);
+        if (literal.isPresent()) {
+            return literal.get();
         }
 
-        Optional<DatumContainer> parse(String strarg) {
-            List<String> splitOr = StringUtils.from(strarg).parseSplit(" or "); // 'Or' takes precedence over 'and'
-            List<List<ConditionalExpressionContainer>> mainExpressionList = new ArrayList<>();
-
-            for (String orCondition : splitOr) {
-                List<String> splitAnd = StringUtils.from(orCondition).parseSplit(" and ");
-                List<ConditionalExpressionContainer> andExpressionList = new ArrayList<>();
-
-                for (String condition : splitAnd) {
-                    SplitSequence triple = StringUtils.from(condition).parseNextSequence(CONDITION_DELIMITER_GROUPS);
-
-                    if (triple == null || triple.getDelimiter() == null) {
-                        return Optional.empty(); // Need exactly a left side and a right side
-                    }
-
-                    // Get literals for these values
-                    DatumContainer leftSideLiteral = Sequencer.this.sequence(triple.getBeforeSegment());
-                    DatumContainer rightSideLiteral = Sequencer.this.sequence(triple.getAfterSegment());
-                    String comparator = triple.getDelimiter();
-
-                    ConditionalExpressionContainer container = new ConditionalExpressionContainer(leftSideLiteral, rightSideLiteral, comparator);
-                    if (splitAnd.size() == 1 && splitOr.size() == 1) { // If this is the only thing, return this alone
-                        return Optional.of(container);
-                    }
-
-                    andExpressionList.add(container);
-                }
-
-                mainExpressionList.add(andExpressionList);
-            }
-
-            return Optional.of(new ConditionContainer(mainExpressionList));
+        // Check if it's a variable
+        if (strarg.startsWith("$")) {
+            return new VariableContainer(Literal.fromObject(strarg.substring(1)));
         }
+
+        // Otherwise, throw an error
+        throw new UnknownSymbolException("Cannot recognize symbol/datum: %s", strarg);
     }
 }

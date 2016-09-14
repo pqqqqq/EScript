@@ -1,7 +1,6 @@
 package com.pqqqqq.escript.lang.data;
 
 import com.google.common.collect.ImmutableList;
-import com.pqqqqq.escript.lang.data.container.expression.ArithmeticContainer;
 import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.util.string.StringUtils;
@@ -312,6 +311,22 @@ public class Literal implements Datum {
             return Literal.fromObject(asNumber() + other.asNumber());
         }
 
+        if (isList()) {
+            List<Literal> list = new ArrayList<>();
+            list.addAll(asList());
+
+            if (other.isList()) { // If the other is also a list, combine the lists
+                list.addAll(other.asList());
+            } else { // Otherwise, just append the other to this list
+                if (!other.isEmpty()) {
+                    list.add(other);
+                }
+            }
+            return Literal.fromObject(list);
+        } else if (other.isList()) {
+            return other.add(this); // Reverse this, so we don't need to rewrite code
+        }
+
         return Literal.fromObject(asString() + other.asString()); // Everything can be a string
     }
 
@@ -375,34 +390,6 @@ public class Literal implements Datum {
         return Literal.fromObject(asNumber() % other.asNumber());
     }
 
-    /**
-     * Performs the given arithmetic on the two literals
-     *
-     * @param other    the other literal
-     * @param operator the operation to perform
-     * @return the resultant literal
-     */
-    public Literal arithmetic(Literal other, ArithmeticContainer.ArithmeticOperator operator) {
-        switch (operator) {
-            case ADDITION:
-                return add(other);
-            case SUBTRACTION:
-                return sub(other);
-            case MULTIPLICATION:
-                return mult(other);
-            case DIVISION:
-                return div(other);
-            case EXPONENTIAL:
-                return pow(other);
-            case ROOT:
-                return root(other);
-            case MODULUS:
-                return mod(other);
-            default:
-                throw new IllegalStateException("Unknown arithmetic operator: " + operator);
-        }
-    }
-
     @Override
     public Literal resolve(Context ctx) {
         return this; // Resolves itself
@@ -411,5 +398,15 @@ public class Literal implements Datum {
     @Override
     public String toString() {
         return asString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Literal && ((Literal) obj).getValue().equals(getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return getValue().hashCode();
     }
 }

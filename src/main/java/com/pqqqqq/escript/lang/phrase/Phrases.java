@@ -4,7 +4,10 @@ import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.action.MessagePhrase;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
 import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
+import com.pqqqqq.escript.lang.phrase.arithmetic.*;
 import com.pqqqqq.escript.lang.phrase.block.*;
+import com.pqqqqq.escript.lang.phrase.condition.*;
+import com.pqqqqq.escript.lang.phrase.getters.ContainsPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerHealth;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerName;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
@@ -19,6 +22,7 @@ import java.util.Optional;
  */
 public class Phrases extends Registry<Phrase> {
     // REGISTRY \\
+    // DO NOT TOUCH THE ORDER OF THESE FIELDS, IT WILL MESS UP EVERYTHING \\
 
     // TRIGGERS
     public static final Phrase MINE_TRIGGER = MineTrigger.instance();
@@ -32,12 +36,37 @@ public class Phrases extends Registry<Phrase> {
     public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();
     public static final Phrase PLAYER_NAME = PlayerName.instance();
 
+    public static final Phrase CONTAINS = ContainsPhrase.instance();
+
     // BLOCKS
     public static final Phrase IF = IfPhrase.instance();
     public static final Phrase ELSE = ElsePhrase.instance();
     public static final Phrase WHILE = WhilePhrase.instance();
     public static final Phrase COUNT = CountPhrase.instance();
     public static final Phrase FOR_EACH = ForEachPhrase.instance();
+
+    // CONDITIONS
+    // CONDITIONS MUST BE AFTER EVERY PHRASE, EXCEPT ARITHMETIC, SINCE THEIR BEGINNING LITERAL WILL EAT THINGS SUCH AS THE 'if' IN IF PHRASES
+
+    public static final Phrase DISSIMILAR = DissimilarPhrase.instance();
+    public static final Phrase SIMILAR = SimilarPhrase.instance();
+    public static final Phrase EQUALS = EqualsPhrase.instance();
+    public static final Phrase NOT_EQUALS = NotEqualsPhrase.instance();
+    public static final Phrase GREATER_THAN = GreaterThan.instance();
+    public static final Phrase LESS_THAN = LessThan.instance();
+    public static final Phrase GREATER_THAN_OET = GreaterThanOET.instance();
+    public static final Phrase LESS_THAN_OET = LessThanOET.instance();
+
+    // ARITHMETIC
+    // ARITHMETIC MUST BE AFTER EVERY PHRASE, SINCE THEIR BEGINNING LITERAL WILL EAT THINGS SUCH AS THE 'if' IN IF PHRASES
+
+    public static final Phrase POWER = PowerPhrase.instance();
+    public static final Phrase ROOT = RootPhrase.instance();
+    public static final Phrase MULTIPLY = MultiplyPhrase.instance();
+    public static final Phrase DIVIDE = DividePhrase.instance();
+    public static final Phrase ADD = AddPhrase.instance();
+    public static final Phrase SUBTRACT = SubtractPhrase.instance();
+    public static final Phrase MODULUS = ModulusPhrase.instance();
 
     // END REGISTRY \\
 
