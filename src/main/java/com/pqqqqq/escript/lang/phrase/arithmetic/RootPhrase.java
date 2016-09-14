@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.arithmetic;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -17,7 +16,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      root 2 of 4</code>
  * </pre>
  */
-public class RootPhrase implements Phrase {
+public class RootPhrase implements ArithmeticPhrase {
     private static final RootPhrase INSTANCE = new RootPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 //|root $Literal2"),

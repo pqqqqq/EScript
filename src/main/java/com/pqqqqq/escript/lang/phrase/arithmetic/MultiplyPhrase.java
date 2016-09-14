@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.arithmetic;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -18,7 +17,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      2 times 3</code>
  * </pre>
  */
-public class MultiplyPhrase implements Phrase {
+public class MultiplyPhrase implements ArithmeticPhrase {
     private static final MultiplyPhrase INSTANCE = new MultiplyPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 *|times|multiply|multiplied by? $Literal2"),

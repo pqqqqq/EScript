@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.arithmetic;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -19,7 +18,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      2 minus 3</code>
  * </pre>
  */
-public class SubtractPhrase implements Phrase {
+public class SubtractPhrase implements ArithmeticPhrase {
     private static final SubtractPhrase INSTANCE = new SubtractPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 -|minus $Literal2"),

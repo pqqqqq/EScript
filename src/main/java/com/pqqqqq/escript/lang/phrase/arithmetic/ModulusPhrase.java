@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.arithmetic;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -17,7 +16,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      2 mod 2</code>
  * </pre>
  */
-public class ModulusPhrase implements Phrase {
+public class ModulusPhrase implements ArithmeticPhrase {
     private static final ModulusPhrase INSTANCE = new ModulusPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 %|mod|modulus $Literal2"),

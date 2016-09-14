@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.condition;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -17,7 +16,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      $var similar "hello"</code>
  * </pre>
  */
-public class SimilarPhrase implements Phrase {
+public class SimilarPhrase implements ConditionalPhrase {
     private static final SimilarPhrase INSTANCE = new SimilarPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 is? similar to? $Literal2")

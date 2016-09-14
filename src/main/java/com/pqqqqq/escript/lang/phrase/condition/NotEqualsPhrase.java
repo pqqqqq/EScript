@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.condition;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -18,7 +17,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      $var does not equal "Hello"</code>
  * </pre>
  */
-public class NotEqualsPhrase implements Phrase {
+public class NotEqualsPhrase implements ConditionalPhrase {
     private static final NotEqualsPhrase INSTANCE = new NotEqualsPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 is|does? not equal|equals to? $Literal2"),

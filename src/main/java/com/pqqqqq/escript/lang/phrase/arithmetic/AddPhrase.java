@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.arithmetic;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -19,7 +18,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      add "hello" to {}</code>
  * </pre>
  */
-public class AddPhrase implements Phrase {
+public class AddPhrase implements ArithmeticPhrase {
     private static final AddPhrase INSTANCE = new AddPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 +|plus|add|added to? $Literal2"),

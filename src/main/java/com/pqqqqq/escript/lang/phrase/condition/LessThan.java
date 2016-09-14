@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.condition;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -17,7 +16,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      $var lower than 5</code>
  * </pre>
  */
-public class LessThan implements Phrase {
+public class LessThan implements ConditionalPhrase {
     private static final LessThan INSTANCE = new LessThan();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 is? less|lesser|lower than|then $Literal2")

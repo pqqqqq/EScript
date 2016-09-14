@@ -18,7 +18,7 @@ import java.util.Optional;
  * A phrase instance can be stored, and is considered to be a compiled line.
  * </pre>
  */
-public interface Phrase extends RegistryEntry {
+public interface Phrase extends RegistryEntry, Comparable<Phrase> {
 
     /**
      * Executes the phrase under the {@link Context context}
@@ -45,6 +45,19 @@ public interface Phrase extends RegistryEntry {
      */
     default Script.State getRunState() {
         return Script.State.RUNTIME;
+    }
+
+    /**
+     * <pre>
+     * Gets the priority number for this phrase.
+     * If the priority for one phrase is higher than another, the phrase with a higher priority will attempt to be {@link #matches(Line) matched} first.
+     * By default, a phrase's priority is 0.
+     * </pre>
+     *
+     * @return the priority
+     */
+    default int getPriority() {
+        return 0;
     }
 
     /**
@@ -81,4 +94,16 @@ public interface Phrase extends RegistryEntry {
         return Optional.empty();
     }
 
+    @Override
+    default int compareTo(Phrase other) { // Override for comparable
+        if (getPriority() > other.getPriority()) { // Higher priority = closer to first in list
+            return -1;
+        }
+
+        if (getPriority() < other.getPriority()) { // Lower priority = closer to last in list
+            return 1;
+        }
+
+        return 0; // Same means keep natural order
+    }
 }

@@ -2,7 +2,6 @@ package com.pqqqqq.escript.lang.phrase.condition;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
@@ -17,7 +16,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      $var lower than or equals 5</code>
  * </pre>
  */
-public class GreaterThanOET implements Phrase {
+public class GreaterThanOET implements ConditionalPhrase {
     private static final GreaterThanOET INSTANCE = new GreaterThanOET();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 is? greater|more|higher than|then or is|does? equal|equals to? $Literal2")

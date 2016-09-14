@@ -11,7 +11,7 @@ import com.pqqqqq.escript.lang.phrase.getters.ContainsPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerHealth;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerName;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
-import com.pqqqqq.escript.lang.registry.Registry;
+import com.pqqqqq.escript.lang.registry.SortedRegistry;
 
 import java.util.Optional;
 
@@ -20,9 +20,8 @@ import java.util.Optional;
  * <p>
  * A registry of phrases
  */
-public class Phrases extends Registry<Phrase> {
+public class Phrases extends SortedRegistry<Phrase> {
     // REGISTRY \\
-    // DO NOT TOUCH THE ORDER OF THESE FIELDS, IT WILL MESS UP EVERYTHING \\
 
     // TRIGGERS
     public static final Phrase MINE_TRIGGER = MineTrigger.instance();
@@ -46,8 +45,6 @@ public class Phrases extends Registry<Phrase> {
     public static final Phrase FOR_EACH = ForEachPhrase.instance();
 
     // CONDITIONS
-    // CONDITIONS MUST BE AFTER EVERY PHRASE, EXCEPT ARITHMETIC, SINCE THEIR BEGINNING LITERAL WILL EAT THINGS SUCH AS THE 'if' IN IF PHRASES
-
     public static final Phrase DISSIMILAR = DissimilarPhrase.instance();
     public static final Phrase SIMILAR = SimilarPhrase.instance();
     public static final Phrase EQUALS = EqualsPhrase.instance();
@@ -58,8 +55,6 @@ public class Phrases extends Registry<Phrase> {
     public static final Phrase LESS_THAN_OET = LessThanOET.instance();
 
     // ARITHMETIC
-    // ARITHMETIC MUST BE AFTER EVERY PHRASE, SINCE THEIR BEGINNING LITERAL WILL EAT THINGS SUCH AS THE 'if' IN IF PHRASES
-
     public static final Phrase POWER = PowerPhrase.instance();
     public static final Phrase ROOT = RootPhrase.instance();
     public static final Phrase MULTIPLY = MultiplyPhrase.instance();
