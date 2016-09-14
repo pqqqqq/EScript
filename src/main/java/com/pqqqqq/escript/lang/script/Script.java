@@ -47,7 +47,11 @@ public class Script extends Environment {
      * @return the new instance
      */
     public static Script from(RawScript rawScript, Properties properties) {
-        return new Script(rawScript, properties);
+        if (properties == null) {
+            return from(rawScript);
+        } else {
+            return new Script(rawScript, properties);
+        }
     }
 
     private Script(RawScript rawScript, Properties properties) {

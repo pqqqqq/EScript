@@ -1,7 +1,8 @@
-package com.pqqqqq.escript.lang.trigger;
+package com.pqqqqq.escript.lang.trigger.cause;
 
 import com.pqqqqq.escript.lang.registry.RegistryEntry;
 import com.pqqqqq.escript.lang.script.Properties;
+import com.pqqqqq.escript.lang.trigger.Trigger;
 
 import java.util.HashSet;
 import java.util.Set;

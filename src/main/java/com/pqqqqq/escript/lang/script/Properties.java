@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.script;
 
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Event;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -11,6 +12,7 @@ import org.spongepowered.api.entity.living.player.Player;
  */
 public class Properties {
     private static final Properties EMPTY = builder().build();
+    private final Event event; // Due to most triggers using events, this won't be optional (but can be null)
     private final Player player; // Due to most triggers using player, this won't be optional (but can be null)
 
     /**
@@ -34,8 +36,18 @@ public class Properties {
         return EMPTY;
     }
 
-    private Properties(Player player) {
+    private Properties(Event event, Player player) {
+        this.event = event;
         this.player = player;
+    }
+
+    /**
+     * Gets the associated {@link Event event}
+     *
+     * @return the event
+     */
+    public Event getEvent() {
+        return event;
     }
 
     /**
@@ -51,9 +63,21 @@ public class Properties {
      * The properties builder
      */
     public static class Builder {
+        private Event event = null;
         private Player player = null;
 
         private Builder() {
+        }
+
+        /**
+         * Sets the {@link Event event} of the script's properties
+         *
+         * @param event the new event
+         * @return this builder, for chaining
+         */
+        public Builder event(Event event) {
+            this.event = event;
+            return this;
         }
 
         /**
@@ -73,7 +97,7 @@ public class Properties {
          * @return the new instance
          */
         public Properties build() {
-            return new Properties(player);
+            return new Properties(event, player);
         }
     }
 }

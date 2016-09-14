@@ -29,7 +29,7 @@ public class Phrases extends SortedRegistry<Phrase> {
     // ACTIONS
     public static final Phrase PRINT = PrintPhrase.instance();
     public static final Phrase MESSAGE = MessagePhrase.instance();
-    public static final Phrase CREATE_VARIABLE = VariablePhrase.instance();
+    public static final Phrase VARIABLE = VariablePhrase.instance();
 
     // GETTERS
     public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();
@@ -45,6 +45,8 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase FOR_EACH = ForEachPhrase.instance();
 
     // CONDITIONS
+    public static final Phrase OR = OrPhrase.instance();
+    public static final Phrase AND = AddPhrase.instance();
     public static final Phrase DISSIMILAR = DissimilarPhrase.instance();
     public static final Phrase SIMILAR = SimilarPhrase.instance();
     public static final Phrase EQUALS = EqualsPhrase.instance();

@@ -5,6 +5,7 @@ import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
 /**
  * Created by Kevin on 2016-08-31.
@@ -51,7 +52,7 @@ public class MessagePhrase implements Phrase {
         Player player = ctx.getPlayer("Player");
         String message = ctx.getLiteral("Message").asString();
 
-        //player.sendMessage(Text.of(message));
+        player.sendMessage(Text.of(message));
         return Result.success();
     }
 }

@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.event;
 
 import com.pqqqqq.escript.lang.script.Properties;
-import com.pqqqqq.escript.lang.trigger.Causes;
+import com.pqqqqq.escript.lang.trigger.cause.Causes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -20,7 +20,7 @@ public class MainEvents {
 
         if (player.isPresent()) {
             if (event instanceof ChangeBlockEvent.Break) {
-                Causes.MINE.trigger(Properties.builder().player(player.get()).build()); // TODO more variable stuff!!
+                Causes.MINE.trigger(Properties.builder().event(event).player(player.get()).build()); // TODO more variable stuff!!
             }
         }
     }

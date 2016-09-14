@@ -161,17 +161,20 @@ public class Syntax {
 
         if (component.isArgument()) { // Arguments should continue until the next component matches
             String stringComponent = stringQueue.poll(); // We're okay to poll
-            Component nextComponent = compQueue.peek();
             String nextString;
 
             main:
             while ((nextString = stringQueue.peek()) != null) {
+                boolean first = true;
+
                 for (Component testComp : compQueue) {
-                    if (testComp.matches(nextString)) { // Next component matches, ends the argument eating
+                    if (testComp.matches(nextString) && (first || !testComp.isIf())) { // Next component matches, ends the argument eating. If an if is here, then if its first it's okay, otherwise not
                         break main;
                     } else if (!testComp.isOptional() && !testComp.isIf()) { // Not optional, continue argument eating
                         break;
                     }
+
+                    first = false;
                 }
 
                 stringComponent += " " + stringQueue.poll(); // Poll it out

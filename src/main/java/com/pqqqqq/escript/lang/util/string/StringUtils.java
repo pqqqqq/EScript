@@ -1,5 +1,7 @@
 package com.pqqqqq.escript.lang.util.string;
 
+import org.spongepowered.api.text.serializer.TextSerializers;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,8 +85,7 @@ public class StringUtils {
             return null;
         }
 
-        return string;
-        //return TextSerializers.formattingCode('&').replaceCodes(getString(), TextSerializers.LEGACY_FORMATTING_CODE);
+        return TextSerializers.formattingCode('&').replaceCodes(getString(), TextSerializers.LEGACY_FORMATTING_CODE);
 
         //return str.replaceAll("&([0-9a-fA-FkKlLmMnNoOrR])", "§$1");
     }

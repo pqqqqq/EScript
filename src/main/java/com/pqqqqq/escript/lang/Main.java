@@ -4,7 +4,7 @@ import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.file.FileSearcher;
 import com.pqqqqq.escript.lang.file.RawScript;
 import com.pqqqqq.escript.lang.file.ScriptFile;
-import com.pqqqqq.escript.lang.trigger.Causes;
+import com.pqqqqq.escript.lang.trigger.cause.Causes;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,6 +1,7 @@
-package com.pqqqqq.escript.lang.trigger;
+package com.pqqqqq.escript.lang.trigger.cause;
 
 import com.pqqqqq.escript.lang.registry.Registry;
+import com.pqqqqq.escript.lang.trigger.Trigger;
 
 /**
  * Created by Kevin on 2016-09-02.
