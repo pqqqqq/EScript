@@ -19,7 +19,7 @@ import org.spongepowered.api.plugin.Plugin;
  */
 @Plugin(id = EScript.ID, name = EScript.NAME, version = EScript.VERSION, authors = EScript.AUTHORS, description = EScript.DESCRIPTION)
 public class EScript {
-    public static final String ID = "com.pqqqqq.escript";
+    public static final String ID = "escript";
     public static final String NAME = "EScript";
     public static final String VERSION = "0.0.1-SNAPSHOT";
     public static final String AUTHORS = "Pqqqqq";

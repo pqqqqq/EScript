@@ -3,6 +3,9 @@ package com.pqqqqq.escript.lang.script;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 
+import java.util.Map;
+import java.util.Optional;
+
 /**
  * Created by Kevin on 2016-09-02.
  * <p>
@@ -14,6 +17,8 @@ public class Properties {
     private static final Properties EMPTY = builder().build();
     private final Event event; // Due to most triggers using events, this won't be optional (but can be null)
     private final Player player; // Due to most triggers using player, this won't be optional (but can be null)
+
+    private final Map<String, Object> variables;
 
     /**
      * Creates a builder instance
@@ -36,9 +41,10 @@ public class Properties {
         return EMPTY;
     }
 
-    private Properties(Event event, Player player) {
+    private Properties(Event event, Player player, Map<String, Object> variables) {
         this.event = event;
         this.player = player;
+        this.variables = variables;
     }
 
     /**
@@ -60,11 +66,31 @@ public class Properties {
     }
 
     /**
+     * Gets the variable only if it contains the given class type
+     *
+     * @param variable the variable name
+     * @param type the class type of the variable
+     * @param <T> the generic type fo teh variable
+     * @return the variable, or {@link Optional#empty()} if no variable with that name and type exists
+     */
+    public <T> Optional<T> getVariable(String variable, Class<T> type) {
+        Object var = this.variables.get(variable);
+        if (var == null) {
+            return Optional.empty();
+        } else if (!type.isInstance(var)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(type.cast(var)); // Cast to it
+        }
+    }
+
+    /**
      * The properties builder
      */
     public static class Builder {
         private Event event = null;
         private Player player = null;
+        private Map<String, Object> variables = null;
 
         private Builder() {
         }
@@ -92,12 +118,23 @@ public class Properties {
         }
 
         /**
+         * Sets the map of variables
+         *
+         * @param variables the variable map
+         * @return this builder, for chaining
+         */
+        public Builder variables(Map<String, Object> variables) {
+            this.variables = variables;
+            return this;
+        }
+
+        /**
          * Builds the {@link Properties properties} instance
          *
          * @return the new instance
          */
         public Properties build() {
-            return new Properties(event, player);
+            return new Properties(event, player, variables);
         }
     }
 }

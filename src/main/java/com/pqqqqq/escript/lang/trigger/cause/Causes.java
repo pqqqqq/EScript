@@ -12,6 +12,7 @@ public class Causes extends Registry<Cause> {
     // REGISTRY \\
 
     public static final Cause MINE = new Cause("mine");
+    public static final Cause PLACE = new Cause("place");
 
     // END REGISTRY \\
 

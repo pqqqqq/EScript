@@ -11,6 +11,7 @@ import com.pqqqqq.escript.lang.phrase.getters.ContainsPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerHealth;
 import com.pqqqqq.escript.lang.phrase.getters.PlayerName;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
+import com.pqqqqq.escript.lang.phrase.trigger.PlaceTrigger;
 import com.pqqqqq.escript.lang.registry.SortedRegistry;
 
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class Phrases extends SortedRegistry<Phrase> {
 
     // TRIGGERS
     public static final Phrase MINE_TRIGGER = MineTrigger.instance();
+    public static final Phrase PLACE_TRIGGER = PlaceTrigger.instance();
 
     // ACTIONS
     public static final Phrase PRINT = PrintPhrase.instance();

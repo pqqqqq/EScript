@@ -64,6 +64,8 @@ public class FileLexer {
             while ((line = br.readLine()) != null) {
                 this.lines.add(line); // Add the line
             }
+
+            br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

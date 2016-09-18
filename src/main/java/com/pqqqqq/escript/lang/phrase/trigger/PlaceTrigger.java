@@ -18,35 +18,32 @@ import java.util.Optional;
  * Created by Kevin on 2016-08-31.
  * <p>
  * <pre>
- * The mine trigger phrase, which fires when a player breaks a block.
+ * The place trigger phrase, which fires when a player places a block.
  * Some ways of doing this:
  *
- *     <code>on mine of stone:
- *     when stone is mined:
- *     if stone is mined:
- *     if mined stone:</code>
+ *     <code>on place of stone:
+ *     when stone is placed:
+ *     if stone is placed:
+ *     if placed stone:</code>
  * </pre>
  */
-public class MineTrigger implements Phrase {
-    private static final MineTrigger INSTANCE = new MineTrigger();
+public class PlaceTrigger implements Phrase {
+    private static final PlaceTrigger INSTANCE = new PlaceTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if $MineType is? mine|mined|broken|break|breaked", true),
-            Syntax.compile("on mine|mining|brake|broken of? $MineType", true)
-
-            /*Pattern.compile("^(when|if)(\\s+?)(?<MineType>\\S+?)(\\s+?)(is(\\s*?))?mine(d)?:$", Pattern.CASE_INSENSITIVE),
-            Pattern.compile("^on(\\s+?)(mine|mining)(\\s+?)(of(\\s*?))?(?<MineType>\\S+?):$", Pattern.CASE_INSENSITIVE)*/
+            Syntax.compile("when|if $PlaceType is? place|placed", true),
+            Syntax.compile("on place|placed|placement of? $PlaceType", true)
     };
 
     /**
-     * Gets the main mine trigger instance
+     * Gets the main place trigger instance
      *
      * @return the instance
      */
-    public static MineTrigger instance() {
+    public static PlaceTrigger instance() {
         return INSTANCE;
     }
 
-    private MineTrigger() {
+    private PlaceTrigger() {
     }
 
     @Override
@@ -61,13 +58,13 @@ public class MineTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        String mineType = ctx.getLiteral("MineType").asString();
-        BlockType blockType = Sponge.getRegistry().getType(BlockType.class, mineType).orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", mineType));
+        String placeType = ctx.getLiteral("PlaceType").asString();
+        BlockType blockType = Sponge.getRegistry().getType(BlockType.class, placeType).orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", placeType));
 
         Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
             Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
             return block.isPresent() && block.get().getState().getType().equals(blockType);
-        }, Causes.MINE);
+        }, Causes.PLACE);
         return Result.success();
     }
 }
