@@ -14,6 +14,9 @@ public class Causes extends Registry<Cause> {
     public static final Cause MINE = new Cause("mine");
     public static final Cause PLACE = new Cause("place");
 
+    public static final Cause SERVER_START = new Cause("serverstart");
+    public static final Cause SERVER_STOP = new Cause("serverstop");
+
     // END REGISTRY \\
 
     private static final Causes INSTANCE = new Causes();
