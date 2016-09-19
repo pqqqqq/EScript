@@ -2,12 +2,10 @@ package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.phrase.syntax.Component;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 import com.pqqqqq.escript.lang.registry.RegistryEntry;
 import com.pqqqqq.escript.lang.script.Script;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -84,10 +82,14 @@ public interface Phrase extends RegistryEntry, Comparable<Phrase> {
      */
     default Optional<AnalysisResult> matches(String line) {
         for (Syntax syntax : getSyntaxes()) {
-            Optional<Map<Component.ArgumentComponent, String>> match = syntax.matches(line);
+            Optional<AnalysisResult.Builder> match = syntax.matches(line);
 
             if (match.isPresent()) {
-                return Optional.of(new AnalysisResult(this, match.get()));
+                Optional<AnalysisResult> analysis = match.get().phrase(this).build();
+
+                if (analysis.isPresent()) {
+                    return Optional.of(analysis.get());
+                }
             }
         }
 

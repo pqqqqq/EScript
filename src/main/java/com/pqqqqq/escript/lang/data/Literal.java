@@ -3,7 +3,7 @@ package com.pqqqqq.escript.lang.data;
 import com.google.common.collect.ImmutableList;
 import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.util.string.StringUtils;
+import com.pqqqqq.escript.lang.util.string.StringUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.*;
@@ -44,12 +44,12 @@ public class Literal implements Datum {
     /**
      * A literal with the number 0
      */
-    public static final Literal ZERO = new Literal(0);
+    public static final Literal ZERO = new Literal(0D);
 
     /**
      * A literal with the number 1
      */
-    public static final Literal ONE = new Literal(1);
+    public static final Literal ONE = new Literal(1D);
 
     /**
      * <pre>
@@ -82,7 +82,7 @@ public class Literal implements Datum {
             if (string.isEmpty()) {
                 return EMPTY_STRING;
             } else {
-                return new Literal(StringUtils.from(string).formatColour());
+                return new Literal(StringUtilities.from(string).formatColour());
             }
         } else if (value instanceof Boolean) {
             return (Boolean) value ? TRUE : FALSE;
@@ -116,7 +116,7 @@ public class Literal implements Datum {
 
         // If there's quotes, it's a string
         if (literal.startsWith("\"") && literal.endsWith("\"")) {
-            return Optional.of(Literal.fromObject(StringUtils.from(StringEscapeUtils.unescapeJava(literal.substring(1, literal.length() - 1))).formatColour()));
+            return Optional.of(Literal.fromObject(StringUtilities.from(StringEscapeUtils.unescapeJava(literal.substring(1, literal.length() - 1))).formatColour()));
         }
 
         // Literal booleans are only true or false
@@ -129,7 +129,7 @@ public class Literal implements Datum {
         }
 
         // All numbers are doubles, just make them all doubles
-        Double doubleVal = StringUtils.from(literal).asDouble();
+        Double doubleVal = StringUtilities.from(literal).asDouble();
         if (doubleVal != null) {
             return Optional.of(Literal.fromObject(doubleVal));
         }
@@ -246,6 +246,27 @@ public class Literal implements Datum {
     @SuppressWarnings("unchecked")
     public List<Literal> asList() {
         return isList() ? (List<Literal>) getValue().get() : parseList().asList();
+    }
+
+    /**
+     * <pre>
+     * Gets the literal at the given index
+     * If the literal is an array, it gets the literal at the given index
+     * Otherwise, the literal is treated as a string, and retrieves the character at the given index
+     * </pre>
+     *
+     * @param indexLiteral the index
+     * @return the literal
+     */
+    public Literal fromIndex(Literal indexLiteral) {
+        // Indices are base 1
+        int index = indexLiteral.asNumber().intValue() - 1; // TODO Index can be string for maps?
+
+        if (isList()) {
+            return asList().get(index);
+        } else {
+            return Literal.fromObject(asString().charAt(index));
+        }
     }
 
     private Literal parseString() { // Parses the value (no matter the value) into a literal with a string value

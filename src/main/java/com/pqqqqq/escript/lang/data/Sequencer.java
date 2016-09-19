@@ -1,14 +1,15 @@
 package com.pqqqqq.escript.lang.data;
 
-import com.pqqqqq.escript.lang.data.container.DatumContainer;
-import com.pqqqqq.escript.lang.data.container.ListContainer;
-import com.pqqqqq.escript.lang.data.container.PhraseContainer;
-import com.pqqqqq.escript.lang.data.container.VariableContainer;
+import com.pqqqqq.escript.lang.data.container.*;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Phrases;
-import com.pqqqqq.escript.lang.util.string.StringUtils;
+import com.pqqqqq.escript.lang.phrase.arithmetic.ArithmeticPhrase;
+import com.pqqqqq.escript.lang.phrase.condition.ConditionalPhrase;
+import com.pqqqqq.escript.lang.util.string.SplitSequence;
+import com.pqqqqq.escript.lang.util.string.StringUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,24 @@ public class Sequencer {
             strarg = strarg.substring(1, strarg.length() - 1);
         }
 
+        // Check if it's a CONDITIONAL phrase
+        Optional<AnalysisResult> conditionAnalysis = Phrases.instance().analyze(strarg, (phrase) -> phrase instanceof ConditionalPhrase);
+        if (conditionAnalysis.isPresent()) {
+            return new PhraseContainer(Literal.fromObject(strarg), conditionAnalysis.get());
+        }
+
+        // Check if it's a ARITHMETIC phrase
+        Optional<AnalysisResult> arithmeticAnalysis = Phrases.instance().analyze(strarg, (phrase) -> phrase instanceof ArithmeticPhrase);
+        if (arithmeticAnalysis.isPresent()) {
+            return new PhraseContainer(Literal.fromObject(strarg), arithmeticAnalysis.get());
+        }
+
+        // Check if it's an index
+        SplitSequence indexSequence = StringUtilities.from(strarg).parseNextSequence(new String[]{"["});
+        if (indexSequence != null) {
+            return new IndexContainer(sequence(indexSequence.getBeforeSegment()), sequence(StringUtils.removeEnd(indexSequence.getAfterSegment(), "]")));
+        }
+
         // Check if it's a list
         if (strarg.startsWith("{") && strarg.endsWith("}")) {
             String braceTrimmed = strarg.substring(1, strarg.length() - 1).trim();
@@ -64,12 +83,12 @@ public class Sequencer {
             }
 
             List<DatumContainer> containers = new ArrayList<>();
-            StringUtils.from(braceTrimmed).parseSplit(",").stream().map(this::sequence).forEach(containers::add);
+            StringUtilities.from(braceTrimmed).parseSplit(",").stream().map(this::sequence).forEach(containers::add);
             return new ListContainer(containers);
         }
 
-        // Check if it's a phrase
-        Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg);
+        // Check if it's a normal phrase
+        Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg, (phrase) -> !(phrase instanceof ConditionalPhrase || phrase instanceof ArithmeticPhrase));
         if (analysis.isPresent()) {
             return new PhraseContainer(Literal.fromObject(strarg), analysis.get());
         }

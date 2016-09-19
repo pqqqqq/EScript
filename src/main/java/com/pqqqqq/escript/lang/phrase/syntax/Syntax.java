@@ -1,8 +1,9 @@
 package com.pqqqqq.escript.lang.phrase.syntax;
 
 import com.pqqqqq.escript.lang.line.Line;
+import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Phrase;
-import com.pqqqqq.escript.lang.util.string.StringUtils;
+import com.pqqqqq.escript.lang.util.string.StringUtilities;
 
 import java.util.*;
 
@@ -109,9 +110,9 @@ public class Syntax {
      * Checks if this syntax matches the {@link Line line}
      *
      * @param line the line
-     * @return a {@link Map map} of strargs, or {@link Optional#empty()} if there was no match
+     * @return an {@link AnalysisResult.Builder analysis builder}, or {@link Optional#empty()} if there was no match
      */
-    public Optional<Map<Component.ArgumentComponent, String>> matches(Line line) {
+    public Optional<AnalysisResult.Builder> matches(Line line) {
         return matches(line.getLine());
     }
 
@@ -119,9 +120,9 @@ public class Syntax {
      * Checks if this syntax matches the line
      *
      * @param line the line
-     * @return a {@link Map map} of strargs, or {@link Optional#empty()} if there was no match
+     * @return an {@link AnalysisResult.Builder analysis builder} or {@link Optional#empty()} if there was no match
      */
-    public Optional<Map<Component.ArgumentComponent, String>> matches(String line) {
+    public Optional<AnalysisResult.Builder> matches(String line) {
         // Check colon first
         if (colon) {
             if (line.endsWith(":")) {
@@ -133,7 +134,7 @@ public class Syntax {
 
         Map<Component.ArgumentComponent, String> map = new HashMap<>();
         LinkedList<Component> compQueue = new LinkedList<>(Arrays.asList(getComponents())); // Create linked list
-        Deque<String> stringQueue = new ArrayDeque<>(StringUtils.from(line).parseSplit(" ")); // String split deque
+        Deque<String> stringQueue = new ArrayDeque<>(StringUtilities.from(line).parseSplit(" ")); // String split deque
 
         Component component;
         boolean lastMatch = false;
@@ -153,7 +154,7 @@ public class Syntax {
 
         // If it's empty, we've done our job, otherwise we're missing components, but we must make sure none are optional
         //boolean check = queue.stream().filter((comp) -> !(comp instanceof Component.OptionalComponent)).findAny().isPresent();
-        return !stringQueue.isEmpty() ? Optional.empty() : Optional.of(map);
+        return !stringQueue.isEmpty() ? Optional.empty() : Optional.of(AnalysisResult.builder().strargs(map));
     }
 
     private Optional<Map<Component.ArgumentComponent, String>> matchesLoad(Component component, LinkedList<Component> compQueue, Deque<String> stringQueue, boolean lastMatch) {

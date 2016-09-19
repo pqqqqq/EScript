@@ -3,7 +3,7 @@ package com.pqqqqq.escript.lang.file;
 import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.exception.state.ESCompileTimeException;
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.util.string.StringUtils;
+import com.pqqqqq.escript.lang.util.string.StringUtilities;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -101,7 +101,7 @@ public class FileLexer {
                 String trimmed = lineContents.trim();
                 lineNumber++; // Incr line number
 
-                int tabs = StringUtils.from(lineContents).getLeadingTabulations(); // lineContents, not trimmed! trimmed has all leading whitespace removed.
+                int tabs = StringUtilities.from(lineContents).getLeadingTabulations(); // lineContents, not trimmed! trimmed has all leading whitespace removed.
                 if (tabs == -1) { // If it's whitespace, just go to the next
                     continue;
                 }

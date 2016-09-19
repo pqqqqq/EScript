@@ -10,7 +10,7 @@ import java.util.List;
  * <p>
  * String utilities
  */
-public class StringUtils {
+public class StringUtilities {
     private final String string;
 
     /**
@@ -19,11 +19,11 @@ public class StringUtils {
      * @param string the represented string
      * @return the new instance
      */
-    public static StringUtils from(String string) {
-        return new StringUtils(string);
+    public static StringUtilities from(String string) {
+        return new StringUtilities(string);
     }
 
-    private StringUtils(String string) {
+    private StringUtilities(String string) {
         this.string = string;
     }
 
@@ -106,6 +106,18 @@ public class StringUtils {
             for (int count = 0; count < string.length(); count++) {
                 char c = string.charAt(count);
 
+                builder += c;
+                if (!quotes && roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0) {
+                    for (String split : splitGroup) {
+                        if (builder.endsWith(split)) {
+                            String before = string.substring(0, count - split.length() + 1);
+                            String after = string.substring(count + 1);
+
+                            current = new SplitSequence(before, split, after);
+                        }
+                    }
+                }
+
                 if (c == '"') {
                     if (!builder.endsWith("\\") || builder.endsWith("\\\\")) {
                         quotes = !quotes;
@@ -123,18 +135,6 @@ public class StringUtils {
                         curlyBrackets++;
                     } else if (c == '}') {
                         curlyBrackets--;
-                    }
-                }
-
-                builder += c;
-                if (!quotes && roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0) {
-                    for (String split : splitGroup) {
-                        if (builder.endsWith(split)) {
-                            String before = string.substring(0, count - split.length() + 1);
-                            String after = string.substring(count + 1);
-
-                            current = new SplitSequence(before, split, after);
-                        }
                     }
                 }
             }

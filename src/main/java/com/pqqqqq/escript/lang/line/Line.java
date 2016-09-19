@@ -1,6 +1,5 @@
 package com.pqqqqq.escript.lang.line;
 
-import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.Sequencer;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
 import com.pqqqqq.escript.lang.exception.UnknownPhraseException;
@@ -11,9 +10,12 @@ import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Phrases;
 import com.pqqqqq.escript.lang.phrase.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
-import com.pqqqqq.escript.lang.util.string.StringUtils;
+import com.pqqqqq.escript.lang.util.string.StringUtilities;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,7 +34,7 @@ public class Line {
 
     private final Phrase phrase;
     private final Map<Component.ArgumentComponent, String> strargs;
-    private final Map<Component.ArgumentComponent, DatumContainer> containers = new HashMap<>();
+    private final Map<Component.ArgumentComponent, DatumContainer> containers;
 
     /**
      * Creates a new {@link Builder builder} instance
@@ -44,19 +46,18 @@ public class Line {
     }
 
     private Line(RawScript rawScript, String line, int lineNumber, int tabulations, AnalysisResult analysis, Set<Line> lineBlock) {
-        this(rawScript, line, lineNumber, tabulations, analysis.getPhrase(), analysis.getStrargs(), lineBlock);
+        this(rawScript, line, lineNumber, tabulations, analysis.getPhrase(), analysis.getStrargs(), analysis.getContainers(), lineBlock);
     }
 
-    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<Component.ArgumentComponent, String> strargs, Set<Line> lineBlock) {
+    private Line(RawScript rawScript, String line, int lineNumber, int tabulations, Phrase phrase, Map<Component.ArgumentComponent, String> strargs, Map<Component.ArgumentComponent, DatumContainer> containers, Set<Line> lineBlock) {
         this.rawScript = rawScript;
-        this.line = StringUtils.from(line).trim(); // Trim line
+        this.line = StringUtilities.from(line).trim(); // Trim line
         this.lineNumber = lineNumber;
         this.tabulations = tabulations;
         this.phrase = phrase;
         this.strargs = strargs;
+        this.containers = containers;
         this.lineBlock = lineBlock;
-
-        this.strargs.forEach((k, v) -> this.containers.put(k, k.doSequence() ? Sequencer.instance().sequence(v) : Literal.EMPTY)); // Populate containers
     }
 
     /**

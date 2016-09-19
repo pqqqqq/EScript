@@ -17,6 +17,7 @@ import com.pqqqqq.escript.lang.phrase.trigger.ServerStopTrigger;
 import com.pqqqqq.escript.lang.registry.SortedRegistry;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Created by Kevin on 2016-08-31.
@@ -99,16 +100,47 @@ public class Phrases extends SortedRegistry<Phrase> {
     }
 
     /**
+     * <pre>
+     * Analyzes the {@link Line line}, and returns an {@link AnalysisResult analysis}
+     * Only {@link Phrase phrases} that pass the {@link Predicate predicate filter} will be checked
+     * </pre>
+     *
+     * @param line the line
+     * @param predicate the phrase predicate
+     * @return an {@link Optional optional} phrase
+     */
+    public Optional<AnalysisResult> analyze(Line line, Predicate<Phrase> predicate) {
+        return analyze(line.getLine(), predicate);
+    }
+
+    /**
      * Analyzes the line's contents, and returns an {@link AnalysisResult analysis}
      *
      * @param line the line
      * @return an {@link Optional optional} phrase
      */
     public Optional<AnalysisResult> analyze(String line) {
+        return analyze(line, (phrase) -> true);
+    }
+
+    /**
+     * <pre>
+     * Analyzes the line's contents, and returns an {@link AnalysisResult analysis}
+     * Only {@link Phrase phrases} that pass the {@link Predicate predicate filter} will be checked
+     * </pre>
+     *
+     * @param line      the line
+     * @param predicate the phrase predicate
+     * @return an {@link Optional optional} phrase
+     */
+    public Optional<AnalysisResult> analyze(String line, Predicate<Phrase> predicate) {
         for (Phrase phrase : registry()) {
-            Optional<AnalysisResult> analysis = phrase.matches(line);
-            if (analysis.isPresent()) {
-                return analysis;
+            if (predicate.test(phrase)) {
+                Optional<AnalysisResult> analysis = phrase.matches(line);
+
+                if (analysis.isPresent()) {
+                    return analysis;
+                }
             }
         }
 
