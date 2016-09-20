@@ -2,6 +2,7 @@ package com.pqqqqq.escript.lang.data;
 
 import com.google.common.collect.ImmutableList;
 import com.pqqqqq.escript.lang.exception.FormatException;
+import com.pqqqqq.escript.lang.exception.InvalidTypeException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -55,7 +56,7 @@ public class Literal implements Datum {
      * <pre>
      * Creates a new literal that represents the given object
      * The main purpose of this method's body is to reduce instances of Literals by using common ones
-     * This method will make use of these public, final literals:
+     * This method will make use of these public, final literals, plus any {@link Keyword keywords}:
      *
      *      {@link #EMPTY}
      *      {@link #EMPTY_STRING}
@@ -104,6 +105,8 @@ public class Literal implements Datum {
 
             collection.stream().map(Literal::fromObject).forEach(list::add);
             return new Literal(ImmutableList.copyOf(list)); // Immutable, since literals are immutable as well
+        } else if (value instanceof Keyword) {
+            return ((Keyword) value).getLiteral();
         }
 
         return new Literal(value);
@@ -128,6 +131,14 @@ public class Literal implements Datum {
             return Optional.of(FALSE);
         }
 
+        // Check for keyword
+        if (literal.startsWith("~")) {
+            Optional<Keyword> keyword = Keyword.fromString(literal.substring(1));
+            if (keyword.isPresent()) {
+                return Optional.of(keyword.get().getLiteral());
+            }
+        }
+
         // All numbers are doubles, just make them all doubles
         Double doubleVal = StringUtilities.from(literal).asDouble();
         if (doubleVal != null) {
@@ -137,11 +148,11 @@ public class Literal implements Datum {
         return Optional.empty();
     }
 
-    private Literal() { // DO NOT USE (unless you are fromObject or fromSequence)
+    protected Literal() { // DO NOT USE (unless you are fromObject or fromSequence)
         this(null);
     }
 
-    private Literal(Object value) { // DO NOT USE (unless you are fromObject or fromSequence)
+    protected Literal(Object value) { // DO NOT USE (unless you are fromObject or fromSequence)
         this.value = Optional.ofNullable(value);
     }
 
@@ -161,6 +172,15 @@ public class Literal implements Datum {
      */
     public boolean isEmpty() {
         return !getValue().isPresent();
+    }
+
+    /**
+     * Checks if this value of the literal is a {@link Keyword keyword}
+     *
+     * @return true if a keyword
+     */
+    public boolean isKeyword() {
+        return getValue().isPresent() && getValue().get() instanceof Keyword;
     }
 
     /**
@@ -197,6 +217,18 @@ public class Literal implements Datum {
      */
     public boolean isList() {
         return getValue().isPresent() && getValue().get() instanceof List;
+    }
+
+    /**
+     * <pre>
+     * Attempts to get this literal as a {@link Keyword keyword} value
+     * This may throw a {@link InvalidTypeException}
+     * </pre>
+     *
+     * @return the keyword
+     */
+    public Keyword asKeyword() {
+        return isKeyword() ? (Keyword) getValue().get() : parseKeyword().asKeyword();
     }
 
     /**
@@ -259,14 +291,24 @@ public class Literal implements Datum {
      * @return the literal
      */
     public Literal fromIndex(Literal indexLiteral) {
-        // Indices are base 1
-        int index = indexLiteral.asNumber().intValue() - 1; // TODO Index can be string for maps?
-
-        if (isList()) {
-            return asList().get(index);
-        } else {
-            return Literal.fromObject(asString().charAt(index));
+        if (indexLiteral.isKeyword() && (indexLiteral.asKeyword() == Keyword.FIRST || indexLiteral.asKeyword() == Keyword.LAST)) {
+            return indexLiteral.asKeyword().applyTo(this);
+        } else { // TODO Index can be string for maps?
+            int index = indexLiteral.asNumber().intValue() - 1; // Indices are base 1
+            if (isList()) {
+                return asList().get(index);
+            } else {
+                return Literal.fromObject(asString().charAt(index));
+            }
         }
+    }
+
+    private Literal parseKeyword() { // This method's only "saving grace" is an empty literal
+        if (isEmpty()) {
+            return EMPTY;
+        }
+
+        throw new InvalidTypeException("Keywords cannot be cast to"); // Throw exception
     }
 
     private Literal parseString() { // Parses the value (no matter the value) into a literal with a string value

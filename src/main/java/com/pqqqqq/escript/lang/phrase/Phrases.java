@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 /**
  * Created by Kevin on 2016-08-31.
  * <p>
- * A registry of phrases
+ * A {@link SortedRegistry sorted registry} of {@link Phrase phrases}
  */
 public class Phrases extends SortedRegistry<Phrase> {
     // REGISTRY \\
