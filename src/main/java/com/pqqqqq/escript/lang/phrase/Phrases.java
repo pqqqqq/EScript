@@ -10,8 +10,7 @@ import com.pqqqqq.escript.lang.phrase.block.*;
 import com.pqqqqq.escript.lang.phrase.condition.*;
 import com.pqqqqq.escript.lang.phrase.getters.ContainsPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.sponge.MOTDPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.sponge.player.PlayerHealth;
-import com.pqqqqq.escript.lang.phrase.getters.sponge.player.PlayerName;
+import com.pqqqqq.escript.lang.phrase.getters.sponge.player.*;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
 import com.pqqqqq.escript.lang.phrase.trigger.PlaceTrigger;
 import com.pqqqqq.escript.lang.phrase.trigger.ServerStartTrigger;
@@ -58,6 +57,9 @@ public class Phrases extends SortedRegistry<Phrase> {
     // Player
     public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();
     public static final Phrase PLAYER_NAME = PlayerName.instance();
+    public static final Phrase PLAYER_EXHAUSTION = PlayerExhaustion.instance();
+    public static final Phrase PLAYER_FOOD = PlayerFood.instance();
+    public static final Phrase PLAYER_SATURATION = PlayerSaturation.instance();
 
     // ----------------------------------------------------------------------- \\
 
