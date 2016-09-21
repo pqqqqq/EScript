@@ -59,6 +59,7 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase PLAYER_NAME = PlayerName.instance();
     public static final Phrase PLAYER_EXHAUSTION = PlayerExhaustion.instance();
     public static final Phrase PLAYER_FOOD = PlayerFood.instance();
+    public static final Phrase PLAYER_GAMEMODE = PlayerGameMode.instance();
     public static final Phrase PLAYER_SATURATION = PlayerSaturation.instance();
 
     // ----------------------------------------------------------------------- \\
