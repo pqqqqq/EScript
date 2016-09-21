@@ -10,6 +10,8 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -22,17 +24,33 @@ import org.spongepowered.api.plugin.Plugin;
  */
 @Plugin(id = EScript.ID, name = EScript.NAME, version = EScript.VERSION, authors = EScript.AUTHORS, description = EScript.DESCRIPTION)
 public class EScript {
+    private static EScript INSTANCE = null;
+
     public static final String ID = "escript";
     public static final String NAME = "EScript";
     public static final String VERSION = "0.0.1-SNAPSHOT";
     public static final String AUTHORS = "Pqqqqq";
     public static final String DESCRIPTION = "An easy scripting plugin for Sponge.";
 
+    /**
+     * Gets the main plugin instance
+     *
+     * @return the plugin instance
+     */
+    public static EScript instance() {
+        return INSTANCE;
+    }
+
+    // Injected variables
+
     @Inject
     private Game game;
 
     @Inject
     private Logger logger;
+
+    // Final variables
+    private final Cause pluginCause = Cause.of(NamedCause.of("plugin", this));
 
     @Inject
     public EScript(Logger logger) {
@@ -41,6 +59,9 @@ public class EScript {
 
     @Listener
     public void init(GameInitializationEvent event) {
+        // Instancing
+        INSTANCE = this;
+
         // Initialisation
         Main.instance().init();
 
@@ -61,5 +82,14 @@ public class EScript {
     @Listener
     public void serverStop(GameStoppingServerEvent event) {
         Causes.SERVER_STOP.trigger();
+    }
+
+    /**
+     * Gets the plugin's main {@link Cause cause}
+     *
+     * @return the cause
+     */
+    public Cause getPluginCause() {
+        return pluginCause;
     }
 }

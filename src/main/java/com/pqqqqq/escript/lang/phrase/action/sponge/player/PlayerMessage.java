@@ -20,8 +20,8 @@ import org.spongepowered.api.text.Text;
  *      </code>
  * </pre>
  */
-public class MessagePhrase implements Phrase {
-    private static final MessagePhrase INSTANCE = new MessagePhrase();
+public class PlayerMessage implements Phrase {
+    private static final PlayerMessage INSTANCE = new PlayerMessage();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("send? message|msg $Message to? $Player*")
 
@@ -35,11 +35,11 @@ public class MessagePhrase implements Phrase {
      *
      * @return the instance
      */
-    public static MessagePhrase instance() {
+    public static PlayerMessage instance() {
         return INSTANCE;
     }
 
-    private MessagePhrase() {
+    private PlayerMessage() {
     }
 
     @Override

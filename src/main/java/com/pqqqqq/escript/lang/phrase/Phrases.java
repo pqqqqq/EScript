@@ -4,7 +4,9 @@ import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
 import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
 import com.pqqqqq.escript.lang.phrase.action.sponge.BroadcastPhrase;
-import com.pqqqqq.escript.lang.phrase.action.sponge.player.MessagePhrase;
+import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerCloseInventory;
+import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerKick;
+import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerMessage;
 import com.pqqqqq.escript.lang.phrase.arithmetic.*;
 import com.pqqqqq.escript.lang.phrase.block.*;
 import com.pqqqqq.escript.lang.phrase.condition.*;
@@ -44,7 +46,9 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase BROADCAST = BroadcastPhrase.instance();
 
     // Player
-    public static final Phrase MESSAGE = MessagePhrase.instance();
+    public static final Phrase PLAYER_CLOSE_INVENTORY = PlayerCloseInventory.instance();
+    public static final Phrase PLAYER_KICK = PlayerKick.instance();
+    public static final Phrase PLAYER_MESSAGE = PlayerMessage.instance();
 
     // ----------------------------------------------------------------------- \\
 
