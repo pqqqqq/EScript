@@ -1,4 +1,4 @@
-package com.pqqqqq.escript.lang.phrase.action;
+package com.pqqqqq.escript.lang.phrase.action.sponge.player;
 
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
@@ -16,7 +16,7 @@ import org.spongepowered.api.text.Text;
  *      <code>
  *          message "Hello!"
  *          send message "Hello!"
- *          message player "Hello!"
+ *          message player "Hello!" to "Fred"
  *      </code>
  * </pre>
  */

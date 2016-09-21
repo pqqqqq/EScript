@@ -1,4 +1,4 @@
-package com.pqqqqq.escript.lang.phrase.getters;
+package com.pqqqqq.escript.lang.phrase.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;

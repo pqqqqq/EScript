@@ -1,15 +1,17 @@
 package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.phrase.action.MessagePhrase;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
 import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
+import com.pqqqqq.escript.lang.phrase.action.sponge.BroadcastPhrase;
+import com.pqqqqq.escript.lang.phrase.action.sponge.player.MessagePhrase;
 import com.pqqqqq.escript.lang.phrase.arithmetic.*;
 import com.pqqqqq.escript.lang.phrase.block.*;
 import com.pqqqqq.escript.lang.phrase.condition.*;
 import com.pqqqqq.escript.lang.phrase.getters.ContainsPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.PlayerHealth;
-import com.pqqqqq.escript.lang.phrase.getters.PlayerName;
+import com.pqqqqq.escript.lang.phrase.getters.sponge.MOTDPhrase;
+import com.pqqqqq.escript.lang.phrase.getters.sponge.player.PlayerHealth;
+import com.pqqqqq.escript.lang.phrase.getters.sponge.player.PlayerName;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
 import com.pqqqqq.escript.lang.phrase.trigger.PlaceTrigger;
 import com.pqqqqq.escript.lang.phrase.trigger.ServerStartTrigger;
@@ -33,16 +35,31 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase SERVER_START = ServerStartTrigger.instance();
     public static final Phrase SERVER_STOP = ServerStopTrigger.instance();
 
+    // ----------------------------------------------------------------------- \\
+
     // ACTIONS
     public static final Phrase PRINT = PrintPhrase.instance();
-    public static final Phrase MESSAGE = MessagePhrase.instance();
     public static final Phrase VARIABLE = VariablePhrase.instance();
 
+    // Sponge
+    public static final Phrase BROADCAST = BroadcastPhrase.instance();
+
+    // Player
+    public static final Phrase MESSAGE = MessagePhrase.instance();
+
+    // ----------------------------------------------------------------------- \\
+
     // GETTERS
+    public static final Phrase CONTAINS = ContainsPhrase.instance();
+
+    // Sponge
+    public static final Phrase MOTD = MOTDPhrase.instance();
+
+    // Player
     public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();
     public static final Phrase PLAYER_NAME = PlayerName.instance();
 
-    public static final Phrase CONTAINS = ContainsPhrase.instance();
+    // ----------------------------------------------------------------------- \\
 
     // BLOCKS
     public static final Phrase IF = IfPhrase.instance();
@@ -50,6 +67,8 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase WHILE = WhilePhrase.instance();
     public static final Phrase COUNT = CountPhrase.instance();
     public static final Phrase FOR_EACH = ForEachPhrase.instance();
+
+    // ----------------------------------------------------------------------- \\
 
     // CONDITIONS
     public static final Phrase OR = OrPhrase.instance();
@@ -62,6 +81,8 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase LESS_THAN = LessThan.instance();
     public static final Phrase GREATER_THAN_OET = GreaterThanOET.instance();
     public static final Phrase LESS_THAN_OET = LessThanOET.instance();
+
+    // ----------------------------------------------------------------------- \\
 
     // ARITHMETIC
     public static final Phrase POWER = PowerPhrase.instance();
