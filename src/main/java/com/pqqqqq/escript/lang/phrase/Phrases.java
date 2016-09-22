@@ -11,6 +11,10 @@ import com.pqqqqq.escript.lang.phrase.arithmetic.*;
 import com.pqqqqq.escript.lang.phrase.block.*;
 import com.pqqqqq.escript.lang.phrase.condition.*;
 import com.pqqqqq.escript.lang.phrase.getters.ContainsPhrase;
+import com.pqqqqq.escript.lang.phrase.getters.math.AbsolutePhrase;
+import com.pqqqqq.escript.lang.phrase.getters.math.CeilPhrase;
+import com.pqqqqq.escript.lang.phrase.getters.math.FloorPhrase;
+import com.pqqqqq.escript.lang.phrase.getters.math.RoundPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.sponge.MOTDPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.sponge.player.*;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
@@ -54,6 +58,12 @@ public class Phrases extends SortedRegistry<Phrase> {
 
     // GETTERS
     public static final Phrase CONTAINS = ContainsPhrase.instance();
+
+    // Math
+    public static final Phrase ABSOLUTE = AbsolutePhrase.instance();
+    public static final Phrase CEIL = CeilPhrase.instance();
+    public static final Phrase FLOOR = FloorPhrase.instance();
+    public static final Phrase ROUND = RoundPhrase.instance();
 
     // Sponge
     public static final Phrase MOTD = MOTDPhrase.instance();
