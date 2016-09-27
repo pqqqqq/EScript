@@ -49,7 +49,7 @@ public class Script extends Environment {
      */
     public static Script from(RawScript rawScript, Properties properties) {
         if (properties == null) {
-            return from(rawScript);
+            return from(rawScript, Properties.empty());
         } else {
             return new Script(rawScript, properties);
         }

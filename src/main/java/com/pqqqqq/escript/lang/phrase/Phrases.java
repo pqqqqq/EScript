@@ -17,6 +17,9 @@ import com.pqqqqq.escript.lang.phrase.getters.math.FloorPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.math.RoundPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.sponge.MOTDPhrase;
 import com.pqqqqq.escript.lang.phrase.getters.sponge.player.*;
+import com.pqqqqq.escript.lang.phrase.getters.string.LowercasePhrase;
+import com.pqqqqq.escript.lang.phrase.getters.string.SubstringPhrase;
+import com.pqqqqq.escript.lang.phrase.getters.string.UppercasePhrase;
 import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
 import com.pqqqqq.escript.lang.phrase.trigger.PlaceTrigger;
 import com.pqqqqq.escript.lang.phrase.trigger.ServerStartTrigger;
@@ -64,6 +67,11 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase CEIL = CeilPhrase.instance();
     public static final Phrase FLOOR = FloorPhrase.instance();
     public static final Phrase ROUND = RoundPhrase.instance();
+
+    // String
+    public static final Phrase LOWERCASE = LowercasePhrase.instance();
+    public static final Phrase UPPERCASE = UppercasePhrase.instance();
+    public static final Phrase SUBSTRING = SubstringPhrase.instance();
 
     // Sponge
     public static final Phrase MOTD = MOTDPhrase.instance();
