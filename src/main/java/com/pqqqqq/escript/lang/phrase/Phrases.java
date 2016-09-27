@@ -78,6 +78,7 @@ public class Phrases extends SortedRegistry<Phrase> {
 
     // Player
     public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();
+    public static final Phrase PLAYER_MAX_HEALTH = PlayerMaxHealth.instance();
     public static final Phrase PLAYER_NAME = PlayerName.instance();
     public static final Phrase PLAYER_EXHAUSTION = PlayerExhaustion.instance();
     public static final Phrase PLAYER_FOOD = PlayerFood.instance();
