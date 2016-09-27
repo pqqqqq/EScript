@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase;
 
+import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
@@ -81,16 +82,26 @@ public interface Phrase extends RegistryEntry, Comparable<Phrase> {
      * @return the matched pattern if the line is this type of phrase
      */
     default Optional<AnalysisResult> matches(String line) {
+        UnknownSymbolException exception = null;
+
         for (Syntax syntax : getSyntaxes()) {
             Optional<AnalysisResult.Builder> match = syntax.matches(line);
 
             if (match.isPresent()) {
-                Optional<AnalysisResult> analysis = match.get().phrase(this).build();
+                try {
+                    Optional<AnalysisResult> analysis = match.get().phrase(this).build();
 
-                if (analysis.isPresent()) {
-                    return Optional.of(analysis.get());
+                    if (analysis.isPresent()) {
+                        return Optional.of(analysis.get());
+                    }
+                } catch (UnknownSymbolException e) {
+                    exception = e; // Store exception if one isn't found before
                 }
             }
+        }
+
+        if (exception != null) {
+            throw exception; // Throw the exception
         }
 
         return Optional.empty();

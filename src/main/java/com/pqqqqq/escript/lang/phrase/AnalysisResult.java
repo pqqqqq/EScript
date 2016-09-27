@@ -103,16 +103,13 @@ public class AnalysisResult {
          * </pre>
          *
          * @return the analysis
+         * @throws UnknownSymbolException if a strarg cannot be {@link Sequencer#sequence(String) sequenced}
          */
-        public Optional<AnalysisResult> build() {
-            try {
-                Map<Component.ArgumentComponent, DatumContainer> containers = new HashMap<>();
-                checkNotNull(this.strargs, "Strargs cannot be null").forEach((k, v) -> containers.put(k, k.doSequence() ? Sequencer.instance().sequence(v) : Literal.EMPTY)); // Populate containers
+        public Optional<AnalysisResult> build() throws UnknownSymbolException {
+            Map<Component.ArgumentComponent, DatumContainer> containers = new HashMap<>();
+            checkNotNull(this.strargs, "Strargs cannot be null").forEach((k, v) -> containers.put(k, k.doSequence() ? Sequencer.instance().sequence(v) : Literal.EMPTY)); // Populate containers
 
-                return Optional.of(new AnalysisResult(checkNotNull(this.phrase, "Phrase cannot be null"), this.strargs, containers));
-            } catch (UnknownSymbolException e) { // Catch unknown symbol from Sequencer, attempt a different phrase
-                return Optional.empty();
-            }
+            return Optional.of(new AnalysisResult(checkNotNull(this.phrase, "Phrase cannot be null"), this.strargs, containers));
         }
     }
 }

@@ -281,7 +281,7 @@ public class Line {
          * @return the new line instance
          */
         public Line build() {
-            AnalysisResult analysis = this.analysis.orElse(Phrases.instance().analyze(line).orElseThrow(() -> new UnknownPhraseException("Unknown phrase for line: \"%s\"", line)));
+            AnalysisResult analysis = this.analysis.orElseGet(() -> Phrases.instance().analyze(line).orElseThrow(() -> new UnknownPhraseException("Unknown phrase for line: \"%s\"", line)));
 
             // Convert each line builder into a line
             Set<Line> lineBlock = new HashSet<>();

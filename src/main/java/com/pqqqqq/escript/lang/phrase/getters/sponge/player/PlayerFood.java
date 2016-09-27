@@ -1,9 +1,10 @@
 package com.pqqqqq.escript.lang.phrase.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
+import com.pqqqqq.escript.lang.phrase.getters.sponge.ValuePhrase;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
+import org.spongepowered.api.entity.living.player.Player;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -18,7 +19,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      food of "Joe"</code>
  * </pre>
  */
-public class PlayerFood implements Phrase {
+public class PlayerFood implements ValuePhrase {
     private static final PlayerFood INSTANCE = new PlayerFood();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person food|hunger|starvation level|lvl?"),
@@ -44,6 +45,7 @@ public class PlayerFood implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        return Result.success(ctx.getPlayer("Player").getFoodData().foodLevel().get());
+        Player player = ctx.getPlayer("Player");
+        return Result.valueSuccess(player.getFoodData().foodLevel(), player);
     }
 }

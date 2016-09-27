@@ -48,15 +48,25 @@ public class PhraseContainer implements DatumContainer {
 
     @Override
     public Literal resolve(Context ctx) {
-        RunVessel vessel = Line.builder().script(ctx.getLine().getRawScript()).line(ctx.getLine().getLine()).number(ctx.getLine().getLineNumber()).tabs(ctx.getLine().getTabulations()).analysis(getAnalysis()).build().toContext(ctx.getScript()).toVessel();
-        vessel.run();
-
-        Result result = vessel.getResult();
+        Result result = resolveResult(ctx);
         if (result instanceof Result.Success) {
             return ((Result.Success) result).getLiteralValue();
         } else {
             Result.Failure fail = (Result.Failure) result;
             throw new FailedLineException("Line failed because: \"%s\"", fail.getErrorMessage().orElse("UNKNOWN"));
         }
+    }
+
+    /**
+     * Resolves the phrase container to its base {@link Result result}
+     *
+     * @param ctx the {@link Context context}
+     * @return the result
+     */
+    public Result resolveResult(Context ctx) {
+        RunVessel vessel = Line.builder().script(ctx.getLine().getRawScript()).line(ctx.getLine().getLine()).number(ctx.getLine().getLineNumber()).tabs(ctx.getLine().getTabulations()).analysis(getAnalysis()).build().toContext(ctx.getScript()).toVessel();
+        vessel.run();
+
+        return vessel.getResult();
     }
 }

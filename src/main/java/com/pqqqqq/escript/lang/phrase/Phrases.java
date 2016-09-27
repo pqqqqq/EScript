@@ -2,7 +2,7 @@ package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
-import com.pqqqqq.escript.lang.phrase.action.VariablePhrase;
+import com.pqqqqq.escript.lang.phrase.action.SetPhrase;
 import com.pqqqqq.escript.lang.phrase.action.sponge.BroadcastPhrase;
 import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerCloseInventory;
 import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerKick;
@@ -44,7 +44,7 @@ public class Phrases extends SortedRegistry<Phrase> {
 
     // ACTIONS
     public static final Phrase PRINT = PrintPhrase.instance();
-    public static final Phrase VARIABLE = VariablePhrase.instance();
+    public static final Phrase SET = SetPhrase.instance();
 
     // Sponge
     public static final Phrase BROADCAST = BroadcastPhrase.instance();

@@ -1,9 +1,10 @@
 package com.pqqqqq.escript.lang.phrase.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
+import com.pqqqqq.escript.lang.phrase.getters.sponge.ValuePhrase;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
+import org.spongepowered.api.entity.living.player.Player;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -18,7 +19,7 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      health of "Joe"</code>
  * </pre>
  */
-public class PlayerHealth implements Phrase {
+public class PlayerHealth implements ValuePhrase {
     private static final PlayerHealth INSTANCE = new PlayerHealth();
     private static final Syntax[] SYNTAXES = {
             // Syntax.compile("$Player? health|hp|hitpoints"), THIS SCREWS UP PRINTS AND MESSAGES
@@ -48,6 +49,7 @@ public class PlayerHealth implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        return Result.success(ctx.getPlayer("Player").getHealthData().health().get());
+        Player player = ctx.getPlayer("Player");
+        return Result.valueSuccess(player.getHealthData().health(), player);
     }
 }

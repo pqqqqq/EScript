@@ -1,10 +1,16 @@
 package com.pqqqqq.escript.lang.phrase.action;
 
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.container.PhraseContainer;
 import com.pqqqqq.escript.lang.line.Context;
+import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Phrase;
+import com.pqqqqq.escript.lang.phrase.Phrases;
 import com.pqqqqq.escript.lang.phrase.Result;
+import com.pqqqqq.escript.lang.phrase.getters.sponge.ValuePhrase;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
+
+import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-08-31.
@@ -16,8 +22,8 @@ import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
  *      set var</code>
  * </pre>
  */
-public class VariablePhrase implements Phrase {
-    private static final VariablePhrase INSTANCE = new VariablePhrase();
+public class SetPhrase implements Phrase {
+    private static final SetPhrase INSTANCE = new SetPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("set|change|modify ^Name to $Value"),
             Syntax.compile("create ^Name with? value* $Value*")
@@ -32,11 +38,11 @@ public class VariablePhrase implements Phrase {
      *
      * @return the instance
      */
-    public static VariablePhrase instance() {
+    public static SetPhrase instance() {
         return INSTANCE;
     }
 
-    private VariablePhrase() {
+    private SetPhrase() {
     }
 
     @Override
@@ -45,11 +51,26 @@ public class VariablePhrase implements Phrase {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Result execute(Context ctx) {
         String name = ctx.getStrarg("Name");
         Literal value = ctx.getLiteral("Value", (Object) null);
 
-        ctx.getScript().createOrSet(name, value);
+        Optional<AnalysisResult> analysis = Phrases.instance().analyze(name, (phrase) -> phrase instanceof ValuePhrase);
+        if (analysis.isPresent()) { // Change the phrase
+            Result result = new PhraseContainer(Literal.fromObject(name), analysis.get()).resolveResult(ctx);
+
+            if (result instanceof Result.ValueSuccess) {
+                Result.ValueSuccess valueResult = (Result.ValueSuccess) result;
+                valueResult.set(value.getValue().orElse(null));
+                return Result.success();
+            } else {
+                return Result.failure("%s is not a bounded value result.", name);
+            }
+        } else { // Otherwise, just make it a variable
+            ctx.getScript().createOrSet(name, value);
+        }
+
         return Result.success();
     }
 }

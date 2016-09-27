@@ -2,8 +2,13 @@ package com.pqqqqq.escript.lang.phrase;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
+import com.pqqqqq.escript.lang.util.CurrentValue;
+import org.spongepowered.api.data.value.mutable.CompositeValueStore;
+import org.spongepowered.api.data.value.mutable.Value;
 
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * <pre>
@@ -19,7 +24,7 @@ public interface Result {
      * @return the new success instance
      */
     static Success<?> success() {
-        return new Success<>();
+        return Success.EMPTY;
     }
 
     /**
@@ -31,6 +36,55 @@ public interface Result {
      */
     static <T> Success<T> success(T value) {
         return new Success<>(value);
+    }
+
+    /**
+     * Creates a new {@link ValueSuccess value success} with the given return value
+     *
+     * @param value the return value
+     * @param <T>   the return value type
+     * @return the new success instance
+     */
+    static <T> ValueSuccess<T> valueSuccess(CurrentValue<T> value) {
+        return new ValueSuccess<>(value);
+    }
+
+    /**
+     * Creates a new {@link ValueSuccess value success} with the {@link Supplier supplier}, and its corresponding {@link Function set function}
+     *
+     * @param value       the value
+     * @param setFunction the set function
+     * @param <T>         the return value type
+     * @return the new success instance
+     */
+    static <T> ValueSuccess<T> valueSuccess(Supplier<T> value, Function<T, Boolean> setFunction) {
+        return new ValueSuccess<>(new CurrentValue<T>() {
+
+            @Override
+            public Optional<T> get() {
+                return Optional.ofNullable(value.get());
+            }
+
+            @Override
+            public boolean set(T value) {
+                return setFunction.apply(value);
+            }
+        });
+    }
+
+    /**
+     * Creates a new {@link ValueSuccess value success} with the {@link Value sponge value} and corresponding {@link CompositeValueStore value store}
+     *
+     * @param value      the value
+     * @param valueStore the store
+     * @param <T>        the generic type
+     * @return the new success instance
+     */
+    static <T> ValueSuccess<T> valueSuccess(Value<T> value, CompositeValueStore<?, ?> valueStore) {
+        return valueSuccess(value::get, (set) -> {
+            value.set(set);
+            return valueStore.offer(value).isSuccessful();
+        });
     }
 
     /**
@@ -46,10 +100,11 @@ public interface Result {
      * Creates a new {@link Failure failure} result with the given error message
      *
      * @param errorMessage the error message
+     * @param args arguments for {@link String#format(String, Object...)}
      * @return the new failure instance
      */
-    static Failure failure(String errorMessage) {
-        return new Failure(errorMessage);
+    static Failure failure(String errorMessage, Object... args) {
+        return new Failure(String.format(errorMessage, args));
     }
 
     /**
@@ -69,14 +124,15 @@ public interface Result {
      *
      * @param <T> the return value's type
      */
-    final class Success<T> implements Result {
+    class Success<T> implements Result {
+        private static final Success<?> EMPTY = new Success<>();
         private final Optional<T> value;
 
         private Success() {
             this(null);
         }
 
-        private Success(T value) {
+        protected Success(T value) {
             this.value = Optional.ofNullable(value);
         }
 
@@ -103,6 +159,32 @@ public interface Result {
             } else {
                 return Literal.EMPTY;
             }
+        }
+    }
+
+    /**
+     * <pre>
+     * A {@link Success successful} {@link Result result} whose value has resides in a {@link CurrentValue current value} container.
+     * Value successes include a {@link #set(Object)} method
+     * </pre>
+     *
+     * @param <T> the type bounded by the current value
+     */
+    final class ValueSuccess<T> extends Success<CurrentValue<? super T>> {
+
+        protected ValueSuccess(CurrentValue<? super T> value) {
+            super(value);
+        }
+
+        /**
+         * Sets the value, based on the {@link CurrentValue current value}
+         *
+         * @param value the new value
+         * @return true, if the set was successful
+         * @see CurrentValue#set(Object)
+         */
+        public boolean set(T value) {
+            return getValue().get().set(value);
         }
     }
 

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.exception.InvalidTypeException;
 import com.pqqqqq.escript.lang.line.Context;
+import com.pqqqqq.escript.lang.util.CurrentValue;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -15,7 +16,7 @@ import java.util.*;
  * An immutable literal type - a type that does not need to be resolved
  */
 public class Literal implements Datum {
-    private final Optional<Object> value;
+    private final Optional<?> value;
 
     /**
      * An empty literal, where the value is null
@@ -75,7 +76,9 @@ public class Literal implements Datum {
             return EMPTY;
         }
 
-        if (value instanceof Literal) {
+        if (value instanceof Optional) {
+            return fromObject(((Optional<?>) value).orElse(null));
+        } else if (value instanceof Literal) {
             return (Literal) value; // No need to change anything
         } else if (value instanceof String) {
             String string = (String) value;
@@ -107,6 +110,8 @@ public class Literal implements Datum {
             return new Literal(ImmutableList.copyOf(list)); // Immutable, since literals are immutable as well
         } else if (value instanceof Keyword) {
             return ((Keyword) value).getLiteral();
+        } else if (value instanceof CurrentValue) {
+            return fromObject(((CurrentValue<?>) value).get()); // Get the actual value
         }
 
         return new Literal(value);
@@ -161,7 +166,7 @@ public class Literal implements Datum {
      *
      * @return the object
      */
-    public Optional<Object> getValue() {
+    public Optional<?> getValue() {
         return value;
     }
 
@@ -282,9 +287,48 @@ public class Literal implements Datum {
 
     /**
      * <pre>
+     * Gets the size of the literal.
+     * If the literal is an list, this calls {@link List#size()}
+     * Otherwise, this calls {@link String#length()}
+     * </pre>
+     *
+     * @return the size
+     */
+    public int size() {
+        if (isList()) {
+            return asList().size();
+        } else {
+            return asString().length();
+        }
+    }
+
+    /**
+     * <pre>
      * Gets the literal at the given index
      * If the literal is an array, it gets the literal at the given index
      * Otherwise, the literal is treated as a string, and retrieves the character at the given index
+     *
+     * The index SHOULD NOT be corrected for base-1, as it is done in this method
+     * </pre>
+     *
+     * @param index the index
+     * @return the literal
+     */
+    public Literal fromIndex(int index) {
+        if (isList()) {
+            return asList().get(--index); // Indices are base-1
+        } else {
+            return Literal.fromObject(asString().charAt(--index)); // Indices are base-1
+        }
+    }
+
+    /**
+     * <pre>
+     * Gets the literal at the given index
+     * If the literal is an array, it gets the literal at the given index
+     * Otherwise, the literal is treated as a string, and retrieves the character at the given index
+     *
+     * The index SHOULD NOT be corrected for base-1, as it is done in this method
      * </pre>
      *
      * @param indexLiteral the index
@@ -292,14 +336,9 @@ public class Literal implements Datum {
      */
     public Literal fromIndex(Literal indexLiteral) {
         if (indexLiteral.isKeyword() && (indexLiteral.asKeyword() == Keyword.FIRST || indexLiteral.asKeyword() == Keyword.LAST)) {
-            return indexLiteral.asKeyword().applyTo(this);
+            return fromIndex(indexLiteral.asKeyword().resolve(this));
         } else { // TODO Index can be string for maps?
-            int index = indexLiteral.asNumber().intValue() - 1; // Indices are base 1
-            if (isList()) {
-                return asList().get(index);
-            } else {
-                return Literal.fromObject(asString().charAt(index));
-            }
+            return fromIndex(indexLiteral.asNumber().intValue());
         }
     }
 

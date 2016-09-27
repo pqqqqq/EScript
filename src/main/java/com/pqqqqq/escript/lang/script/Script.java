@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.script;
 
 import com.pqqqqq.escript.lang.data.variable.Environment;
+import com.pqqqqq.escript.lang.data.variable.Variable;
 import com.pqqqqq.escript.lang.exception.FailedLineException;
 import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.exception.state.ESRuntimeException;
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>
  * <pre>
  * A script instance, usually formed from a {@link com.pqqqqq.escript.lang.file.RawScript raw script}
- * A script is also a {@link com.pqqqqq.escript.lang.data.variable.Variable variable} {@link Environment environment}
+ * A script is also a {@link Variable variable} {@link Environment environment}
  * </pre>
  */
 public class Script extends Environment {
