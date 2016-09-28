@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.data;
 
 import com.google.common.collect.ImmutableList;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.exception.InvalidTypeException;
 import com.pqqqqq.escript.lang.line.Context;
@@ -74,9 +75,7 @@ public class Literal implements Datum {
     public static Literal fromObject(Object value) {
         if (value == null) {
             return EMPTY;
-        }
-
-        if (value instanceof Optional) {
+        } else if (value instanceof Optional) {
             return fromObject(((Optional<?>) value).orElse(null));
         } else if (value instanceof Literal) {
             return (Literal) value; // No need to change anything
@@ -100,6 +99,8 @@ public class Literal implements Datum {
             } else if (number == 1D) {
                 return ONE;
             }
+
+            return new Literal(number);
         } else if (value.getClass().isArray()) { // Check if the value is an array
             return fromObject(Arrays.asList((Object[]) value)); // Recursion as a list
         } else if (value instanceof Collection) { // Array formatting
@@ -114,7 +115,14 @@ public class Literal implements Datum {
             return fromObject(((CurrentValue<?>) value).get()); // Get the actual value
         }
 
-        return new Literal(value);
+        // If we reach the end, try serializing it
+        Optional<Literal> serialized = Serializers.instance().serialize(value);
+        if (serialized.isPresent()) {
+            return serialized.get(); // Woo!
+        }
+
+        // TODO Allow unknown objects as literals?
+        return new Literal(value); // Otherwise, just make it a plain value
     }
 
     protected static Optional<Literal> fromSequence(String literal) { // Only Sequencer should use this

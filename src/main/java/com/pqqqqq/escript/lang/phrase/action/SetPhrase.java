@@ -54,21 +54,28 @@ public class SetPhrase implements Phrase {
     @SuppressWarnings("unchecked")
     public Result execute(Context ctx) {
         String name = ctx.getStrarg("Name");
-        Literal value = ctx.getLiteral("Value", (Object) null);
-
         Optional<AnalysisResult> analysis = Phrases.instance().analyze(name, (phrase) -> phrase instanceof ValuePhrase);
+
         if (analysis.isPresent()) { // Change the phrase
             Result result = new PhraseContainer(Literal.fromObject(name), analysis.get()).resolveResult(ctx);
 
             if (result instanceof Result.ValueSuccess) {
                 Result.ValueSuccess valueResult = (Result.ValueSuccess) result;
-                valueResult.set(value.getValue().orElse(null));
+
+                ValuePhrase phrase = (ValuePhrase) analysis.get().getPhrase();
+                Class<?> correspondingClass = phrase.getCorrespondingClass();
+
+                if (correspondingClass == null) {
+                    valueResult.set(ctx.getLiteral("Value", (Object) null).getValue().orElse(null));
+                } else {
+                    valueResult.set(ctx.getSerialized("Value", correspondingClass));
+                }
                 return Result.success();
             } else {
                 return Result.failure("%s is not a bounded value result.", name);
             }
         } else { // Otherwise, just make it a variable
-            ctx.getScript().createOrSet(name, value);
+            ctx.getScript().createOrSet(name, ctx.getLiteral("Value", (Object) null));
         }
 
         return Result.success();

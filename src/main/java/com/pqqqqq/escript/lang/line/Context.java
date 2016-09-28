@@ -2,7 +2,10 @@ package com.pqqqqq.escript.lang.line;
 
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
+import com.pqqqqq.escript.lang.data.serializer.Serializer;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.exception.MissingGroupException;
+import com.pqqqqq.escript.lang.exception.SerializationException;
 import com.pqqqqq.escript.lang.phrase.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
 import org.spongepowered.api.Sponge;
@@ -197,6 +200,20 @@ public class Context {
      */
     public Player getPlayer(String group) {
         return getOptionalPlayer(group).orElseThrow(() -> new MissingGroupException("A player could not be found for the given group: %s", group));
+    }
+
+    public <T> Optional<T> getOptionalSerialized(String group, Class<? extends T> serializeClass) {
+        Optional<Literal> literal = getOptionalLiteral(group);
+        if (!literal.isPresent()) {
+            return Optional.empty();
+        }
+
+        Serializer<? extends T> serializer = Serializers.instance().getSerializer(serializeClass).orElseThrow(() -> new SerializationException("\"%s\" cannot be deserialized to class %s", literal.get().toString(), serializeClass.getSimpleName()));
+        return Optional.ofNullable(serializer.deserialize(literal.get()));
+    }
+
+    public <T> T getSerialized(String group, Class<? extends T> serializeClass) {
+        return getOptionalSerialized(group, serializeClass).orElseThrow(() -> new MissingGroupException("A serialized literal could not be found for the given group: %s", group));
     }
 
     /**
