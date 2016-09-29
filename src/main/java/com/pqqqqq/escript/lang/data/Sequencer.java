@@ -87,6 +87,12 @@ public class Sequencer {
             return new ListContainer(containers);
         }
 
+        // Check if it's a range vector
+        List<String> rangeSplit = StringUtilities.from(strarg).parseSplit(":");
+        if (rangeSplit.size() == 2) {
+            return new RangeContainer(sequence(rangeSplit.get(0)), sequence(rangeSplit.get(1)));
+        }
+
         // Check if it's a normal phrase
         Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg, (phrase) -> !(phrase instanceof ConditionalPhrase || phrase instanceof ArithmeticPhrase));
         if (analysis.isPresent()) {

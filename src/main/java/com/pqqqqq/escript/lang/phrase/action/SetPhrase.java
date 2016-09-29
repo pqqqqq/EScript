@@ -16,10 +16,11 @@ import java.util.Optional;
  * Created by Kevin on 2016-08-31.
  * <p>
  * <pre>
- * The variable phrase, which will create, or modify a variable
+ * The variable phrase, which will create, or modify a variable/value
  * Examples:
  *      <code>set var to "hello"
- *      set var</code>
+ *      set var
+ *      set player's health to 10</code>
  * </pre>
  */
 public class SetPhrase implements Phrase {
@@ -54,28 +55,31 @@ public class SetPhrase implements Phrase {
     @SuppressWarnings("unchecked")
     public Result execute(Context ctx) {
         String name = ctx.getStrarg("Name");
-        Optional<AnalysisResult> analysis = Phrases.instance().analyze(name, (phrase) -> phrase instanceof ValuePhrase);
 
-        if (analysis.isPresent()) { // Change the phrase
-            Result result = new PhraseContainer(Literal.fromObject(name), analysis.get()).resolveResult(ctx);
+        if (name.startsWith("$")) { // Setting variables must begin with dollar
+            ctx.getScript().createOrSet(name.substring(1), ctx.getLiteral("Value", (Object) null));
+        } else {
+            Optional<AnalysisResult> analysis = Phrases.instance().analyze(name, (phrase) -> phrase instanceof ValuePhrase);
 
-            if (result instanceof Result.ValueSuccess) {
-                Result.ValueSuccess valueResult = (Result.ValueSuccess) result;
+            if (analysis.isPresent()) { // Change the phrase
+                Result result = new PhraseContainer(Literal.fromObject(name), analysis.get()).resolveResult(ctx);
 
-                ValuePhrase phrase = (ValuePhrase) analysis.get().getPhrase();
-                Class<?> correspondingClass = phrase.getCorrespondingClass();
+                if (result instanceof Result.ValueSuccess) {
+                    Result.ValueSuccess valueResult = (Result.ValueSuccess) result;
 
-                if (correspondingClass == null) {
-                    valueResult.set(ctx.getLiteral("Value", (Object) null).getValue().orElse(null));
+                    ValuePhrase phrase = (ValuePhrase) analysis.get().getPhrase();
+                    Class<?> correspondingClass = phrase.getCorrespondingClass();
+
+                    if (correspondingClass == null) {
+                        valueResult.set(ctx.getLiteral("Value", (Object) null).getValue().orElse(null));
+                    } else {
+                        valueResult.set(ctx.getSerialized("Value", correspondingClass));
+                    }
+                    return Result.success();
                 } else {
-                    valueResult.set(ctx.getSerialized("Value", correspondingClass));
+                    return Result.failure("%s is not a bounded value result.", name);
                 }
-                return Result.success();
-            } else {
-                return Result.failure("%s is not a bounded value result.", name);
             }
-        } else { // Otherwise, just make it a variable
-            ctx.getScript().createOrSet(name, ctx.getLiteral("Value", (Object) null));
         }
 
         return Result.success();

@@ -50,7 +50,7 @@ public class LocationSerializer implements Serializer<Location> {
 
         List<Literal> list = value.asList();
         if (list.size() < 4) { // We'll allow lenience with having more
-            throw new SerializationException("Value \"%s\" has incorrect number of arguments for a Location", value.asString());
+            throw new SerializationException("Value \"%s\" has incorrect number of arguments for a Location (<4)", value.asString());
         }
 
         // Parse position vector
