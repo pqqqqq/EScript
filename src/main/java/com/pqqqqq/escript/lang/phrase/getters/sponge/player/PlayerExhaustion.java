@@ -2,7 +2,7 @@ package com.pqqqqq.escript.lang.phrase.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
-import com.pqqqqq.escript.lang.phrase.getters.sponge.ValuePhrase;
+import com.pqqqqq.escript.lang.phrase.getters.ValuePhrase;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 import org.spongepowered.api.entity.living.player.Player;
 

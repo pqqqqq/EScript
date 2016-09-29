@@ -7,7 +7,7 @@ import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Phrases;
 import com.pqqqqq.escript.lang.phrase.Result;
-import com.pqqqqq.escript.lang.phrase.getters.sponge.ValuePhrase;
+import com.pqqqqq.escript.lang.phrase.getters.ValuePhrase;
 import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
 
 import java.util.Optional;
