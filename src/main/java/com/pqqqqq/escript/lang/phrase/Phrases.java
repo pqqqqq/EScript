@@ -1,33 +1,29 @@
 package com.pqqqqq.escript.lang.phrase;
 
-import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.phrase.action.PrintPhrase;
-import com.pqqqqq.escript.lang.phrase.action.SetPhrase;
-import com.pqqqqq.escript.lang.phrase.action.sponge.BroadcastPhrase;
-import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerCloseInventory;
-import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerKick;
-import com.pqqqqq.escript.lang.phrase.action.sponge.player.PlayerMessage;
-import com.pqqqqq.escript.lang.phrase.arithmetic.*;
-import com.pqqqqq.escript.lang.phrase.block.*;
-import com.pqqqqq.escript.lang.phrase.condition.*;
-import com.pqqqqq.escript.lang.phrase.getters.ContainsPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.math.AbsolutePhrase;
-import com.pqqqqq.escript.lang.phrase.getters.math.CeilPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.math.FloorPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.math.RoundPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.sponge.MOTDPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.sponge.player.*;
-import com.pqqqqq.escript.lang.phrase.getters.string.LowercasePhrase;
-import com.pqqqqq.escript.lang.phrase.getters.string.SubstringPhrase;
-import com.pqqqqq.escript.lang.phrase.getters.string.UppercasePhrase;
-import com.pqqqqq.escript.lang.phrase.trigger.MineTrigger;
-import com.pqqqqq.escript.lang.phrase.trigger.PlaceTrigger;
-import com.pqqqqq.escript.lang.phrase.trigger.ServerStartTrigger;
-import com.pqqqqq.escript.lang.phrase.trigger.ServerStopTrigger;
+import com.pqqqqq.escript.lang.phrase.phrases.action.PrintPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.action.SetPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.BroadcastPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.player.PlayerCloseInventory;
+import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.player.PlayerKick;
+import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.player.PlayerMessage;
+import com.pqqqqq.escript.lang.phrase.phrases.arithmetic.*;
+import com.pqqqqq.escript.lang.phrase.phrases.block.*;
+import com.pqqqqq.escript.lang.phrase.phrases.condition.*;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.ContainsPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.math.AbsolutePhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.math.CeilPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.math.FloorPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.math.RoundPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.MOTDPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player.*;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.string.LowercasePhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.string.SubstringPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.string.UppercasePhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.trigger.MineTrigger;
+import com.pqqqqq.escript.lang.phrase.phrases.trigger.PlaceTrigger;
+import com.pqqqqq.escript.lang.phrase.phrases.trigger.ServerStartTrigger;
+import com.pqqqqq.escript.lang.phrase.phrases.trigger.ServerStopTrigger;
 import com.pqqqqq.escript.lang.registry.SortedRegistry;
-
-import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * Created by Kevin on 2016-08-31.
@@ -85,6 +81,7 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase PLAYER_GAMEMODE = PlayerGameMode.instance();
     public static final Phrase PLAYER_SATURATION = PlayerSaturation.instance();
     public static final Phrase PLAYER_LOCATION = PlayerLocation.instance();
+    public static final Phrase PLAYER_ITEM_HAND = PlayerItemHand.instance();
 
     // ----------------------------------------------------------------------- \\
 
@@ -135,63 +132,5 @@ public class Phrases extends SortedRegistry<Phrase> {
 
     private Phrases() {
         super(Phrase.class);
-    }
-
-    /**
-     * Analyzes the {@link Line line}, and returns an {@link AnalysisResult analysis}
-     *
-     * @param line the line
-     * @return an {@link Optional optional} phrase
-     */
-    public Optional<AnalysisResult> analyze(Line line) {
-        return analyze(line.getLine());
-    }
-
-    /**
-     * <pre>
-     * Analyzes the {@link Line line}, and returns an {@link AnalysisResult analysis}
-     * Only {@link Phrase phrases} that pass the {@link Predicate predicate filter} will be checked
-     * </pre>
-     *
-     * @param line the line
-     * @param predicate the phrase predicate
-     * @return an {@link Optional optional} phrase
-     */
-    public Optional<AnalysisResult> analyze(Line line, Predicate<Phrase> predicate) {
-        return analyze(line.getLine(), predicate);
-    }
-
-    /**
-     * Analyzes the line's contents, and returns an {@link AnalysisResult analysis}
-     *
-     * @param line the line
-     * @return an {@link Optional optional} phrase
-     */
-    public Optional<AnalysisResult> analyze(String line) {
-        return analyze(line, (phrase) -> true);
-    }
-
-    /**
-     * <pre>
-     * Analyzes the line's contents, and returns an {@link AnalysisResult analysis}
-     * Only {@link Phrase phrases} that pass the {@link Predicate predicate filter} will be checked
-     * </pre>
-     *
-     * @param line      the line
-     * @param predicate the phrase predicate
-     * @return an {@link Optional optional} phrase
-     */
-    public Optional<AnalysisResult> analyze(String line, Predicate<Phrase> predicate) {
-        for (Phrase phrase : registry()) {
-            if (predicate.test(phrase)) {
-                Optional<AnalysisResult> analysis = phrase.matches(line);
-
-                if (analysis.isPresent()) {
-                    return analysis;
-                }
-            }
-        }
-
-        return Optional.empty();
     }
 }

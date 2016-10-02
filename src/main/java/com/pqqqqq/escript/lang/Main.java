@@ -5,6 +5,7 @@ import com.pqqqqq.escript.lang.file.FileSearcher;
 import com.pqqqqq.escript.lang.file.RawScript;
 import com.pqqqqq.escript.lang.file.ScriptFile;
 import com.pqqqqq.escript.lang.trigger.cause.Causes;
+import com.pqqqqq.escript.lang.util.Timer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,9 +36,13 @@ public class Main {
      * Initializes the script environment
      */
     public void init() {
-        Causes.instance().reload(); // Reload causes
-        ExceptionHandler.instance().attach(); // Exception handler init
-        scriptFiles = FileSearcher.instance().search(); // Populate scripts
+        long timeInit = Timer.from(() -> {
+            Causes.instance().reload(); // Reload causes
+            ExceptionHandler.instance().attach(); // Exception handler init
+            scriptFiles = FileSearcher.instance().search(); // Populate scripts
+        }).time();
+
+        ExceptionHandler.instance().logFlush("Scripts compiled, initialized and loaded in: " + timeInit + "ms");
     }
 
     public static void main(String[] args) {

@@ -3,10 +3,10 @@ package com.pqqqqq.escript.lang.data;
 import com.pqqqqq.escript.lang.data.container.*;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.phrase.AnalysisResult;
-import com.pqqqqq.escript.lang.phrase.Phrases;
-import com.pqqqqq.escript.lang.phrase.arithmetic.ArithmeticPhrase;
-import com.pqqqqq.escript.lang.phrase.condition.ConditionalPhrase;
+import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
+import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
+import com.pqqqqq.escript.lang.phrase.phrases.arithmetic.ArithmeticPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.condition.ConditionalPhrase;
 import com.pqqqqq.escript.lang.util.string.SplitSequence;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
@@ -57,14 +57,17 @@ public class Sequencer {
             strarg = strarg.substring(1, strarg.length() - 1);
         }
 
+        // Create an analysis instance here, and if necessary analyses can be run with different predicates
+        Analysis analysis = Analysis.from(strarg);
+
         // Check if it's a CONDITIONAL phrase
-        Optional<AnalysisResult> conditionAnalysis = Phrases.instance().analyze(strarg, (phrase) -> phrase instanceof ConditionalPhrase);
+        Optional<AnalysisResult> conditionAnalysis = analysis.analyze(phrase -> phrase instanceof ConditionalPhrase);
         if (conditionAnalysis.isPresent()) {
             return new PhraseContainer(Literal.fromObject(strarg), conditionAnalysis.get());
         }
 
         // Check if it's a ARITHMETIC phrase
-        Optional<AnalysisResult> arithmeticAnalysis = Phrases.instance().analyze(strarg, (phrase) -> phrase instanceof ArithmeticPhrase);
+        Optional<AnalysisResult> arithmeticAnalysis = analysis.analyze(phrase -> phrase instanceof ArithmeticPhrase);
         if (arithmeticAnalysis.isPresent()) {
             return new PhraseContainer(Literal.fromObject(strarg), arithmeticAnalysis.get());
         }
@@ -94,9 +97,9 @@ public class Sequencer {
         }
 
         // Check if it's a normal phrase
-        Optional<AnalysisResult> analysis = Phrases.instance().analyze(strarg, (phrase) -> !(phrase instanceof ConditionalPhrase || phrase instanceof ArithmeticPhrase));
-        if (analysis.isPresent()) {
-            return new PhraseContainer(Literal.fromObject(strarg), analysis.get());
+        Optional<AnalysisResult> normalAnalysis = analysis.analyze(phrase -> !(phrase instanceof ConditionalPhrase || phrase instanceof ArithmeticPhrase));
+        if (normalAnalysis.isPresent()) {
+            return new PhraseContainer(Literal.fromObject(strarg), normalAnalysis.get());
         }
 
         // Check plain data

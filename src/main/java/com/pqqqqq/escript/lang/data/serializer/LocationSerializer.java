@@ -74,7 +74,7 @@ public class LocationSerializer implements Serializer<Location> {
     }
 
     @Override
-    public Class<? extends Location> getCorrespondingClass() {
+    public Class<Location> getCorrespondingClass() {
         return Location.class;
     }
 }

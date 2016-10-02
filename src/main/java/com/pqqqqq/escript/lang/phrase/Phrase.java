@@ -3,7 +3,9 @@ package com.pqqqqq.escript.lang.phrase;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.phrase.syntax.Syntax;
+import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
+import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
+import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 import com.pqqqqq.escript.lang.registry.RegistryEntry;
 import com.pqqqqq.escript.lang.script.Script;
 
@@ -61,38 +63,25 @@ public interface Phrase extends RegistryEntry, Comparable<Phrase> {
 
     /**
      * <pre>
-     * Check if the given {@link Line line} matches any of the given {@link #getSyntaxes() syntaxes}
-     * If the line does match a pattern, an {@link AnalysisResult analysis} is returned, otherwise {@link Optional#empty()} is returned
-     * </pre>
-     *
-     * @param line the line
-     * @return the matched pattern if the line is this type of phrase
-     */
-    default Optional<AnalysisResult> matches(Line line) {
-        return matches(line.getLine());
-    }
-
-    /**
-     * <pre>
      * Check if the given line's contents matches any of the given {@link #getSyntaxes() syntaxes}
      * If the line does match a pattern, an {@link AnalysisResult analysis} is returned, otherwise {@link Optional#empty()} is returned
      * </pre>
      *
-     * @param line the line
+     * @param analysis the current {@link Analysis analysis}
      * @return the matched pattern if the line is this type of phrase
      */
-    default Optional<AnalysisResult> matches(String line) {
+    default Optional<AnalysisResult> matches(Analysis analysis) {
         UnknownSymbolException exception = null;
 
         for (Syntax syntax : getSyntaxes()) {
-            Optional<AnalysisResult.Builder> match = syntax.matches(line);
+            Optional<AnalysisResult.Builder> match = syntax.matches(analysis);
 
             if (match.isPresent()) {
                 try {
-                    Optional<AnalysisResult> analysis = match.get().phrase(this).build();
+                    Optional<AnalysisResult> result = match.get().phrase(this).build();
 
-                    if (analysis.isPresent()) {
-                        return Optional.of(analysis.get());
+                    if (result.isPresent()) {
+                        return Optional.of(result.get());
                     }
                 } catch (UnknownSymbolException e) {
                     exception = e; // Store exception if one isn't found before

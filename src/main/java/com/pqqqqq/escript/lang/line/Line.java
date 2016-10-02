@@ -5,10 +5,10 @@ import com.pqqqqq.escript.lang.data.container.DatumContainer;
 import com.pqqqqq.escript.lang.exception.UnknownPhraseException;
 import com.pqqqqq.escript.lang.file.FileLexer;
 import com.pqqqqq.escript.lang.file.RawScript;
-import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Phrase;
-import com.pqqqqq.escript.lang.phrase.Phrases;
-import com.pqqqqq.escript.lang.phrase.syntax.Component;
+import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
+import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
+import com.pqqqqq.escript.lang.phrase.analysis.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 
@@ -190,7 +190,7 @@ public class Line {
         private Integer lineNumber = null;
         private Integer tabulations = null;
 
-        private Optional<AnalysisResult> analysis = Optional.empty();
+        private Optional<AnalysisResult> analysisResult = Optional.empty();
 
         private Set<Line.Builder> lineBlock = new HashSet<>();
 
@@ -254,13 +254,13 @@ public class Line {
         }
 
         /**
-         * Sets the line's {@link AnalysisResult analysis}
+         * Sets the line's {@link AnalysisResult analysis result}
          *
-         * @param analysis the analysis result
+         * @param analysisResult the analysis result
          * @return this builder, for chaining
          */
-        public Builder analysis(AnalysisResult analysis) {
-            this.analysis = Optional.of(analysis);
+        public Builder analysis(AnalysisResult analysisResult) {
+            this.analysisResult = Optional.of(analysisResult);
             return this;
         }
 
@@ -281,14 +281,14 @@ public class Line {
          * @return the new line instance
          */
         public Line build() {
-            AnalysisResult analysis = this.analysis.orElseGet(() -> Phrases.instance().analyze(line).orElseThrow(() -> new UnknownPhraseException("Unknown phrase for line: \"%s\"", line)));
+            AnalysisResult analysisResult = this.analysisResult.orElseGet(() -> Analysis.from(line).analyze().orElseThrow(() -> new UnknownPhraseException("Unknown phrase for line: \"%s\"", line)));
 
             // Convert each line builder into a line
             Set<Line> lineBlock = new HashSet<>();
             this.lineBlock.stream().map(buildableLine -> buildableLine.script(this.rawScript).build()).forEach(lineBlock::add);
 
             return new Line(checkNotNull(this.rawScript, "You must specify a script."), checkNotNull(this.line, "You must specify a line string."), checkNotNull(this.lineNumber, "You must specify a line number."),
-                    checkNotNull(this.tabulations, "You must specify a tabulation number."), analysis, lineBlock);
+                    checkNotNull(this.tabulations, "You must specify a tabulation number."), analysisResult, lineBlock);
         }
     }
 }

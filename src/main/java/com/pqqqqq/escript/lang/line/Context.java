@@ -6,7 +6,7 @@ import com.pqqqqq.escript.lang.data.serializer.Serializer;
 import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.exception.MissingGroupException;
 import com.pqqqqq.escript.lang.exception.SerializationException;
-import com.pqqqqq.escript.lang.phrase.syntax.Component;
+import com.pqqqqq.escript.lang.phrase.analysis.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -202,6 +202,18 @@ public class Context {
         return getOptionalPlayer(group).orElseThrow(() -> new MissingGroupException("A player could not be found for the given group: %s", group));
     }
 
+    /**
+     * <pre>
+     * Gets an {@link Optional optional} serialized type (after {@link DatumContainer#resolve(Context) resolved}) for the given group
+     * The type will be serialized by the {@link Serializer serializer} for the given type
+     * If the serialization is unsuccessful, a {@link SerializationException serialization exception} is thrown
+     * </pre>
+     *
+     * @param group          the group
+     * @param serializeClass the serialize type's class
+     * @param <T>            the generic type to be serialized into
+     * @return the optional serialized type
+     */
     public <T> Optional<T> getOptionalSerialized(String group, Class<? extends T> serializeClass) {
         Optional<Literal> literal = getOptionalLiteral(group);
         if (!literal.isPresent()) {
@@ -212,8 +224,60 @@ public class Context {
         return Optional.ofNullable(serializer.deserialize(literal.get()));
     }
 
-    public <T> T getSerialized(String group, Class<? extends T> serializeClass) {
+    /**
+     * <pre>
+     * Gets a serialized type (after {@link DatumContainer#resolve(Context) resolved}) for the given group
+     * The type will be serialized by the {@link Serializer serializer} for the given type
+     * If the serialization is unsuccessful, a {@link SerializationException serialization exception} is thrown
+     *
+     * If no literal is found in that group, a {@link com.pqqqqq.escript.lang.exception.MissingGroupException missing group exception (MGE)} is thrown
+     * </pre>
+     *
+     * @param group          the group
+     * @param serializeClass the serialize type's class
+     * @param <T>            the generic type to be serialized into
+     * @return the serialized type
+     */
+    public <T> T getSerialized(String group, Class<T> serializeClass) {
         return getOptionalSerialized(group, serializeClass).orElseThrow(() -> new MissingGroupException("A serialized literal could not be found for the given group: %s", group));
+    }
+
+    /**
+     * <pre>
+     * Gets a serialized type (after {@link DatumContainer#resolve(Context) resolved}) for the given group
+     * The type will be serialized by the {@link Serializer serializer} for the given type
+     * If the serialization is unsuccessful, a {@link SerializationException serialization exception} is thrown
+     *
+     * If no literal is found in that group, the default is returned
+     * </pre>
+     *
+     * @param group          the group
+     * @param serializeClass the serialize type's class
+     * @param def            the default value
+     * @param <T>            the generic type to be serialized into
+     * @return the serialized type
+     */
+    public <T> T getSerialized(String group, Class<T> serializeClass, T def) {
+        return getOptionalSerialized(group, serializeClass).orElse(def);
+    }
+
+    /**
+     * <pre>
+     * Gets a serialized type (after {@link DatumContainer#resolve(Context) resolved}) for the given group
+     * The type will be serialized by the {@link Serializer serializer} for the given type
+     * If the serialization is unsuccessful, a {@link SerializationException serialization exception} is thrown
+     *
+     * If no literal is found in that group, the default {@link Supplier supplier} is used
+     * </pre>
+     *
+     * @param group          the group
+     * @param serializeClass the serialize type's class
+     * @param def            the default supplier
+     * @param <T>            the generic type to be serialized into
+     * @return the serialized type
+     */
+    public <T> T getSerialized(String group, Class<T> serializeClass, Supplier<T> def) {
+        return getOptionalSerialized(group, serializeClass).orElseGet(def);
     }
 
     /**

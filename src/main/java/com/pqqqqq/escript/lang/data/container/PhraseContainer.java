@@ -6,8 +6,8 @@ import com.pqqqqq.escript.lang.exception.FailedLineException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.line.RunVessel;
-import com.pqqqqq.escript.lang.phrase.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.Result;
+import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
 
 /**
  * Created by Kevin on 2015-06-17.

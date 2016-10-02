@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class ExceptionHandler {
     private static final ExceptionHandler INSTANCE = new ExceptionHandler();
-    private static final File ERROR_FILE = new File("scripts/errors.log");
+    private static final File ERROR_FILE = new File("scripts/scripts.log");
     private PrintStream writer;
 
     private ExceptionHandler() {
@@ -40,6 +40,7 @@ public class ExceptionHandler {
      */
     public void attach() {
         try {
+            ERROR_FILE.createNewFile(); // Create if not existent
             writer = new PrintStream(ERROR_FILE);
         } catch (Exception e) {
             e.printStackTrace();

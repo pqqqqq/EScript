@@ -41,7 +41,7 @@ public interface Serializer<T> extends RegistryEntry {
      *
      * @return the class
      */
-    Class<? extends T> getCorrespondingClass();
+    Class<T> getCorrespondingClass();
 
     /**
      * Checks if the passed object is applicable to be {@link #serialize(Object) serialized} by this serializer.
