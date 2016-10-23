@@ -3,7 +3,6 @@ package com.pqqqqq.escript.lang.line;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
 import com.pqqqqq.escript.lang.data.serializer.Serializer;
-import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.exception.MissingGroupException;
 import com.pqqqqq.escript.lang.exception.SerializationException;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Component;
@@ -210,17 +209,16 @@ public class Context {
      * </pre>
      *
      * @param group          the group
-     * @param serializeClass the serialize type's class
+     * @param serializer the {@link Serializer serializer}
      * @param <T>            the generic type to be serialized into
      * @return the optional serialized type
      */
-    public <T> Optional<T> getOptionalSerialized(String group, Class<? extends T> serializeClass) {
+    public <T> Optional<T> getOptionalSerialized(String group, Serializer<? extends T> serializer) {
         Optional<Literal> literal = getOptionalLiteral(group);
         if (!literal.isPresent()) {
             return Optional.empty();
         }
 
-        Serializer<? extends T> serializer = Serializers.instance().getSerializer(serializeClass).orElseThrow(() -> new SerializationException("\"%s\" cannot be deserialized to class %s", literal.get().toString(), serializeClass.getSimpleName()));
         return Optional.ofNullable(serializer.deserialize(literal.get()));
     }
 
@@ -234,12 +232,12 @@ public class Context {
      * </pre>
      *
      * @param group          the group
-     * @param serializeClass the serialize type's class
+     * @param serializer the {@link Serializer serializer}
      * @param <T>            the generic type to be serialized into
      * @return the serialized type
      */
-    public <T> T getSerialized(String group, Class<T> serializeClass) {
-        return getOptionalSerialized(group, serializeClass).orElseThrow(() -> new MissingGroupException("A serialized literal could not be found for the given group: %s", group));
+    public <T> T getSerialized(String group, Serializer<? extends T> serializer) {
+        return getOptionalSerialized(group, serializer).orElseThrow(() -> new MissingGroupException("A serialized literal could not be found for the given group: %s", group));
     }
 
     /**
@@ -252,13 +250,13 @@ public class Context {
      * </pre>
      *
      * @param group          the group
-     * @param serializeClass the serialize type's class
+     * @param serializer the {@link Serializer serializer}
      * @param def            the default value
      * @param <T>            the generic type to be serialized into
      * @return the serialized type
      */
-    public <T> T getSerialized(String group, Class<T> serializeClass, T def) {
-        return getOptionalSerialized(group, serializeClass).orElse(def);
+    public <T> T getSerialized(String group, Serializer<T> serializer, T def) {
+        return getOptionalSerialized(group, serializer).orElse(def);
     }
 
     /**
@@ -271,13 +269,13 @@ public class Context {
      * </pre>
      *
      * @param group          the group
-     * @param serializeClass the serialize type's class
+     * @param serializer the {@link Serializer serializer}
      * @param def            the default supplier
      * @param <T>            the generic type to be serialized into
      * @return the serialized type
      */
-    public <T> T getSerialized(String group, Class<T> serializeClass, Supplier<T> def) {
-        return getOptionalSerialized(group, serializeClass).orElseGet(def);
+    public <T> T getSerialized(String group, Serializer<T> serializer, Supplier<T> def) {
+        return getOptionalSerialized(group, serializer).orElseGet(def);
     }
 
     /**

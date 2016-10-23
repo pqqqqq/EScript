@@ -52,15 +52,4 @@ public class Serializers extends Registry<Serializer> {
     public Optional<Literal> serialize(Object object) {
         return registry().stream().filter((serializer) -> serializer.isApplicable(object)).map((serializer) -> serializer.serialize(object)).findFirst();
     }
-
-    /**
-     * Attempts to gets the corresponding {@link Serializer serializer} for the given class
-     *
-     * @param clazz the class
-     * @return the serializer, or {@link Optional#empty()}
-     */
-    @SuppressWarnings("unchecked")
-    public <T> Optional<Serializer<T>> getSerializer(Class<? extends T> clazz) {
-        return registry().stream().filter((serializer) -> serializer.getCorrespondingClass().isAssignableFrom(clazz)).map(a -> (Serializer<T>) a).findFirst();
-    }
 }

@@ -18,7 +18,7 @@ import java.util.*;
  * <p>
  * An immutable literal type - a type that does not need to be resolved
  */
-public class Literal implements Datum {
+public final class Literal implements Datum {
     private final Optional<?> value;
 
     /**
