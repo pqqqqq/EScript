@@ -7,13 +7,4 @@ import com.pqqqqq.escript.lang.phrase.Phrase;
  * A tagging interface for phrases that have bounded values
  */
 public interface ValuePhrase extends Phrase {
-
-    /**
-     * Gets the class corresponding to this value
-     *
-     * @return the class
-     */
-    default Class<?> getCorrespondingClass() {
-        return null;
-    }
 }

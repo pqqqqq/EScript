@@ -1,13 +1,12 @@
 package com.pqqqqq.escript.lang.phrase.phrases.block;
 
 import com.pqqqqq.escript.lang.data.Literal;
-import com.pqqqqq.escript.lang.data.variable.Variable;
+import com.pqqqqq.escript.lang.data.mutable.variable.Variable;
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
-
-import java.util.List;
 
 /**
  * Created by Kevin on 2016-08-31.
@@ -51,8 +50,8 @@ public class ForEachPhrase implements Phrase {
         String name = ctx.getStrarg("Name");
         Variable variable = ctx.getScript().createOrGet(name);
 
-        List<Literal> list = ctx.getLiteral("Array").asList();
-        for (Literal literal : list) {
+        LiteralStore store = ctx.getLiteral("Array").asStore();
+        for (Literal literal : store.getListModule().toImmutable()) {
             variable.setValue(literal);
             ctx.executeBlock();
 

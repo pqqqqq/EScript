@@ -2,12 +2,13 @@ package com.pqqqqq.escript.lang.data.serializer;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
+import com.pqqqqq.escript.lang.data.store.map.MapModule;
 import com.pqqqqq.escript.lang.exception.SerializationException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
  */
 public class LocationSerializer implements Serializer<Location> {
     private static final LocationSerializer INSTANCE = new LocationSerializer();
+    private static final String[] MAPPER = {"world", "x", "y", "z"};
 
     /**
      * Gets the main instance
@@ -32,13 +34,14 @@ public class LocationSerializer implements Serializer<Location> {
 
     @Override
     public Literal serialize(Location value) {
-        Object[] array = new Object[4];
-        array[0] = value.getExtent().getUniqueId().toString();
-        array[1] = value.getX();
-        array[2] = value.getY();
-        array[3] = value.getZ();
+        LiteralStore store = LiteralStore.empty();
+        MapModule mapModule = store.getMapModule();
 
-        return Literal.fromObject(array);
+        mapModule.add("world", Literal.fromObject(value.getExtent().getUniqueId().toString()));
+        mapModule.add("x", Literal.fromObject(value.getX()));
+        mapModule.add("y", Literal.fromObject(value.getY()));
+        mapModule.add("z", Literal.fromObject(value.getZ()));
+        return Literal.fromObject(store);
     }
 
     @Override
@@ -48,19 +51,21 @@ public class LocationSerializer implements Serializer<Location> {
             return deserialize(Literal.fromObject(value.asString().split(","))); // Strings will just separate them by commas
         }
 
-        List<Literal> list = value.asList();
-        if (list.size() < 4) { // We'll allow lenience with having more
+        LiteralStore store = value.asStore().collapseMap(MAPPER);
+        MapModule mapModule = store.getMapModule();
+
+        if (mapModule.size() < 4) { // We'll allow lenience with having more
             throw new SerializationException("Value \"%s\" has incorrect number of arguments for a Location (<4)", value.asString());
         }
 
         // Parse position vector
-        double x = list.get(1).asNumber();
-        double y = list.get(2).asNumber();
-        double z = list.get(3).asNumber();
+        double x = mapModule.getLiteral("x").asNumber();
+        double y = mapModule.getLiteral("y").asNumber();
+        double z = mapModule.getLiteral("z").asNumber();
         Vector3d position = new Vector3d(x, y, z);
 
         // Parse world
-        String uuidOrName = list.get(0).asString();
+        String uuidOrName = mapModule.getLiteral("world").asString();
         Optional<World> worldOptional;
 
         try {

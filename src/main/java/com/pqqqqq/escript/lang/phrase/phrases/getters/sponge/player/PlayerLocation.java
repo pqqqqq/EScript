@@ -1,11 +1,12 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player;
 
+import com.pqqqqq.escript.lang.data.mutable.LinkedMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.LocationSerializer;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.ValuePhrase;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.world.Location;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -47,11 +48,6 @@ public class PlayerLocation implements ValuePhrase {
     @Override
     public Result execute(Context ctx) {
         Player player = ctx.getPlayer("Player");
-        return Result.valueSuccess(player::getLocation, player::setLocation);
-    }
-
-    @Override
-    public Class<?> getCorrespondingClass() {
-        return Location.class;
+        return Result.valueSuccess(LinkedMutableValue.fromFunction(player::getLocation, player::setLocation, LocationSerializer.instance()));
     }
 }

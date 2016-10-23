@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.lang.script;
 
-import com.pqqqqq.escript.lang.data.variable.Environment;
-import com.pqqqqq.escript.lang.data.variable.Variable;
+import com.pqqqqq.escript.lang.data.mutable.variable.Environment;
+import com.pqqqqq.escript.lang.data.mutable.variable.Variable;
 import com.pqqqqq.escript.lang.exception.FailedLineException;
 import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.exception.state.ESRuntimeException;

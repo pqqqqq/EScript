@@ -1,28 +1,27 @@
 package com.pqqqqq.escript.lang.data.container;
 
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.line.Context;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by Kevin on 2016-09-13.
  * <p>
  * <pre>
- * A list {@link DatumContainer container}, dedicated to resolving lists at runtime
+ * A store {@link DatumContainer container}, dedicated to resolving stores at runtime
  * </pre>
  */
-public class ListContainer implements DatumContainer {
+public class StoreContainer implements DatumContainer {
     private final Collection<DatumContainer> items;
 
     /**
-     * Creates a new list containers with the given items
+     * Creates a new store container with the given items
      *
      * @param items the items
      */
-    public ListContainer(Collection<DatumContainer> items) {
+    public StoreContainer(Collection<DatumContainer> items) {
         this.items = items;
     }
 
@@ -37,8 +36,8 @@ public class ListContainer implements DatumContainer {
 
     @Override
     public Literal resolve(Context ctx) {
-        List<Literal> resolved = new ArrayList<>();
-        items.stream().map(container -> container.resolve(ctx)).forEach(resolved::add);
-        return Literal.fromObject(resolved);
+        LiteralStore store = LiteralStore.empty();
+        items.stream().map(container -> container.resolve(ctx)).forEach(store::add);
+        return Literal.fromObject(store);
     }
 }

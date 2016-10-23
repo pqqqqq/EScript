@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.lang.data.container;
 
 import com.pqqqqq.escript.lang.data.Literal;
-import com.pqqqqq.escript.lang.data.variable.Variable;
+import com.pqqqqq.escript.lang.data.mutable.variable.Variable;
 import com.pqqqqq.escript.lang.line.Context;
 
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.Optional;
  * A {@link DatumContainer} that attempts to resolve a {@link Variable}
  * </pre>
  */
-public class VariableContainer implements DatumContainer {
+public class VariableContainer implements DatumContainer.Value {
     private final DatumContainer variableName;
 
     /**
@@ -35,5 +35,11 @@ public class VariableContainer implements DatumContainer {
         } else {
             return Literal.EMPTY;
         }
+    }
+
+    @Override
+    public Variable resolveVariable(Context ctx) {
+        String name = variableName.resolve(ctx).asString();
+        return ctx.getScript().createOrGet(name);
     }
 }

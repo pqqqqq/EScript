@@ -1,6 +1,5 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.string;
 
-import com.pqqqqq.escript.lang.data.Keyword;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
@@ -47,17 +46,9 @@ public class SubstringPhrase implements Phrase {
         Literal stringLiteral = ctx.getLiteral("String");
         String string = stringLiteral.asString();
 
-        int start = getIndex(stringLiteral, ctx.getLiteral("Start", 1)) - 1; // Base 1
-        int end = getIndex(stringLiteral, ctx.getLiteral("End", string.length())); // Inclusive end
+        int start = ctx.getLiteral("Start", 1).asNumber().intValue() - 1; // Base 1
+        int end = ctx.getLiteral("End", string.length()).asNumber().intValue(); // Inclusive end
 
         return Result.success(string.substring(start, end));
-    }
-
-    private int getIndex(Literal container, Literal index) {
-        if (index.isKeyword() && (index.asKeyword() == Keyword.FIRST || index.asKeyword() == Keyword.LAST)) {
-            return index.asKeyword().resolve(container).asNumber().intValue();
-        } else { // TODO Index can be string for maps?
-            return index.asNumber().intValue();
-        }
     }
 }

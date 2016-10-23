@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.lang.phrase.phrases.block;
 
 import com.pqqqqq.escript.lang.data.Literal;
-import com.pqqqqq.escript.lang.data.variable.Variable;
+import com.pqqqqq.escript.lang.data.mutable.variable.Variable;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;

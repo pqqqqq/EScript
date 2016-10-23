@@ -1,5 +1,7 @@
 package com.pqqqqq.escript.lang.data;
 
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
+
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -10,42 +12,33 @@ import java.util.function.Function;
  */
 public enum Keyword {
     /**
-     * <pre>
-     * The last keyword, takes one container argument in {@link #resolve(Literal...)}, and inserts on indices
-     * For example, in {@link Literal#fromIndex(Literal)}, the last keyword will automatically get the last item
-     * </pre>
+     * The last keyword, which gets the last item in a list
      */
-    LAST((arguments) -> Literal.fromObject(arguments[0].size()), "last", "tail"),
+    LAST((list) -> Literal.fromObject(list.getListModule().size()), "last", "tail"),
 
     /**
-     * <pre>
-     * The first keyword, takes one container argument in {@link #resolve(Literal...)}, and inserts on indices
-     * For example, in {@link Literal#fromIndex(Literal)}, the first keyword will automatically get the first item
-     * </pre>
+     * The first keyword, which gets the first item in a list
      */
-    FIRST((arguments) -> Literal.ONE, "first", "head");
+    FIRST((list) -> Literal.ONE, "first", "head");
 
-    private final Function<Literal[], Literal> function;
+    private final Function<LiteralStore, Literal> function;
     private final String[] aliases;
     private final Literal literalValue;
 
-    Keyword(Function<Literal[], Literal> function, String... aliases) {
+    Keyword(Function<LiteralStore, Literal> function, String... aliases) {
         this.aliases = aliases;
         this.function = function;
         this.literalValue = new Literal(this);
     }
 
     /**
-     * <pre>
-     * Attempts to apply this keyword to the list of {@link Literal arguments}
-     * Different keywords may take a different number of arguments
-     * </pre>
+     * Attempts to apply this keyword to the {@link LiteralStore literal store}
      *
-     * @param arguments the arguments
+     * @param store the store
      * @return the resultant literal
      */
-    public Literal resolve(Literal... arguments) {
-        return this.function.apply(arguments);
+    public Literal resolve(LiteralStore store) {
+        return this.function.apply(store);
     }
 
     /**

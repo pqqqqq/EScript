@@ -1,4 +1,4 @@
-package com.pqqqqq.escript.lang.data.variable;
+package com.pqqqqq.escript.lang.data.mutable.variable;
 
 import com.pqqqqq.escript.lang.data.Datum;
 

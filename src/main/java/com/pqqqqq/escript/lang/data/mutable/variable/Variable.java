@@ -1,8 +1,9 @@
-package com.pqqqqq.escript.lang.data.variable;
+package com.pqqqqq.escript.lang.data.mutable.variable;
 
 import com.google.common.base.Objects;
 import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A memory section that stores an instance of a {@link Datum}
  * </pre>
  */
-public class Variable {
+public class Variable implements MutableValue<Datum> {
     private final String name;
     private final Environment environment;
     private Datum value;
@@ -48,22 +49,15 @@ public class Variable {
         return environment;
     }
 
-    /**
-     * Gets the {@link Datum datum} value
-     *
-     * @return the variable's value
-     */
+    @Override
     public Datum getValue() {
         return value;
     }
 
-    /**
-     * Sets the {@link Datum datum} value
-     *
-     * @param value the new value
-     */
-    public void setValue(Datum value) {
+    @Override
+    public boolean setValue(Datum value) {
         this.value = Optional.ofNullable(value).orElse(Literal.EMPTY); // Fixed unchecked cast? How?
+        return true;
     }
 
     @Override
@@ -88,5 +82,10 @@ public class Variable {
                 .add("Environment", getEnvironment().getClass().getName())
                 .add("Value", value.toString())
                 .toString();
+    }
+
+    @Override
+    public MutableValue<Datum> copy() {
+        throw new AbstractMethodError("Variables are not copyable");
     }
 }

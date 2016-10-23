@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player;
 
+import com.pqqqqq.escript.lang.data.mutable.LinkedMutableValue;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
@@ -50,6 +51,6 @@ public class PlayerHealth implements ValuePhrase {
     @Override
     public Result execute(Context ctx) {
         Player player = ctx.getPlayer("Player");
-        return Result.valueSuccess(player.getHealthData().health(), player);
+        return Result.valueSuccess(LinkedMutableValue.fromStore(player.getHealthData().health(), player));
     }
 }

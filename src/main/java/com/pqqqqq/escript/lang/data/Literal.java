@@ -1,11 +1,13 @@
 package com.pqqqqq.escript.lang.data;
 
-import com.google.common.collect.ImmutableList;
+import com.pqqqqq.escript.lang.data.mutable.MutableValue;
+import com.pqqqqq.escript.lang.data.mutable.SimpleMutableValue;
 import com.pqqqqq.escript.lang.data.serializer.Serializers;
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
+import com.pqqqqq.escript.lang.data.store.map.EntryReplicate;
 import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.exception.InvalidTypeException;
 import com.pqqqqq.escript.lang.line.Context;
-import com.pqqqqq.escript.lang.util.CurrentValue;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -28,11 +30,6 @@ public class Literal implements Datum {
      * A literal with an empty string - ""
      */
     public static final Literal EMPTY_STRING = new Literal("");
-
-    /**
-     * A literal with an empty list - {}
-     */
-    public static final Literal EMPTY_LIST = new Literal(ImmutableList.copyOf(new ArrayList<>()));
 
     /**
      * A literal with the boolean value true
@@ -62,7 +59,6 @@ public class Literal implements Datum {
      *
      *      {@link #EMPTY}
      *      {@link #EMPTY_STRING}
-     *      {@link #EMPTY_LIST}
      *      {@link #TRUE}
      *      {@link #FALSE}
      *      {@link #ZERO}
@@ -102,17 +98,27 @@ public class Literal implements Datum {
 
             return new Literal(number);
         } else if (value.getClass().isArray()) { // Check if the value is an array
-            return fromObject(Arrays.asList((Object[]) value)); // Recursion as a list
+            return fromObject(Arrays.asList((Object[]) value));
         } else if (value instanceof Collection) { // Array formatting
             Collection<?> collection = (Collection<?>) value;
-            List<Literal> list = new ArrayList<>();
+            List<MutableValue<Literal>> list = new ArrayList<>();
 
-            collection.stream().map(Literal::fromObject).forEach(list::add);
-            return new Literal(ImmutableList.copyOf(list)); // Immutable, since literals are immutable as well
+            collection.stream().map(Literal::fromObject).map(SimpleMutableValue::from).forEach(list::add);
+            return new Literal(LiteralStore.builder().listMV(list).build()); // Literal store
+        } else if (value instanceof Map) { // Map formatting
+            Map<?, ?> map = (Map<?, ?>) value;
+            Map<String, MutableValue<Literal>> newMap = new HashMap<>();
+
+            map.entrySet().forEach(entry -> newMap.put(entry.getKey().toString(), SimpleMutableValue.from(Literal.fromObject(entry.getValue()))));
+            return new Literal(LiteralStore.builder().mapMV(newMap).build());
         } else if (value instanceof Keyword) {
             return ((Keyword) value).getLiteral();
-        } else if (value instanceof CurrentValue) {
-            return fromObject(((CurrentValue<?>) value).get()); // Get the actual value
+        } else if (value instanceof LiteralStore) {
+            return new Literal(value); // Just letting it through
+        } else if (value instanceof EntryReplicate) {
+            return new Literal(value); // Just letting it through
+        } else if (value instanceof MutableValue) {
+            return fromObject(((MutableValue<?>) value).getValue()); // Get the actual value
         }
 
         // If we reach the end, try serializing it
@@ -224,12 +230,23 @@ public class Literal implements Datum {
     }
 
     /**
-     * Checks if this literal is a list type
+     * Checks if this literal is a store type
      *
-     * @return true if a list
+     * @return true if a store
      */
-    public boolean isList() {
-        return getValue().isPresent() && getValue().get() instanceof List;
+    public boolean isStore() {
+        return getValue().isPresent() && getValue().get() instanceof LiteralStore;
+    }
+
+    /**
+     * Checks if this literal is castable to the given type.
+     * This is useful preceding a {@link #rawAs(Class) raw cast}
+     *
+     * @param typeClass the type's class
+     * @return true if castable
+     */
+    public boolean isType(Class<?> typeClass) {
+        return getValue().isPresent() && typeClass.isInstance(getValue().get());
     }
 
     /**
@@ -288,52 +305,25 @@ public class Literal implements Datum {
      *
      * @return the list
      */
-    @SuppressWarnings("unchecked")
-    public List<Literal> asList() {
-        return isList() ? (List<Literal>) getValue().get() : parseList().asList();
+    public LiteralStore asStore() {
+        return isStore() ? (LiteralStore) getValue().get() : parseStore().asStore();
     }
 
     /**
-     * <pre>
-     * Gets the size of the literal.
-     * If the literal is an list, this calls {@link List#size()}
-     * Otherwise, this calls {@link String#length()}
-     * </pre>
+     * A raw cast to the given type
      *
-     * @return the size
+     * @param clazz the class of the type
+     * @param <T> the generic type
+     * @return the value, or null
      */
-    public int size() {
-        if (isList()) {
-            return asList().size();
-        } else {
-            return asString().length();
-        }
+    public <T> T rawAs(Class<T> clazz) {
+        return (T) getValue().orElse(null);
     }
 
     /**
      * <pre>
      * Gets the literal at the given index
-     * If the literal is an array, it gets the literal at the given index
-     * Otherwise, the literal is treated as a string, and retrieves the character at the given index
-     *
-     * The index SHOULD NOT be corrected for base-1, as it is done in this method
-     * </pre>
-     *
-     * @param index the index
-     * @return the literal
-     */
-    public Literal fromIndex(int index) {
-        if (isList()) {
-            return asList().get(--index); // Indices are base-1
-        } else {
-            return Literal.fromObject(asString().charAt(--index)); // Indices are base-1
-        }
-    }
-
-    /**
-     * <pre>
-     * Gets the literal at the given index
-     * If the literal is an array, it gets the literal at the given index
+     * If the literal is a list, it gets the literal at the given index
      * Otherwise, the literal is treated as a string, and retrieves the character at the given index
      *
      * The index SHOULD NOT be corrected for base-1, as it is done in this method
@@ -343,10 +333,10 @@ public class Literal implements Datum {
      * @return the literal
      */
     public Literal fromIndex(Literal indexLiteral) {
-        if (indexLiteral.isKeyword() && (indexLiteral.asKeyword() == Keyword.FIRST || indexLiteral.asKeyword() == Keyword.LAST)) {
-            return fromIndex(indexLiteral.asKeyword().resolve(this));
-        } else { // TODO Index can be string for maps?
-            return fromIndex(indexLiteral.asNumber().intValue());
+        if (isStore()) {
+            return asStore().get(indexLiteral).getValue();
+        } else {
+            return Literal.fromObject(asString().indexOf(indexLiteral.asNumber().intValue() - 1));
         }
     }
 
@@ -400,9 +390,9 @@ public class Literal implements Datum {
         throw new FormatException(asString() + " cannot be formatted into a boolean.");
     }
 
-    private Literal parseList() { // Attempts to parse the value into a literal with a list value
+    private Literal parseStore() { // Attempts to parse the value into a literal with a store value
         if (isEmpty()) {
-            return EMPTY_LIST;
+            return LiteralStore.emptyLiteral().get();
         }
 
         return Literal.fromObject(Collections.singletonList(this)); // Create a singleton
@@ -421,19 +411,18 @@ public class Literal implements Datum {
             return Literal.fromObject(asNumber() + other.asNumber());
         }
 
-        if (isList()) {
-            List<Literal> list = new ArrayList<>();
-            list.addAll(asList());
+        if (isStore()) {
+            LiteralStore store = asStore().copy();
 
-            if (other.isList()) { // If the other is also a list, combine the lists
-                list.addAll(other.asList());
-            } else { // Otherwise, just append the other to this list
+            if (other.isStore()) { // If the other is also a store, combine the stores
+                store.addAll(other.asStore());
+            } else { // Otherwise, just append the other to this store
                 if (!other.isEmpty()) {
-                    list.add(other);
+                    store.add(other);
                 }
             }
-            return Literal.fromObject(list);
-        } else if (other.isList()) {
+            return Literal.fromObject(store);
+        } else if (other.isString()) {
             return other.add(this); // Reverse this, so we don't need to rewrite code
         }
 

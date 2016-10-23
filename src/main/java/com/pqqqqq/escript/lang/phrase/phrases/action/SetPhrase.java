@@ -1,16 +1,13 @@
 package com.pqqqqq.escript.lang.phrase.phrases.action;
 
 import com.pqqqqq.escript.lang.data.Literal;
-import com.pqqqqq.escript.lang.data.container.PhraseContainer;
+import com.pqqqqq.escript.lang.data.container.DatumContainer;
+import com.pqqqqq.escript.lang.data.mutable.MutableValue;
+import com.pqqqqq.escript.lang.data.serializer.Serializer;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
-import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
-import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
-import com.pqqqqq.escript.lang.phrase.phrases.getters.ValuePhrase;
-
-import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-08-31.
@@ -26,8 +23,8 @@ import java.util.Optional;
 public class SetPhrase implements Phrase {
     private static final SetPhrase INSTANCE = new SetPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("set|change|modify ^Name to $Value"),
-            Syntax.compile("create ^Name with? value* $Value*")
+            Syntax.compile("set|change|modify #Name to $Value"),
+            Syntax.compile("create #Name with? value* $Value*")
 
             /*Pattern.compile("^(send(\\s+?))?(message|msg)(\\s+?)(?<Message>\\S+?)$", Pattern.CASE_INSENSITIVE),
             Pattern.compile("^(send(\\s+?))?(message|msg)(\\s+?)(?<Message>\\S+?)(\\s+?)" +
@@ -55,33 +52,19 @@ public class SetPhrase implements Phrase {
     @SuppressWarnings("unchecked")
     public Result execute(Context ctx) {
         String name = ctx.getStrarg("Name");
+        Literal literalValue = ctx.getLiteral("Value", (Object) null);
+        DatumContainer container = ctx.getContainer("Name");
 
-        if (name.startsWith("$")) { // Setting variables must begin with dollar
-            ctx.getScript().createOrSet(name.substring(1), ctx.getLiteral("Value", (Object) null));
-        } else {
-            Optional<AnalysisResult> analysis = Analysis.from(name).analyze(phrase -> phrase instanceof ValuePhrase);
+        if (container instanceof DatumContainer.Value) {
+            DatumContainer.Value valueContainer = (DatumContainer.Value) container;
+            MutableValue mutableValue = valueContainer.resolveVariable(ctx);
+            Serializer<?> serializer = mutableValue.getSerializer();
 
-            if (analysis.isPresent()) { // Change the phrase
-                Result result = new PhraseContainer(Literal.fromObject(name), analysis.get()).resolveResult(ctx);
-
-                if (result instanceof Result.ValueSuccess) {
-                    Result.ValueSuccess valueResult = (Result.ValueSuccess) result;
-
-                    ValuePhrase phrase = (ValuePhrase) analysis.get().getPhrase();
-                    Class<?> correspondingClass = phrase.getCorrespondingClass();
-
-                    if (correspondingClass == null) {
-                        valueResult.set(ctx.getLiteral("Value", (Object) null).getValue().orElse(null));
-                    } else {
-                        valueResult.set(ctx.getSerialized("Value", correspondingClass));
-                    }
-                    return Result.success();
-                } else {
-                    return Result.failure("%s is not a bounded value result.", name);
-                }
-            }
+            Object value = (serializer == null ? literalValue : (literalValue.isEmpty() ? null : serializer.deserialize(literalValue)));
+            mutableValue.setValue(value); // This may error
+            return Result.success();
         }
 
-        return Result.success();
+        return Result.failure("\"%s\" (Container: %s) is not a mutable value.", name, container.getClass().getSimpleName());
     }
 }

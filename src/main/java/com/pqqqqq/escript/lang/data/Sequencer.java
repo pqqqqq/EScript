@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.data;
 
 import com.pqqqqq.escript.lang.data.container.*;
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
@@ -82,18 +83,24 @@ public class Sequencer {
         if (strarg.startsWith("{") && strarg.endsWith("}")) {
             String braceTrimmed = strarg.substring(1, strarg.length() - 1).trim();
             if (braceTrimmed.isEmpty()) { // More optimization here
-                return Literal.EMPTY_LIST;
+                return LiteralStore.emptyLiteral().get();
             }
 
             List<DatumContainer> containers = new ArrayList<>();
             StringUtilities.from(braceTrimmed).parseSplit(",").stream().map(this::sequence).forEach(containers::add);
-            return new ListContainer(containers);
+            return new StoreContainer(containers);
         }
 
         // Check if it's a range vector
         List<String> rangeSplit = StringUtilities.from(strarg).parseSplit(":");
         if (rangeSplit.size() == 2) {
             return new RangeContainer(sequence(rangeSplit.get(0)), sequence(rangeSplit.get(1)));
+        }
+
+        // Check if it's a literal map entry
+        List<String> entrySplit = StringUtilities.from(strarg).parseSplit("=");
+        if (entrySplit.size() == 2) {
+            return new EntryReplicateContainer(entrySplit.get(0).trim(), sequence(entrySplit.get(1)));
         }
 
         // Check if it's a normal phrase

@@ -1,12 +1,11 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters;
 
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
-
-import java.util.List;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -49,9 +48,9 @@ public class ContainsPhrase implements Phrase {
         Literal container = ctx.getLiteral("Container");
         Literal check = ctx.getLiteral("Check");
 
-        if (container.isList()) { // List, we check entries
-            List<Literal> list = container.asList();
-            return Result.success(list.contains(check));
+        if (container.isStore()) { // Store, we check entries
+            LiteralStore store = container.asStore();
+            return Result.success(store.contains(check));
         } else { // Otherwise, take it as a string
             String stringContainer = container.asString();
             return Result.success(stringContainer.contains(check.asString()));

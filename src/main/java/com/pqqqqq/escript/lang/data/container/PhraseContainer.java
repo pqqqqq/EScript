@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.lang.data.container;
 
-
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 import com.pqqqqq.escript.lang.exception.FailedLineException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.line.Line;
@@ -13,7 +13,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
  * Created by Kevin on 2015-06-17.
  * Represents a {@link DatumContainer} which resolves a phrase's {@link Literal} value at runtime
  */
-public class PhraseContainer implements DatumContainer {
+public class PhraseContainer implements DatumContainer.Value {
     private final Literal phrase;
     private final AnalysisResult analysis;
 
@@ -55,6 +55,17 @@ public class PhraseContainer implements DatumContainer {
             Result.Failure fail = (Result.Failure) result;
             throw new FailedLineException("Line failed because: \"%s\"", fail.getErrorMessage().orElse("UNKNOWN"));
         }
+    }
+
+    @Override
+    public MutableValue<?> resolveVariable(Context ctx) {
+        Result result = resolveResult(ctx);
+        if (result instanceof Result.ValueSuccess) {
+            Result.ValueSuccess<?> valueResult = (Result.ValueSuccess<?>) result;
+            return valueResult.getValue().orElse(null);
+        }
+
+        return null;
     }
 
     /**

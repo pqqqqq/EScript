@@ -1,11 +1,12 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player;
 
+import com.pqqqqq.escript.lang.data.mutable.LinkedMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.ValuePhrase;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -47,11 +48,6 @@ public class PlayerGameMode implements ValuePhrase {
     @Override
     public Result execute(Context ctx) {
         Player player = ctx.getPlayer("Player");
-        return Result.valueSuccess(player.gameMode(), player);
-    }
-
-    @Override
-    public Class<?> getCorrespondingClass() {
-        return GameMode.class;
+        return Result.valueSuccess(LinkedMutableValue.fromStore(player.gameMode(), player, Serializers.GAME_MODE));
     }
 }
