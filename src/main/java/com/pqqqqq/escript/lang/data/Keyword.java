@@ -19,7 +19,12 @@ public enum Keyword {
     /**
      * The first keyword, which gets the first item in a list
      */
-    FIRST((list) -> Literal.ONE, "first", "head");
+    FIRST((list) -> Literal.ONE, "first", "head"),
+
+    /**
+     * The next keywords, which gets the index for the index of natural addition progression.
+     */
+    NEXT(list -> Literal.fromObject(list.getListModule().size() + 1), "next", "add");
 
     private final Function<LiteralStore, Literal> function;
     private final String[] aliases;
