@@ -61,7 +61,7 @@ public final class SimpleListModule implements ListModule {
      * @param col the collection
      * @return the new list
      */
-    public static SimpleListModule fromLiterals(Collection<? extends Literal> col) {
+    public static SimpleListModule fromLiterals(Collection<Literal> col) {
         SimpleListModule list = from();
         col.stream().map(SimpleMutableValue::from).forEach(list::add); // EVERY value has to go through this
         return list;
