@@ -81,7 +81,12 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase PLAYER_GAMEMODE = PlayerGameMode.instance();
     public static final Phrase PLAYER_SATURATION = PlayerSaturation.instance();
     public static final Phrase PLAYER_LOCATION = PlayerLocation.instance();
+
     public static final Phrase PLAYER_ITEM_HAND = PlayerItemHand.instance();
+    public static final Phrase PLAYER_HELMET = PlayerHelmet.instance();
+    public static final Phrase PLAYER_CHEST_PLATE = PlayerChestplate.instance();
+    public static final Phrase PLAYER_LEGGINGS = PlayerLeggings.instance();
+    public static final Phrase PLAYER_BOOTS = PlayerBoots.instance();
 
     // ----------------------------------------------------------------------- \\
 
