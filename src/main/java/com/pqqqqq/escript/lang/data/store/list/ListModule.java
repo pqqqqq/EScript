@@ -6,6 +6,7 @@ import com.pqqqqq.escript.lang.data.mutable.SimpleMutableValue;
 import com.pqqqqq.escript.lang.data.store.Module;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * A list {@link Module module} interface.
@@ -13,6 +14,10 @@ import java.util.List;
  * List modules also incorporate some stack methods, including pop, popLast, peek, and peekLast.
  */
 public interface ListModule extends Module<Integer>, Iterable<MutableValue<Literal>> {
+    /**
+     * The {@link Random random} variable, used for {@link #sample() sampling}.
+     */
+    Random RANDOM = new Random();
 
     /**
      * Converts this literal module to a {@link List list} of immutable {@link Literal literals}
@@ -82,12 +87,26 @@ public interface ListModule extends Module<Integer>, Iterable<MutableValue<Liter
     }
 
     /**
-     * A peek is similar to a {@link #peekLast()}, however it does not remove the entry, it only retrieves it.
+     * A peek is similar to a {@link #peek()}, however it does not remove the entry, it only retrieves it.
      * The tail of the list (last element) is retrieved
      *
      * @return the last element, or null if the list is empty
      */
     default MutableValue<Literal> peekLast() {
         return get(size());
+    }
+
+    /**
+     * Attempts to sample the list.
+     * A sample gets a random value from within the list.
+     *
+     * @return the sample, or null if the list is empty
+     */
+    default MutableValue<Literal> sample() {
+        if (isEmpty()) {
+            return null;
+        }
+
+        return get(1 + RANDOM.nextInt(size() + 1)); // We have to account for base-1
     }
 }

@@ -14,6 +14,8 @@ import com.pqqqqq.escript.lang.phrase.phrases.getters.math.AbsolutePhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.math.CeilPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.math.FloorPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.math.RoundPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.math.statistics.SamplePhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.math.statistics.TrialPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.MOTDPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player.*;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.string.LowercasePhrase;
@@ -63,6 +65,10 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase CEIL = CeilPhrase.instance();
     public static final Phrase FLOOR = FloorPhrase.instance();
     public static final Phrase ROUND = RoundPhrase.instance();
+
+    // Statistics
+    public static final Phrase SAMPLE = SamplePhrase.instance();
+    public static final Phrase TRIAL = TrialPhrase.instance();
 
     // String
     public static final Phrase LOWERCASE = LowercasePhrase.instance();
