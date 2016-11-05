@@ -74,15 +74,19 @@ public class Sequencer {
         }
 
         // Check if it's an index
-        SplitSequence indexSequence = StringUtilities.from(strarg).parseNextSequence(new String[]{"["});
+        SplitSequence indexSequence = StringUtilities.from(strarg).parseNextSequence(new String[]{"[", "$"});
         if (indexSequence != null) {
-            return new IndexContainer(sequence(indexSequence.getBeforeSegment()), sequence(StringUtils.removeEnd(indexSequence.getAfterSegment(), "]")));
-        }
-
-        // Check if it's a literal index
-        SplitSequence literalIndexSequence = StringUtilities.from(strarg).parseNextSequence(new String[]{"$"});
-        if (literalIndexSequence != null && !literalIndexSequence.getBeforeSegment().trim().isEmpty()) { // An empty beginning means the $ is leading, meaning it's a variable
-            return new IndexContainer(sequence(indexSequence.getBeforeSegment()), Literal.fromObject(literalIndexSequence.getAfterSegment().trim()));
+            switch (indexSequence.getDelimiter()) {
+                case "[": // Sequenced index
+                    return new IndexContainer(sequence(indexSequence.getBeforeSegment()), sequence(StringUtils.removeEnd(indexSequence.getAfterSegment(), "]"))); // Remove ending bracket
+                case "$": // Non-sequenced index
+                    if (!indexSequence.getBeforeSegment().trim().isEmpty()) { // An empty beginning means the $ is leading, meaning it's a variable
+                        return new IndexContainer(sequence(indexSequence.getBeforeSegment()), Literal.fromObject(indexSequence.getAfterSegment().trim()));
+                    }
+                    break;
+                default:
+                    break; // How would this even be possible?
+            }
         }
 
         // Check if it's a list
