@@ -79,6 +79,12 @@ public class Sequencer {
             return new IndexContainer(sequence(indexSequence.getBeforeSegment()), sequence(StringUtils.removeEnd(indexSequence.getAfterSegment(), "]")));
         }
 
+        // Check if it's a literal index
+        SplitSequence literalIndexSequence = StringUtilities.from(strarg).parseNextSequence(new String[]{"$"});
+        if (literalIndexSequence != null && !literalIndexSequence.getBeforeSegment().trim().isEmpty()) { // An empty beginning means the $ is leading, meaning it's a variable
+            return new IndexContainer(sequence(indexSequence.getBeforeSegment()), Literal.fromObject(literalIndexSequence.getAfterSegment().trim()));
+        }
+
         // Check if it's a list
         if (strarg.startsWith("{") && strarg.endsWith("}")) {
             String braceTrimmed = strarg.substring(1, strarg.length() - 1).trim();

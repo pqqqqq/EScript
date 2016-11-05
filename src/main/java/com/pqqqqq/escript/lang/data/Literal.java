@@ -10,6 +10,7 @@ import com.pqqqqq.escript.lang.exception.InvalidTypeException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -138,7 +139,7 @@ public final class Literal implements Datum {
 
         // If there's quotes, it's a string
         if (literal.startsWith("\"") && literal.endsWith("\"")) {
-            return Optional.of(Literal.fromObject(StringUtilities.from(StringEscapeUtils.unescapeJava(literal.substring(1, literal.length() - 1))).formatColour()));
+            return Optional.of(fromObject(StringUtilities.from(StringEscapeUtils.unescapeJava(literal.substring(1, literal.length() - 1))).formatColour()));
         }
 
         // Literal booleans are only true or false
@@ -155,6 +156,14 @@ public final class Literal implements Datum {
             Optional<Keyword> keyword = Keyword.fromString(literal.substring(1));
             if (keyword.isPresent()) {
                 return Optional.of(keyword.get().getLiteral());
+            }
+        }
+
+        // Check for percentage
+        if (literal.endsWith("%")) {
+            Optional<Literal> sequence = fromSequence(StringUtils.removeEnd(literal, "%"));
+            if (sequence.isPresent()) {
+                return Optional.of(fromObject(sequence.get().asNumber() / 100D));
             }
         }
 

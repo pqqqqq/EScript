@@ -96,7 +96,7 @@ public class Analysis {
      * @return an {@link Optional optional} phrase
      */
     public Optional<AnalysisResult> analyze(Predicate<Phrase> predicate) {
-        for (Phrase phrase : Phrases.instance().registry()) {
+        for (Phrase phrase : Phrases.instance().registry()) { // We don't use stream here because we're going to return the method from within the forEach loop
             if (predicate.test(phrase)) {
                 Optional<AnalysisResult> analysis = phrase.matches(this);
 
