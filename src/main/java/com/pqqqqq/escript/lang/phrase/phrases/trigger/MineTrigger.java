@@ -30,8 +30,8 @@ import java.util.Optional;
 public class MineTrigger implements Phrase {
     private static final MineTrigger INSTANCE = new MineTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if $MineType is? mine|mined|broken|break|breaked", true),
-            Syntax.compile("on mine|mining|brake|broken of? $MineType", true)
+            Syntax.compile("when|if $MineType is? mine|mined|broken|break|breaked:"),
+            Syntax.compile("on mine|mining|brake|broken of? $MineType:")
 
             /*Pattern.compile("^(when|if)(\\s+?)(?<MineType>\\S+?)(\\s+?)(is(\\s*?))?mine(d)?:$", Pattern.CASE_INSENSITIVE),
             Pattern.compile("^on(\\s+?)(mine|mining)(\\s+?)(of(\\s*?))?(?<MineType>\\S+?):$", Pattern.CASE_INSENSITIVE)*/

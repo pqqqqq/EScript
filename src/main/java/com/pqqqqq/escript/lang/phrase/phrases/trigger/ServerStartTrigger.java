@@ -23,8 +23,8 @@ import com.pqqqqq.escript.lang.trigger.cause.Causes;
 public class ServerStartTrigger implements Phrase {
     private static final ServerStartTrigger INSTANCE = new ServerStartTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if the? server|game is? started|starts|start|starting", true),
-            Syntax.compile("on start|starting of? server|game", true)
+            Syntax.compile("when|if the? server|game is? started|starts|start|starting:"),
+            Syntax.compile("on start|starting of? server|game:")
     };
 
     /**

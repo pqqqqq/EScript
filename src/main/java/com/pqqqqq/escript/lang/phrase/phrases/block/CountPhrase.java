@@ -22,8 +22,8 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class CountPhrase implements Phrase {
     private static final CountPhrase INSTANCE = new CountPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("count ^Name from $Start to $End by? $Increment*", true),
-            Syntax.compile("count ^Name to $End by? $Increment*", true)
+            Syntax.compile("count ^Name from $Start to $End by? $Increment*:"),
+            Syntax.compile("count ^Name to $End by? $Increment*:")
 
     };
 

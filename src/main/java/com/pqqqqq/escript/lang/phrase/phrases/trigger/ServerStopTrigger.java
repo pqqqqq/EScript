@@ -23,8 +23,8 @@ import com.pqqqqq.escript.lang.trigger.cause.Causes;
 public class ServerStopTrigger implements Phrase {
     private static final ServerStopTrigger INSTANCE = new ServerStopTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if the? server|game is? stopped|stops|stop|stopping|exit|extis|exiting", true),
-            Syntax.compile("on stop|stopping|exit|exiting of? server|game", true)
+            Syntax.compile("when|if the? server|game is? stopped|stops|stop|stopping|exit|extis|exiting:"),
+            Syntax.compile("on stop|stopping|exit|exiting of? server|game:")
     };
 
     /**

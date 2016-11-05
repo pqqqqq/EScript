@@ -18,7 +18,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class IfPhrase implements Phrase {
     private static final IfPhrase INSTANCE = new IfPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("if $Condition", true)
+            Syntax.compile("if $Condition:")
     };
 
     /**

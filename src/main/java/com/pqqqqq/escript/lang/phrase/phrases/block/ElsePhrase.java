@@ -22,7 +22,7 @@ import java.util.Optional;
 public class ElsePhrase implements Phrase {
     private static final ElsePhrase INSTANCE = new ElsePhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("or? else if? $Condition*", true)
+            Syntax.compile("or? else if? $Condition*:")
     };
 
     /**

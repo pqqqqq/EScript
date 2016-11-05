@@ -30,8 +30,8 @@ import java.util.Optional;
 public class PlaceTrigger implements Phrase {
     private static final PlaceTrigger INSTANCE = new PlaceTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if $PlaceType is? place|placed", true),
-            Syntax.compile("on place|placed|placement of? $PlaceType", true)
+            Syntax.compile("when|if $PlaceType is? place|placed:"),
+            Syntax.compile("on place|placed|placement of? $PlaceType:")
     };
 
     /**

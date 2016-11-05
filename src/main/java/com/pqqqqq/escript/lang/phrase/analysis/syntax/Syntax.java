@@ -3,6 +3,7 @@ package com.pqqqqq.escript.lang.phrase.analysis.syntax;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
 import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -30,20 +31,6 @@ public class Syntax {
 
     /**
      * <pre>
-     * Compiles a new syntax string.
-     * See override method for details
-     * </pre>
-     *
-     * @param string the string
-     * @return the new syntax
-     * @see #compile(String, boolean)
-     */
-    public static Syntax compile(String string) {
-        return compile(string, false);
-    }
-
-    /**
-     * <pre>
      * Compiles a new syntax string, based on the following principles:
      * <li>Each {@link Component component} is separated by a whitespace character</li>
      * <li>If there is a dollar sign '$' at the start, it is treated as a {@link Component.ArgumentComponent argument}
@@ -57,10 +44,14 @@ public class Syntax {
      * </pre>
      *
      * @param string the string
-     * @param colon  whether the syntax needs a colon at the end
      * @return the new syntax
      */
-    public static Syntax compile(String string, boolean colon) {
+    public static Syntax compile(String string) {
+        boolean colon = string.endsWith(":");
+        if (colon) { // Remove colon if present
+            string = StringUtils.removeEnd(string, ":");
+        }
+
         String[] split = string.split("\\s"); // Normal split
         List<Component> components = new ArrayList<>();
 

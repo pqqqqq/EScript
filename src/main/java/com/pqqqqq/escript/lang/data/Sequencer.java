@@ -92,7 +92,7 @@ public class Sequencer {
         // Check if it's a list
         if (strarg.startsWith("{") && strarg.endsWith("}")) {
             String braceTrimmed = strarg.substring(1, strarg.length() - 1).trim();
-            if (braceTrimmed.isEmpty()) { // More optimization here
+            if (braceTrimmed.isEmpty()) { // Optimization here
                 return LiteralStore.emptyLiteral().get();
             }
 
