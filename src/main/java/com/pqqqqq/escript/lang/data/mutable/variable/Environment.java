@@ -3,6 +3,7 @@ package com.pqqqqq.escript.lang.data.mutable.variable;
 import com.pqqqqq.escript.lang.data.Datum;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -86,6 +87,15 @@ public abstract class Environment {
             variable.get().setValue(value);
             return variable.get();
         }
+    }
+
+    /**
+     * Creates a bus of variables with their respected values, or if they already exist sets the preexisting one to that value
+     *
+     * @param variableBus the variable {@link Map bus}
+     */
+    public void createOrSet(Map<String, Datum> variableBus) {
+        variableBus.forEach(this::createOrSet);
     }
 
     /**

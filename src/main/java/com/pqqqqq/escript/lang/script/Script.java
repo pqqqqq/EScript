@@ -58,6 +58,7 @@ public class Script extends Environment {
     private Script(RawScript rawScript, Properties properties) {
         this.rawScript = checkNotNull(rawScript, "Raw script cannot be null");
         this.properties = checkNotNull(properties, "Properties cannot be null");
+        createOrSet(properties.getVariableBus()); // Add variable bus
     }
 
     /**

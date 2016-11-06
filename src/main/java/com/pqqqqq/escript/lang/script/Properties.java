@@ -1,8 +1,10 @@
 package com.pqqqqq.escript.lang.script;
 
+import com.pqqqqq.escript.lang.data.Datum;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ public class Properties {
     private final Player player; // Due to most triggers using player, this won't be optional (but can be null)
 
     private final Map<String, Object> variables;
+    private final Map<String, Datum> variableBus = new HashMap<>();
 
     /**
      * Creates a builder instance
@@ -85,12 +88,21 @@ public class Properties {
     }
 
     /**
+     * Gets the variable bus, which will be deployed when the script is created at runtime.
+     *
+     * @return the variable bus
+     */
+    public Map<String, Datum> getVariableBus() {
+        return variableBus;
+    }
+
+    /**
      * The properties builder
      */
     public static class Builder {
         private Event event = null;
         private Player player = null;
-        private Map<String, Object> variables = null;
+        private Map<String, Object> variables = new HashMap<>();
 
         private Builder() {
         }
@@ -118,13 +130,14 @@ public class Properties {
         }
 
         /**
-         * Sets the map of variables
+         * Adds a variable K,V value
          *
-         * @param variables the variable map
+         * @param key the key
+         * @param value the value
          * @return this builder, for chaining
          */
-        public Builder variables(Map<String, Object> variables) {
-            this.variables = variables;
+        public Builder variable(String key, Object value) {
+            this.variables.put(key, value);
             return this;
         }
 

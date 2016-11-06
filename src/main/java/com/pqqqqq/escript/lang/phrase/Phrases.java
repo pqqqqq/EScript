@@ -25,6 +25,7 @@ import com.pqqqqq.escript.lang.phrase.phrases.trigger.MineTrigger;
 import com.pqqqqq.escript.lang.phrase.phrases.trigger.PlaceTrigger;
 import com.pqqqqq.escript.lang.phrase.phrases.trigger.ServerStartTrigger;
 import com.pqqqqq.escript.lang.phrase.phrases.trigger.ServerStopTrigger;
+import com.pqqqqq.escript.lang.phrase.phrases.trigger.command.CommandTrigger;
 import com.pqqqqq.escript.lang.registry.SortedRegistry;
 
 /**
@@ -38,6 +39,8 @@ public class Phrases extends SortedRegistry<Phrase> {
     // TRIGGERS
     public static final Phrase MINE_TRIGGER = MineTrigger.instance();
     public static final Phrase PLACE_TRIGGER = PlaceTrigger.instance();
+    public static final Phrase COMMAND_TRIGGER = CommandTrigger.instance();
+
     public static final Phrase SERVER_START = ServerStartTrigger.instance();
     public static final Phrase SERVER_STOP = ServerStopTrigger.instance();
 

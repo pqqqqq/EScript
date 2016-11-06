@@ -172,7 +172,7 @@ public class Context {
      */
     public Optional<Player> getOptionalPlayer(String group) {
         Optional<Literal> playerLiteral = getOptionalLiteral(group);
-        if (playerLiteral.isPresent()) {
+        if (playerLiteral.isPresent() && !playerLiteral.get().isEmpty()) {
             String playerString = playerLiteral.get().asString();
             Optional<Player> player = Sponge.getServer().getPlayer(playerString); // Try by name first
 
