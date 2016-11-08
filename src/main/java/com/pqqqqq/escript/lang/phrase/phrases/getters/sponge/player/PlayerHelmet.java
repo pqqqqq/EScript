@@ -24,7 +24,7 @@ public class PlayerHelmet implements ValuePhrase {
     private static final PlayerHelmet INSTANCE = new PlayerHelmet();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person helmet"),
-            Syntax.compile("helmet of $Player")
+            Syntax.compile("the? helmet of $Player")
     };
 
     /**

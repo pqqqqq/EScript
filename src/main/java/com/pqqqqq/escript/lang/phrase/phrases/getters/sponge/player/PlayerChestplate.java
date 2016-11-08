@@ -24,7 +24,7 @@ public class PlayerChestplate implements ValuePhrase {
     private static final PlayerChestplate INSTANCE = new PlayerChestplate();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person chestplate|chest|body"),
-            Syntax.compile("chestplate|chest|body of $Player")
+            Syntax.compile("the? chestplate|chest|body of $Player")
     };
 
     /**

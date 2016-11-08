@@ -24,7 +24,7 @@ public class PlayerBoots implements ValuePhrase {
     private static final PlayerBoots INSTANCE = new PlayerBoots();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person boots|feet|shoes"),
-            Syntax.compile("boots|feet|shoes of $Player")
+            Syntax.compile("the? boots|feet|shoes of $Player")
     };
 
     /**

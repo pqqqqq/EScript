@@ -24,7 +24,7 @@ public class PlayerLeggings implements ValuePhrase {
     private static final PlayerLeggings INSTANCE = new PlayerLeggings();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person leggings|legs"),
-            Syntax.compile("leggings|legs of $Player")
+            Syntax.compile("the? leggings|legs of $Player")
     };
 
     /**

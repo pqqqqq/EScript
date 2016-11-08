@@ -11,8 +11,8 @@ import com.pqqqqq.escript.lang.phrase.Phrase;
  */
 public interface ArithmeticPhrase extends Phrase {
 
-    @Override
+    /*@Override
     default int getPriority() {
         return -2;
-    }
+    }*/
 }

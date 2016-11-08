@@ -24,7 +24,7 @@ public class PlayerExhaustion implements ValuePhrase {
     private static final PlayerExhaustion INSTANCE = new PlayerExhaustion();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person exhaust|exhaustion level|lvl?"),
-            Syntax.compile("exhaust|exhaustion level|lvl? of $Player")
+            Syntax.compile("the? exhaust|exhaustion level|lvl? of $Player")
     };
 
     /**

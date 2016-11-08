@@ -25,7 +25,7 @@ public class PlayerLocation implements ValuePhrase {
     private static final PlayerLocation INSTANCE = new PlayerLocation();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person loc|location|position|pos"),
-            Syntax.compile("loc|location|position|pos of $Player")
+            Syntax.compile("the? loc|location|position|pos of $Player")
     };
 
     /**

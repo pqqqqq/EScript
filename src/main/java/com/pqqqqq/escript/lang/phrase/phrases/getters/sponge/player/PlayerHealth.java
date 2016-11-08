@@ -25,7 +25,7 @@ public class PlayerHealth implements ValuePhrase {
     private static final Syntax[] SYNTAXES = {
             // Syntax.compile("$Player? health|hp|hitpoints"), THIS SCREWS UP PRINTS AND MESSAGES
             Syntax.compile("player's|person's|player|person health|hp|hitpoints"),
-            Syntax.compile("health|hp|hitpoints of $Player")
+            Syntax.compile("the? health|hp|hitpoints of $Player")
 
             /*Pattern.compile("^(player|person)(\\'s)?(\\s+?)(health|hp|hitpoints)$", Pattern.CASE_INSENSITIVE),
             Pattern.compile("^(health|hp|hitpoints)(\\s+?)of(\\s+?)(player|person)$", Pattern.CASE_INSENSITIVE)*/

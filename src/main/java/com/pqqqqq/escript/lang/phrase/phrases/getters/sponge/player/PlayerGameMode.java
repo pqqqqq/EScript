@@ -25,7 +25,7 @@ public class PlayerGameMode implements ValuePhrase {
     private static final PlayerGameMode INSTANCE = new PlayerGameMode();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person gamemode"), // TODO allow "game mode"?
-            Syntax.compile("gamemode of $Player")
+            Syntax.compile("the? gamemode of $Player")
     };
 
     /**

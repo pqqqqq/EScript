@@ -431,7 +431,7 @@ public final class Literal implements Datum {
                 }
             }
             return Literal.fromObject(store);
-        } else if (other.isString()) {
+        } else if (other.isStore()) {
             return other.add(this); // Reverse this, so we don't need to rewrite code
         }
 

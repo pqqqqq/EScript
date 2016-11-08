@@ -24,7 +24,7 @@ public class PlayerSaturation implements ValuePhrase {
     private static final PlayerSaturation INSTANCE = new PlayerSaturation();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person saturation level|lvl?"),
-            Syntax.compile("saturation level|lvl? of $Player")
+            Syntax.compile("the? saturation level|lvl? of $Player")
     };
 
     /**

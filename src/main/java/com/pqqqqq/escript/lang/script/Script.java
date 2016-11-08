@@ -114,6 +114,8 @@ public class Script extends Environment {
                     if (result instanceof Result.Failure) {
                         Result.Failure fail = (Result.Failure) result;
                         throw new FailedLineException("Line failed because: \"%s\"", fail.getErrorMessage().orElse("UNKNOWN"));
+                    } else if (result instanceof Result.Break) {
+                        return Result.success();
                     }
 
                     ranVessels.add(vessel);

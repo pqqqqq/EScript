@@ -27,7 +27,7 @@ public class PlayerItemHand implements ValuePhrase {
     private static final PlayerItemHand INSTANCE = new PlayerItemHand();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person item? in* @HandType hand"), // TODO allow "hand item"?
-            Syntax.compile("item? in* @HandType hand of $Player")
+            Syntax.compile("the? item? in* @HandType hand of $Player")
     };
 
     /**

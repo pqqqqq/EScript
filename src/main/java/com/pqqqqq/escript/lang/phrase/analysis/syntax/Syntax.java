@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.analysis.syntax;
 
+import com.pqqqqq.escript.lang.exception.SyntaxMatchingException;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
 import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
@@ -105,34 +106,38 @@ public class Syntax {
      * @return an {@link AnalysisResult.Builder analysis builder} or {@link Optional#empty()} if there was no match
      */
     public synchronized Optional<AnalysisResult.Builder> matches(Analysis analysis) {
-        // Check colon first
-        if (colon != analysis.lineHasColon()) { // Must be in agreeance
-            return Optional.empty();
-        }
-
-        Map<Component.ArgumentComponent, String> map = new HashMap<>();
-        LinkedList<Component> compQueue = new LinkedList<>(Arrays.asList(getComponents())); // Create linked list
-        Deque<String> stringQueue = new ArrayDeque<>(analysis.getStringComponents()); // String split deque
-
-        Component component;
-        boolean lastMatch = false;
-
-        while ((component = compQueue.poll()) != null) { // Poll, not pop, for no errors
-            Optional<Map<Component.ArgumentComponent, String>> match = matchesLoad(component, compQueue, stringQueue, lastMatch);
-
-            if (match == null) { // Null just means the optional didn't match, just track it
-                lastMatch = false;
-            } else if (!match.isPresent()) {
+        try {
+            // Check colon first
+            if (colon != analysis.lineHasColon()) { // Must be in agreeance
                 return Optional.empty();
-            } else {
-                map.putAll(match.get());
-                lastMatch = true;
             }
-        }
 
-        // If it's empty, we've done our job, otherwise we're missing components, but we must make sure none are optional
-        //boolean check = queue.stream().filter((comp) -> !(comp instanceof Component.OptionalComponent)).findAny().isPresent();
-        return !stringQueue.isEmpty() ? Optional.empty() : Optional.of(AnalysisResult.builder().strargs(map));
+            Map<Component.ArgumentComponent, String> map = new HashMap<>();
+            LinkedList<Component> compQueue = new LinkedList<>(Arrays.asList(getComponents())); // Create linked list
+            Deque<String> stringQueue = new ArrayDeque<>(analysis.getStringComponents()); // String split deque
+
+            Component component;
+            boolean lastMatch = false;
+
+            while ((component = compQueue.poll()) != null) { // Poll, not pop, for no errors
+                Optional<Map<Component.ArgumentComponent, String>> match = matchesLoad(component, compQueue, stringQueue, lastMatch);
+
+                if (match == null) { // Null just means the optional didn't match, just track it
+                    lastMatch = false;
+                } else if (!match.isPresent()) {
+                    return Optional.empty();
+                } else {
+                    map.putAll(match.get());
+                    lastMatch = true;
+                }
+            }
+
+            // If it's empty, we've done our job, otherwise we're missing components, but we must make sure none are optional
+            //boolean check = queue.stream().filter((comp) -> !(comp instanceof Component.OptionalComponent)).findAny().isPresent();
+            return !stringQueue.isEmpty() ? Optional.empty() : Optional.of(AnalysisResult.builder().strargs(map));
+        } catch (Throwable e) {
+            throw new SyntaxMatchingException(e, "Error when matching phrase '%s' with syntax: '%s'", analysis.getLine(), Arrays.toString(components));
+        }
     }
 
     private synchronized Optional<Map<Component.ArgumentComponent, String>> matchesLoad(Component component, LinkedList<Component> compQueue, Deque<String> stringQueue, boolean lastMatch) {

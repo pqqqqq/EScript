@@ -24,7 +24,7 @@ public class PlayerMaxHealth implements ValuePhrase {
     private static final PlayerMaxHealth INSTANCE = new PlayerMaxHealth();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("player's|person's|player|person max|maximum health|hp|hitpoints"),
-            Syntax.compile("max|maximum health|hp|hitpoints of $Player")
+            Syntax.compile("the? max|maximum health|hp|hitpoints of $Player")
     };
 
     /**

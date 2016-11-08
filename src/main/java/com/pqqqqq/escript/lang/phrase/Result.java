@@ -51,7 +51,16 @@ public interface Result {
      * @return the new failure instance
      */
     static Failure failure() {
-        return new Failure();
+        return Failure.EMPTY;
+    }
+
+    /**
+     * Gets the {@link Break break} result
+     *
+     * @return the break result
+     */
+    static Break breakResult() {
+        return Break.INSTANCE;
     }
 
     /**
@@ -153,6 +162,7 @@ public interface Result {
      * </pre>
      */
     final class Failure implements Result {
+        private static final Failure EMPTY = new Failure();
         private final Optional<String> errorMessage;
 
         private Failure() {
@@ -170,6 +180,16 @@ public interface Result {
          */
         public Optional<String> getErrorMessage() {
             return errorMessage;
+        }
+    }
+
+    /**
+     * A break is a result that will cease action (like a failure), but won't cause an error
+     */
+    final class Break implements Result {
+        private static final Break INSTANCE = new Break();
+
+        private Break() {
         }
     }
 }

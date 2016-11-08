@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase;
 
+import com.pqqqqq.escript.lang.phrase.phrases.action.CheckPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.action.PrintPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.action.SetPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.BroadcastPhrase;
@@ -49,6 +50,7 @@ public class Phrases extends SortedRegistry<Phrase> {
     // ACTIONS
     public static final Phrase PRINT = PrintPhrase.instance();
     public static final Phrase SET = SetPhrase.instance();
+    public static final Phrase CHECK = CheckPhrase.instance();
 
     // Sponge
     public static final Phrase BROADCAST = BroadcastPhrase.instance();
@@ -57,46 +59,6 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase PLAYER_CLOSE_INVENTORY = PlayerCloseInventory.instance();
     public static final Phrase PLAYER_KICK = PlayerKick.instance();
     public static final Phrase PLAYER_MESSAGE = PlayerMessage.instance();
-
-    // ----------------------------------------------------------------------- \\
-
-    // GETTERS
-    public static final Phrase CONTAINS = ContainsPhrase.instance();
-
-    // Math
-    public static final Phrase ABSOLUTE = AbsolutePhrase.instance();
-    public static final Phrase CEIL = CeilPhrase.instance();
-    public static final Phrase FLOOR = FloorPhrase.instance();
-    public static final Phrase ROUND = RoundPhrase.instance();
-
-    // Statistics
-    public static final Phrase SAMPLE = SamplePhrase.instance();
-    public static final Phrase TRIAL = TrialPhrase.instance();
-
-    // String
-    public static final Phrase LOWERCASE = LowercasePhrase.instance();
-    public static final Phrase UPPERCASE = UppercasePhrase.instance();
-    public static final Phrase SUBSTRING = SubstringPhrase.instance();
-
-    // Sponge
-    public static final Phrase MOTD = MOTDPhrase.instance();
-
-    // Player
-    public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();
-    public static final Phrase PLAYER_MAX_HEALTH = PlayerMaxHealth.instance();
-    public static final Phrase PLAYER_NAME = PlayerName.instance();
-    public static final Phrase PLAYER_EXHAUSTION = PlayerExhaustion.instance();
-    public static final Phrase PLAYER_FOOD = PlayerFood.instance();
-    public static final Phrase PLAYER_GAMEMODE = PlayerGameMode.instance();
-    public static final Phrase PLAYER_SATURATION = PlayerSaturation.instance();
-    public static final Phrase PLAYER_LOCATION = PlayerLocation.instance();
-    public static final Phrase PLAYER_PERMISSION = PlayerPermission.instance();
-
-    public static final Phrase PLAYER_ITEM_HAND = PlayerItemHand.instance();
-    public static final Phrase PLAYER_HELMET = PlayerHelmet.instance();
-    public static final Phrase PLAYER_CHEST_PLATE = PlayerChestplate.instance();
-    public static final Phrase PLAYER_LEGGINGS = PlayerLeggings.instance();
-    public static final Phrase PLAYER_BOOTS = PlayerBoots.instance();
 
     // ----------------------------------------------------------------------- \\
 
@@ -131,6 +93,47 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase ADD = AddPhrase.instance();
     public static final Phrase SUBTRACT = SubtractPhrase.instance();
     public static final Phrase MODULUS = ModulusPhrase.instance();
+
+    // ----------------------------------------------------------------------- \\
+
+    // GETTERS
+
+    // Sponge
+    public static final Phrase MOTD = MOTDPhrase.instance();
+
+    // Player
+    public static final Phrase PLAYER_HEALTH = PlayerHealth.instance();
+    public static final Phrase PLAYER_MAX_HEALTH = PlayerMaxHealth.instance();
+    public static final Phrase PLAYER_NAME = PlayerName.instance();
+    public static final Phrase PLAYER_EXHAUSTION = PlayerExhaustion.instance();
+    public static final Phrase PLAYER_FOOD = PlayerFood.instance();
+    public static final Phrase PLAYER_GAMEMODE = PlayerGameMode.instance();
+    public static final Phrase PLAYER_SATURATION = PlayerSaturation.instance();
+    public static final Phrase PLAYER_LOCATION = PlayerLocation.instance();
+    public static final Phrase PLAYER_PERMISSION = PlayerPermission.instance();
+
+    public static final Phrase PLAYER_ITEM_HAND = PlayerItemHand.instance();
+    public static final Phrase PLAYER_HELMET = PlayerHelmet.instance();
+    public static final Phrase PLAYER_CHEST_PLATE = PlayerChestplate.instance();
+    public static final Phrase PLAYER_LEGGINGS = PlayerLeggings.instance();
+    public static final Phrase PLAYER_BOOTS = PlayerBoots.instance();
+
+    public static final Phrase CONTAINS = ContainsPhrase.instance();
+
+    // Math
+    public static final Phrase ABSOLUTE = AbsolutePhrase.instance();
+    public static final Phrase CEIL = CeilPhrase.instance();
+    public static final Phrase FLOOR = FloorPhrase.instance();
+    public static final Phrase ROUND = RoundPhrase.instance();
+
+    // Statistics
+    public static final Phrase SAMPLE = SamplePhrase.instance();
+    public static final Phrase TRIAL = TrialPhrase.instance();
+
+    // String
+    public static final Phrase LOWERCASE = LowercasePhrase.instance();
+    public static final Phrase UPPERCASE = UppercasePhrase.instance();
+    public static final Phrase SUBSTRING = SubstringPhrase.instance();
 
     // END REGISTRY \\
 

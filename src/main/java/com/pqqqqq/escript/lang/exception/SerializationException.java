@@ -7,7 +7,7 @@ package com.pqqqqq.escript.lang.exception;
 public class SerializationException extends EScriptException {
 
     /**
-     * Creates an empty serialization type exception
+     * Creates an empty serialization exception
      */
     public SerializationException() {
         super();
