@@ -20,7 +20,7 @@ public class ModulusPhrase implements ArithmeticPhrase {
     private static final ModulusPhrase INSTANCE = new ModulusPhrase();
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 %|mod|modulus $Literal2"),
-            Syntax.compile("modulus of? $Literal1 and $Literal2")
+            Syntax.compile("modulus|mod of? $Literal1 and $Literal2")
     };
 
     /**

@@ -13,7 +13,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
  * The substring phrase, which creates a substring of the string
  *
  * Some examples:
- *      <code>substring of "Hello" from 1
+ *      <code>substring of "Hello" from 2
  *      substring "Hello" from 1 to 4
  *      substring "HEllo" to 3</code>
  * </pre>

@@ -23,7 +23,7 @@ public class SubtractPhrase implements ArithmeticPhrase {
     private static final Syntax[] SYNTAXES = {
             Syntax.compile("$Literal1 -|minus $Literal2"),
             Syntax.compile("subtract $Literal1 from $Literal2"),
-            Syntax.compile("take? difference|diff of? $Literal1 and|from $Literal2")
+            Syntax.compile("take? the? difference|diff of? $Literal1 and|from $Literal2")
     };
 
     /**

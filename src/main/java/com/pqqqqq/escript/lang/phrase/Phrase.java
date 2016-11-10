@@ -51,7 +51,7 @@ public interface Phrase extends RegistryEntry, Comparable<Phrase> {
     /**
      * <pre>
      * Gets the priority number for this phrase.
-     * If the priority for one phrase is higher than another, the phrase with a higher priority will attempt to be {@link #matches(Line) matched} first.
+     * If the priority for one phrase is higher than another, the phrase with a higher priority will attempt to be {@link #matches(Analysis) matched} first.
      * By default, a phrase's priority is 0.
      * </pre>
      *
@@ -79,9 +79,8 @@ public interface Phrase extends RegistryEntry, Comparable<Phrase> {
             if (match.isPresent()) {
                 try {
                     Optional<AnalysisResult> result = match.get().phrase(this).build();
-
                     if (result.isPresent()) {
-                        return Optional.of(result.get());
+                        return result;
                     }
                 } catch (UnknownSymbolException e) {
                     exception = e; // Store exception if one isn't found before

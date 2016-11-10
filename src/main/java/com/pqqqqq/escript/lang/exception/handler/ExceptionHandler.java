@@ -51,19 +51,21 @@ public class ExceptionHandler {
      * Logs a given message with the {@link #timestamp()} included
      *
      * @param message the message to log
+     * @param args the arguments for string formatting
      */
-    public void log(Object message) {
-        writer.println(timestamp() + ": " + message);
+    public void log(Object message, Object... args) {
+        writer.println(timestamp() + ": " + String.format(message.toString(), args));
     }
 
     /**
      * Logs a given message with the {@link #timestamp()} included, and flushes the stream right away
      *
      * @param message the message to log
-     * @see #log(Object)
+     * @param args the arguments for string formatting
+     * @see #log(Object, Object...)
      */
-    public void logFlush(Object message) {
-        log(message);
+    public void logFlush(Object message, Object... args) {
+        log(message, args);
         flush();
     }
 

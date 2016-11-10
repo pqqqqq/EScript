@@ -20,7 +20,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class DividePhrase implements ArithmeticPhrase {
     private static final DividePhrase INSTANCE = new DividePhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Literal1 *|divide|divided by? $Literal2"),
+            Syntax.compile("$Literal1 /|divide|divided by? $Literal2"),
             Syntax.compile("divide $Literal1 by|and $Literal2")
     };
 

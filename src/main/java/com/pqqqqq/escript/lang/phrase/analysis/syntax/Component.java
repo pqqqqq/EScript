@@ -3,6 +3,7 @@ package com.pqqqqq.escript.lang.phrase.analysis.syntax;
 import com.pqqqqq.escript.lang.line.Line;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -73,26 +74,35 @@ public interface Component {
      * An enumeration of possible {@link Component wrappable components}
      */
     enum Wrap {
-        OPTIONAL() {
-            @Override
-            Component wrap(Component component) {
-                return OptionalComponent.from(component);
-            }
-        },
+        /**
+         * The {@link OptionalComponent optional wrapper}
+         */
+        OPTIONAL(OptionalComponent::from),
 
-        IF() {
-            @Override
-            Component wrap(Component component) {
-                return IfComponent.from(component);
-            }
-        },
+        /**
+         * The {@link IfComponent if component wrapper}
+         */
+        IF(IfComponent::from),
 
-        NONE() {
-            @Override
-            Component wrap(Component component) {
-                return component;
-            }
-        };
+        /**
+         * No wrapper
+         */
+        NONE(component -> component);
+
+        private final Function<Component, Component> wrapFunction;
+
+        Wrap(Function<Component, Component> wrapFunction) {
+            this.wrapFunction = wrapFunction;
+        }
+
+        /**
+         * Returns the wrap {@link Function function}
+         *
+         * @return the wrap functionn
+         */
+        public Function<Component, Component> getWrapFunction() {
+            return wrapFunction;
+        }
 
         /**
          * Wraps the given {@link Component component}
@@ -100,7 +110,9 @@ public interface Component {
          * @param component the component
          * @return the new wrapped component
          */
-        abstract Component wrap(Component component);
+        public Component wrap(Component component) {
+            return getWrapFunction().apply(component);
+        }
     }
 
     /**
