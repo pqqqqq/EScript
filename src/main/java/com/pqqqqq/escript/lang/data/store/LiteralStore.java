@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.lang.data.store;
 
-import com.pqqqqq.escript.lang.data.Keyword;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.Pointer;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 import com.pqqqqq.escript.lang.data.mutable.SimpleMutableValue;
 import com.pqqqqq.escript.lang.data.store.list.ListModule;
@@ -84,7 +84,7 @@ public class LiteralStore implements Copyable<LiteralStore> {
      * The method takes a {@link Literal literal} key, and determines whether to retrieve data from the map or list according to the following criteria:
      * <p>
      * <ul>
-     * <li>If the literal has a {@link Keyword keyword} value, it pertains to a <strong>list</strong> module</li>
+     * <li>If the literal has a {@link Pointer pointer} value, it pertains to a <strong>list</strong> module</li>
      * <li>If the literal has a value that CAN be parsed into an number, it pertains to a <strong>list</strong> module</li>
      * <li>Otherwise, the key pertains to a <strong>map</strong> value</li>
      * </ul>
@@ -93,8 +93,8 @@ public class LiteralStore implements Copyable<LiteralStore> {
      * @return the mutable value, or null if none found
      */
     public MutableValue<Literal> get(Literal key) {
-        if (key.isKeyword()) { // If it's a keyword, it has to do with the list
-            return get(key.asKeyword().resolve(this)); // Recursive
+        if (key.isPointer()) { // If it's a pointer, it has to do with the list
+            return get(key.asPointer().resolve(this)); // Recursive
         } else {
             try { // We'll try to consider the index a number. Since keys can't start with an integer, this should work well
                 return getListModule().get(key.asNumber().intValue());
@@ -115,8 +115,8 @@ public class LiteralStore implements Copyable<LiteralStore> {
     public MutableValue<Literal> getOrCreate(Literal key, Literal def) {
         // Instead of calling the get() method and finding out whether to add to list or map, just rewrite code in this case with subtle differences
 
-        if (key.isKeyword()) { // If it's a keyword, it has to do with the list
-            return getOrCreate(key.asKeyword().resolve(this), def); // Recursive
+        if (key.isPointer()) { // If it's a pointer, it has to do with the list
+            return getOrCreate(key.asPointer().resolve(this), def); // Recursive
         } else {
             try { // We'll try to consider the index a number. Since keys can't start with an integer, this should work
                 return getListModule().getOrCreate(key.asNumber().intValue(), def);

@@ -1,13 +1,13 @@
 package com.pqqqqq.escript.lang.exception;
 
-import com.pqqqqq.escript.lang.data.Keyword;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.Pointer;
 
 /**
  * Created by Kevin on 2016-09-11.
  * <pre>
  * Thrown when a {@link Literal} is casted to an invalid type
- * This is only thrown for {@link Keyword keywords} ({@link Literal#asKeyword()})
+ * This is only thrown for {@link Pointer pointers} ({@link Literal#asPointer()})
  * </pre>
  */
 public class InvalidTypeException extends EScriptException {

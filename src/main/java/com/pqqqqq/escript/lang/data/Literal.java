@@ -56,7 +56,7 @@ public final class Literal implements Datum {
      * <pre>
      * Creates a new literal that represents the given object
      * The main purpose of this method's body is to reduce instances of Literals by using common ones
-     * This method will make use of these public, final literals, plus any {@link Keyword keywords}:
+     * This method will make use of these public, final literals, plus any {@link Pointer pointers}:
      *
      *      {@link #EMPTY}
      *      {@link #EMPTY_STRING}
@@ -112,8 +112,8 @@ public final class Literal implements Datum {
 
             map.entrySet().forEach(entry -> newMap.put(entry.getKey().toString(), SimpleMutableValue.from(Literal.fromObject(entry.getValue()))));
             return new Literal(LiteralStore.builder().mapMV(newMap).build());
-        } else if (value instanceof Keyword) {
-            return ((Keyword) value).getLiteral();
+        } else if (value instanceof Pointer) {
+            return ((Pointer) value).getLiteral();
         } else if (value instanceof LiteralStore) {
             return new Literal(value); // Just letting it through
         } else if (value instanceof EntryReplicate) {
@@ -151,11 +151,11 @@ public final class Literal implements Datum {
             return Optional.of(FALSE);
         }
 
-        // Check for keyword
+        // Check for pointer
         if (literal.startsWith("~")) {
-            Optional<Keyword> keyword = Keyword.fromString(literal.substring(1));
-            if (keyword.isPresent()) {
-                return Optional.of(keyword.get().getLiteral());
+            Optional<Pointer> pointer = Pointer.fromString(literal.substring(1));
+            if (pointer.isPresent()) {
+                return Optional.of(pointer.get().getLiteral());
             }
         }
 
@@ -203,12 +203,12 @@ public final class Literal implements Datum {
     }
 
     /**
-     * Checks if this value of the literal is a {@link Keyword keyword}
+     * Checks if this value of the literal is a {@link Pointer pointer}
      *
-     * @return true if a keyword
+     * @return true if a pointer
      */
-    public boolean isKeyword() {
-        return getValue().isPresent() && getValue().get() instanceof Keyword;
+    public boolean isPointer() {
+        return getValue().isPresent() && getValue().get() instanceof Pointer;
     }
 
     /**
@@ -260,14 +260,14 @@ public final class Literal implements Datum {
 
     /**
      * <pre>
-     * Attempts to get this literal as a {@link Keyword keyword} value
+     * Attempts to get this literal as a {@link Pointer pointer} value
      * This may throw a {@link InvalidTypeException}
      * </pre>
      *
-     * @return the keyword
+     * @return the pointer
      */
-    public Keyword asKeyword() {
-        return isKeyword() ? (Keyword) getValue().get() : parseKeyword().asKeyword();
+    public Pointer asPointer() {
+        return isPointer() ? (Pointer) getValue().get() : parsePointer().asPointer();
     }
 
     /**
@@ -349,12 +349,12 @@ public final class Literal implements Datum {
         }
     }
 
-    private Literal parseKeyword() { // This method's only "saving grace" is an empty literal
+    private Literal parsePointer() { // This method's only "saving grace" is an empty literal
         if (isEmpty()) {
             return EMPTY;
         }
 
-        throw new InvalidTypeException("Keywords cannot be cast to"); // Throw exception
+        throw new InvalidTypeException("Pointers cannot be cast to"); // Throw exception
     }
 
     private Literal parseString() { // Parses the value (no matter the value) into a literal with a string value
