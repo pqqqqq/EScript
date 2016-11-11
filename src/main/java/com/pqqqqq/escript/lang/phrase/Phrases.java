@@ -4,6 +4,7 @@ import com.pqqqqq.escript.lang.phrase.phrases.action.CheckPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.action.PrintPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.action.SetPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.BroadcastPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.CancelPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.player.PlayerCloseInventory;
 import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.player.PlayerKick;
 import com.pqqqqq.escript.lang.phrase.phrases.action.sponge.player.PlayerMessage;
@@ -54,6 +55,7 @@ public class Phrases extends SortedRegistry<Phrase> {
 
     // Sponge
     public static final Phrase BROADCAST = BroadcastPhrase.instance();
+    public static final Phrase CANCEL = CancelPhrase.instance();
 
     // Player
     public static final Phrase PLAYER_CLOSE_INVENTORY = PlayerCloseInventory.instance();
