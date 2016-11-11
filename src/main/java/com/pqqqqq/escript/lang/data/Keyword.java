@@ -12,7 +12,12 @@ public enum Keyword {
      * The player keyword
      */
     PLAYER(ctx -> Literal.fromObject(ctx.getScript().getProperties().getPlayer().getUniqueId()),
-            "player", "player's", "person", "person's"); // TODO plain object reference?
+            "player", "player's", "person", "person's"), // TODO plain object reference?
+
+    /**
+     * The block keyword
+     */
+    BLOCK(ctx -> Literal.EMPTY, "block"); // TODO Should this be empty?
 
     private final DatumContainer resolver;
     private final String[] aliases;

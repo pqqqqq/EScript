@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by Kevin on 2016-10-14.
@@ -75,6 +76,11 @@ public final class SimpleListModule implements ListModule {
     public MutableValue<Literal> add(MutableValue<Literal> value) {
         list.add(value);
         return value;
+    }
+
+    @Override
+    public Stream<MutableValue<Literal>> stream() {
+        return list.stream();
     }
 
     @Override

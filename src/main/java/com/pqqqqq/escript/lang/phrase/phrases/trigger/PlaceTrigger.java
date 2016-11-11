@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger;
 
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.exception.UnknownRegistryTypeException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
@@ -12,6 +13,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,8 +33,8 @@ import java.util.Optional;
 public class PlaceTrigger implements Phrase {
     private static final PlaceTrigger INSTANCE = new PlaceTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if $PlaceType is? place|placed:"),
-            Syntax.compile("on place|placed|placement of? $PlaceType:")
+            Syntax.compile("when|if $PlaceTypes is? place|placed:"),
+            Syntax.compile("on place|placed|placement of? $PlaceTypes:"),
     };
 
     /**
@@ -58,12 +61,19 @@ public class PlaceTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        String placeType = ctx.getLiteral("PlaceType").asString();
-        BlockType blockType = Sponge.getRegistry().getType(BlockType.class, placeType).orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", placeType));
+        LiteralStore placeTypes = ctx.getLiteral("PlaceTypes", (Object) null).asStore();
+        List<BlockType> blockTypes = new ArrayList<>();
+
+        placeTypes.getListModule().literalStream().forEach(type -> blockTypes.add(Sponge.getRegistry().getType(BlockType.class, type.asString()).
+                orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", type.asString()))));
 
         Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
-            Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
-            return block.isPresent() && block.get().getState().getType().equals(blockType);
+            if (blockTypes.isEmpty()) {
+                return true;
+            } else {
+                Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
+                return block.isPresent() && blockTypes.contains(block.get().getState().getType());
+            }
         }, Causes.PLACE);
         return Result.success();
     }

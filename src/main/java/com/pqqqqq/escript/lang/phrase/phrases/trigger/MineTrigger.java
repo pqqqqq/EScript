@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger;
 
+import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.exception.UnknownRegistryTypeException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
@@ -12,6 +13,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,8 +33,8 @@ import java.util.Optional;
 public class MineTrigger implements Phrase {
     private static final MineTrigger INSTANCE = new MineTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if $MineType is? mine|mined|broken|break|breaked:"),
-            Syntax.compile("on mine|mining|brake|broken of? $MineType:")
+            Syntax.compile("when|if $MineTypes is? mine|mined|broken|break|breaked:"),
+            Syntax.compile("on mine|mining|brake|broken of? $MineTypes:")
 
             /*Pattern.compile("^(when|if)(\\s+?)(?<MineType>\\S+?)(\\s+?)(is(\\s*?))?mine(d)?:$", Pattern.CASE_INSENSITIVE),
             Pattern.compile("^on(\\s+?)(mine|mining)(\\s+?)(of(\\s*?))?(?<MineType>\\S+?):$", Pattern.CASE_INSENSITIVE)*/
@@ -61,12 +64,19 @@ public class MineTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        String mineType = ctx.getLiteral("MineType").asString();
-        BlockType blockType = Sponge.getRegistry().getType(BlockType.class, mineType).orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", mineType));
+        LiteralStore mineTypes = ctx.getLiteral("MineTypes", (Object) null).asStore();
+        List<BlockType> blockTypes = new ArrayList<>();
+
+        mineTypes.getListModule().literalStream().forEach(type -> blockTypes.add(Sponge.getRegistry().getType(BlockType.class, type.asString()).
+                orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", type.asString()))));
 
         Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
-            Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
-            return block.isPresent() && block.get().getState().getType().equals(blockType);
+            if (blockTypes.isEmpty()) {
+                return true;
+            } else {
+                Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
+                return block.isPresent() && blockTypes.contains(block.get().getState().getType());
+            }
         }, Causes.MINE);
         return Result.success();
     }

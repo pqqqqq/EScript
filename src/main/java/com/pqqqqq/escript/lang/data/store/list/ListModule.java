@@ -7,6 +7,7 @@ import com.pqqqqq.escript.lang.data.store.Module;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 /**
  * A list {@link Module module} interface.
@@ -35,6 +36,22 @@ public interface ListModule extends Module<Integer>, Iterable<MutableValue<Liter
      * @return the value that was added
      */
     MutableValue<Literal> add(MutableValue<Literal> value);
+
+    /**
+     * Creates a {@link MutableValue mutable value} {@link Stream stream} for this list module.
+     *
+     * @return the new stream
+     */
+    Stream<MutableValue<Literal>> stream();
+
+    /**
+     * Creates a {@link Literal literal} {@link Stream stream} for this list module.
+     *
+     * @return the literal stream
+     */
+    default Stream<Literal> literalStream() {
+        return stream().map(MutableValue::getValue);
+    }
 
     /**
      * <pre>
