@@ -3,6 +3,7 @@ package com.pqqqqq.escript.lang.file;
 import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.exception.state.ESCompileTimeException;
 import com.pqqqqq.escript.lang.line.Line;
+import com.pqqqqq.escript.lang.util.string.StringLibrary;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 
 import java.io.BufferedReader;
@@ -92,12 +93,18 @@ public class FileLexer {
         RawScript.Builder scriptBuilder = null;
 
         int lineNumber = 0; // Have to keep track of line numbers
+        boolean blockComment = false; // Have to keep track of block comment state
 
         Deque<Line.Builder> blockLineQueue = new ArrayDeque<>(); // Used for adding block lines
         Line.Builder lastLine = null; // Recording last line is important to start branching lines
 
         try {
             for (String lineContents : checkNotNull(lines, "Lines haven't been lexed yet.")) {
+                // Remove any comments
+                StringLibrary.Result commentResult = StringLibrary.from(lineContents).removeComments(blockComment);
+                lineContents = commentResult.getResult(); // Set the line's contents to whatever after comments
+                blockComment = commentResult.isSuccessful(); // Set new block comment state
+
                 String trimmed = lineContents.trim();
                 lineNumber++; // Incr line number
 

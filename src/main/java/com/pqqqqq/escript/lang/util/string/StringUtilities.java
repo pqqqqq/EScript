@@ -93,50 +93,35 @@ public class StringUtilities {
     /**
      * Parses the next {@link SplitSequence} in a string by a prioritized split group
      *
+     * @param properties the {@link TrackerProperties tracker properties}
      * @param delimiterGroups a two-dimensional delimiter string array, where each String[] in the String[][] is prioritized by its ordinal
      * @return the next split sequence, or null if none
      */
-    public SplitSequence parseNextSequence(String[]... delimiterGroups) {
+    public SplitSequence parseNextSequence(TrackerProperties properties, String[]... delimiterGroups) {
         for (String[] splitGroup : delimiterGroups) {
-            boolean quotes = false;
-            int roundBrackets = 0, squareBrackets = 0, curlyBrackets = 0;
-            String builder = "";
+            Tracker tracker = new Tracker(properties); // Create new tracker
             SplitSequence current = null;
 
             for (int count = 0; count < string.length(); count++) {
                 char c = string.charAt(count);
 
-                builder += c;
-                if (!quotes && roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0) {
+                tracker.builder += c; // Manual
+                if (tracker.canMatch()) {
                     for (String split : splitGroup) {
-                        if (builder.endsWith(split)) {
+                        if (tracker.doesMatch(split)) {
                             String before = string.substring(0, count - split.length() + 1);
                             String after = string.substring(count + 1);
 
                             current = new SplitSequence(before, split, after);
+
+                            if (!properties.isLast()) { // If it's not the last one, we can return now
+                                return current;
+                            }
                         }
                     }
                 }
 
-                if (c == '"') {
-                    if (!builder.endsWith("\\") || builder.endsWith("\\\\")) {
-                        quotes = !quotes;
-                    }
-                } else if (!quotes) {
-                    if (c == '(') {
-                        roundBrackets++;
-                    } else if (c == ')') {
-                        roundBrackets--;
-                    } else if (c == '[') {
-                        squareBrackets++;
-                    } else if (c == ']') {
-                        squareBrackets--;
-                    } else if (c == '{') {
-                        curlyBrackets++;
-                    } else if (c == '}') {
-                        curlyBrackets--;
-                    }
-                }
+                tracker.track(c, false);
             }
 
             if (current != null) {
@@ -154,49 +139,37 @@ public class StringUtilities {
      * @return the split string {@link List list}
      */
     public List<String> parseSplit(String... delimiter) {
-        List<String> list = new ArrayList<>();
+        return parseSplit(TrackerProperties.def(), delimiter);
+    }
 
-        boolean quotes = false;
-        int roundBrackets = 0, squareBrackets = 0, curlyBrackets = 0;
-        String builder = "";
+    /**
+     * Parses a split of the specified string at the given delimiters based on the {@link TrackerProperties tracker properties} for delimitation.
+     *
+     * @param properties the tracker properties
+     * @param delimiter  the delimiter strings
+     * @return the split string {@link List list}
+     */
+    public List<String> parseSplit(TrackerProperties properties, String... delimiter) {
+        List<String> list = new ArrayList<>();
+        Tracker tracker = new Tracker(); // New tracker
 
         for (int count = 0; count < string.length(); count++) {
             char c = string.charAt(count);
+            tracker.track(c, true);
 
-            if (c == '"') {
-                if (!builder.endsWith("\\") || builder.endsWith("\\\\")) {
-                    quotes = !quotes;
-                }
-            } else if (!quotes) {
-                if (c == '(') {
-                    roundBrackets++;
-                } else if (c == ')') {
-                    roundBrackets--;
-                } else if (c == '[') {
-                    squareBrackets++;
-                } else if (c == ']') {
-                    squareBrackets--;
-                } else if (c == '{') {
-                    curlyBrackets++;
-                } else if (c == '}') {
-                    curlyBrackets--;
-                }
-            }
-
-            builder += c;
-            if (!quotes && roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0) {
+            if (tracker.canMatch()) {
                 for (String split : delimiter) {
-                    if (builder.endsWith(split)) {
-                        list.add(builder.substring(0, builder.length() - split.length()));
-                        builder = "";
+                    if (tracker.doesMatch(split)) {
+                        list.add(tracker.builder.substring(0, tracker.builder.length() - split.length()));
+                        tracker.builder = "";
                         break;
                     }
                 }
             }
         }
 
-        if (!builder.isEmpty()) {
-            list.add(builder);
+        if (!tracker.builder.isEmpty()) {
+            list.add(tracker.builder);
         }
         return list;
     }
@@ -225,4 +198,55 @@ public class StringUtilities {
 
         return builder;
     }
+
+    private class Tracker { // Private class
+        private final TrackerProperties properties;
+
+        private String builder = "";
+        private boolean quotes = false;
+        private int roundBrackets = 0, squareBrackets = 0, curlyBrackets = 0;
+
+        private Tracker() {
+            this(TrackerProperties.def());
+        }
+
+        private Tracker(TrackerProperties properties) { // Can't be created by anything else
+            this.properties = properties;
+        }
+
+        private boolean canMatch() { // Other getters aren't necessary
+            return (!quotes || !properties.doQuotesMatter()) && (!properties.doBracketsMatter() || roundBrackets == 0 && squareBrackets == 0 && curlyBrackets == 0);
+        }
+
+        private boolean doesMatch(String str) {
+            return builder.endsWith(str);
+        }
+
+        private void track(char c, boolean addToString) { // This class tracks all that is necessary for the next character
+            if (c == '"' && properties.doQuotesMatter()) {
+                if (!builder.endsWith("\\") || builder.endsWith("\\\\")) {
+                    quotes = !quotes;
+                }
+            } else if (!quotes && properties.doBracketsMatter()) {
+                if (c == '(') {
+                    roundBrackets++;
+                } else if (c == ')') {
+                    roundBrackets--;
+                } else if (c == '[') {
+                    squareBrackets++;
+                } else if (c == ']') {
+                    squareBrackets--;
+                } else if (c == '{') {
+                    curlyBrackets++;
+                } else if (c == '}') {
+                    curlyBrackets--;
+                }
+            }
+
+            if (addToString) {
+                builder += c;
+            }
+        }
+    }
+
 }

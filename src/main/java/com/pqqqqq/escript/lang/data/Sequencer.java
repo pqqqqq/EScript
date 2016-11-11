@@ -8,6 +8,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
 import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
 import com.pqqqqq.escript.lang.util.string.SplitSequence;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
+import com.pqqqqq.escript.lang.util.string.TrackerProperties;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class Sequencer {
         }
 
         // Check if it's an index
-        SplitSequence indexSequence = StringUtilities.from(strarg).parseNextSequence(new String[]{"[", "$"});
+        SplitSequence indexSequence = StringUtilities.from(strarg).parseNextSequence(TrackerProperties.builder().last(true).build(), new String[]{"[", "$"});
         if (indexSequence != null) {
             switch (indexSequence.getDelimiter()) {
                 case "[": // Sequenced index
