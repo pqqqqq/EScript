@@ -20,7 +20,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class PlayerName implements Phrase {
     private static final PlayerName INSTANCE = new PlayerName();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("player's|person's|player|person name|username|user"),
+            Syntax.compile("$Player name|username|user"),
     };
 
     /**

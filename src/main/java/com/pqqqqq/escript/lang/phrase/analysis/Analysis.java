@@ -17,8 +17,6 @@ import java.util.function.Predicate;
  * Runs a full phrase analysis, which attempts to match a {@link Line line} to its {@link Phrase} and {@link Syntax syntax}
  */
 public class Analysis {
-    private static final Predicate<Phrase> TRUE_PREDICATE = (phrase) -> true;
-
     private final String line;
     private final List<String> stringComponents;
     private final boolean colon;
@@ -83,7 +81,7 @@ public class Analysis {
      * @return an {@link Optional optional} phrase
      */
     public Optional<AnalysisResult> analyze() {
-        return analyze(TRUE_PREDICATE);
+        return analyze(null);
     }
 
     /**
@@ -97,7 +95,7 @@ public class Analysis {
      */
     public Optional<AnalysisResult> analyze(Predicate<Phrase> predicate) {
         for (Phrase phrase : Phrases.instance().registry()) { // We don't use stream here because we're going to return the method from within the forEach loop
-            if (predicate.test(phrase)) {
+            if (predicate == null || predicate.test(phrase)) {
                 Optional<AnalysisResult> analysis = phrase.matches(this);
 
                 if (analysis.isPresent()) {

@@ -24,7 +24,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerLocation implements ValuePhrase {
     private static final PlayerLocation INSTANCE = new PlayerLocation();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("player's|person's|player|person loc|location|position|pos"),
+            Syntax.compile("$Player loc|location|position|pos"),
             Syntax.compile("the? loc|location|position|pos of $Player")
     };
 

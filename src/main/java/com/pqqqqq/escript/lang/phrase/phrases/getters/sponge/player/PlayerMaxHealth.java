@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.data.mutable.LinkedMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.primitive.DoubleSerializer;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
@@ -23,7 +24,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerMaxHealth implements ValuePhrase {
     private static final PlayerMaxHealth INSTANCE = new PlayerMaxHealth();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("player's|person's|player|person max|maximum health|hp|hitpoints"),
+            Syntax.compile("$Player max|maximum health|hp|hitpoints"),
             Syntax.compile("the? max|maximum health|hp|hitpoints of $Player")
     };
 
@@ -47,6 +48,6 @@ public class PlayerMaxHealth implements ValuePhrase {
     @Override
     public Result execute(Context ctx) {
         Player player = ctx.getPlayer("Player");
-        return Result.valueSuccess(LinkedMutableValue.fromStore(player.getHealthData().maxHealth(), player));
+        return Result.valueSuccess(LinkedMutableValue.fromStore(player.getHealthData().maxHealth(), player, DoubleSerializer.instance()));
     }
 }

@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.data.mutable.LinkedMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.primitive.IntegerSerializer;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
@@ -23,7 +24,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerFood implements ValuePhrase {
     private static final PlayerFood INSTANCE = new PlayerFood();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("player's|person's|player|person food|hunger|starvation level|lvl?"),
+            Syntax.compile("$Player food|hunger|starvation level|lvl?"),
             Syntax.compile("the? food|hunger|starvation level|lvl? of $Player")
     };
 
@@ -47,6 +48,6 @@ public class PlayerFood implements ValuePhrase {
     @Override
     public Result execute(Context ctx) {
         Player player = ctx.getPlayer("Player");
-        return Result.valueSuccess(LinkedMutableValue.fromStore(player.getFoodData().foodLevel(), player));
+        return Result.valueSuccess(LinkedMutableValue.fromStore(player.getFoodData().foodLevel(), player, IntegerSerializer.instance()));
     }
 }

@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.data.mutable.LinkedMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.primitive.DoubleSerializer;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
@@ -24,7 +25,7 @@ public class PlayerHealth implements ValuePhrase {
     private static final PlayerHealth INSTANCE = new PlayerHealth();
     private static final Syntax[] SYNTAXES = {
             // Syntax.compile("$Player? health|hp|hitpoints"), THIS SCREWS UP PRINTS AND MESSAGES
-            Syntax.compile("player's|person's|player|person health|hp|hitpoints"),
+            Syntax.compile("$Player health|hp|hitpoints"),
             Syntax.compile("the? health|hp|hitpoints of $Player")
 
             /*Pattern.compile("^(player|person)(\\'s)?(\\s+?)(health|hp|hitpoints)$", Pattern.CASE_INSENSITIVE),
@@ -51,6 +52,6 @@ public class PlayerHealth implements ValuePhrase {
     @Override
     public Result execute(Context ctx) {
         Player player = ctx.getPlayer("Player");
-        return Result.valueSuccess(LinkedMutableValue.fromStore(player.getHealthData().health(), player));
+        return Result.valueSuccess(LinkedMutableValue.fromStore(player.getHealthData().health(), player, DoubleSerializer.instance()));
     }
 }

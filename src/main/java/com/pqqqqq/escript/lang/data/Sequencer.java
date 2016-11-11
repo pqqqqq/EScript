@@ -105,6 +105,12 @@ public class Sequencer {
             return new EntryReplicateContainer(entrySplit.get(0).trim(), sequence(entrySplit.get(1)));
         }
 
+        // Check for keyword
+        Optional<Keyword> keyword = Keyword.fromString(strarg);
+        if (keyword.isPresent()) {
+            return keyword.get().getResolver();
+        }
+
         // Check plain data
         Optional<Literal> literal = Literal.fromSequence(strarg);
         if (literal.isPresent()) {

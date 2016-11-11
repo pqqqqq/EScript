@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player;
 
 import com.pqqqqq.escript.lang.data.mutable.LinkedMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.ItemStackSerializer;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Result;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
@@ -23,7 +24,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerHelmet implements ValuePhrase {
     private static final PlayerHelmet INSTANCE = new PlayerHelmet();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("player's|person's|player|person helmet"),
+            Syntax.compile("$Player helmet"),
             Syntax.compile("the? helmet of $Player")
     };
 
@@ -47,6 +48,6 @@ public class PlayerHelmet implements ValuePhrase {
     @Override
     public Result execute(Context ctx) {
         Player player = ctx.getPlayer("Player");
-        return Result.valueSuccess(LinkedMutableValue.fromConsumer(() -> player.getHelmet().orElse(null), player::setHelmet));
+        return Result.valueSuccess(LinkedMutableValue.fromConsumer(() -> player.getHelmet().orElse(null), player::setHelmet, ItemStackSerializer.instance()));
     }
 }

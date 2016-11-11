@@ -60,7 +60,7 @@ public class SetPhrase implements Phrase {
             MutableValue mutableValue = valueContainer.resolveVariable(ctx);
             Serializer<?> serializer = mutableValue.getSerializer();
 
-            Object value = (serializer == null ? literalValue : (literalValue.isEmpty() ? null : serializer.deserialize(literalValue)));
+            Object value = (serializer == null ? literalValue.getValue().orElse(null) : (literalValue.isEmpty() ? null : serializer.deserialize(literalValue)));
             mutableValue.setValue(value); // This may error
             return Result.success();
         }

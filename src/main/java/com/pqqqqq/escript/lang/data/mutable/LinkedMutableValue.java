@@ -23,22 +23,7 @@ import java.util.function.Supplier;
 public final class LinkedMutableValue<T> implements MutableValue<T> {
     private final Supplier<? extends T> getSupplier;
     private final Function<? super T, Boolean> setFunction;
-    private final Serializer<T> serializer;
-
-    /**
-     * <pre>
-     * Creates a new linked mutable value from the {@link Supplier supplier}, {@link Consumer set consumer}.
-     * Since the consumer has no return type to indicate success, the success will always be TRUE.
-     * </pre>
-     *
-     * @param getSupplier the get supplier
-     * @param setConsumer the set consumer
-     * @param <T>         the value's generic type
-     * @return the new instance
-     */
-    public static <T> LinkedMutableValue<T> fromConsumer(Supplier<? extends T> getSupplier, Consumer<? super T> setConsumer) {
-        return fromConsumer(getSupplier, setConsumer, null);
-    }
+    private final Serializer<T> serializer; // This isn't optional anymore
 
     /**
      * <pre>
@@ -60,18 +45,6 @@ public final class LinkedMutableValue<T> implements MutableValue<T> {
     }
 
     /**
-     * Creates a new linked mutable value from the {@link Supplier supplier}, and {@link Function set function}
-     *
-     * @param getSupplier the get supplier
-     * @param setFunction the set function
-     * @param <T>         the value's generic type
-     * @return the new instance
-     */
-    public static <T> LinkedMutableValue<T> fromFunction(Supplier<? extends T> getSupplier, Function<? super T, Boolean> setFunction) {
-        return fromFunction(getSupplier, setFunction, null);
-    }
-
-    /**
      * Creates a new linked mutable value from the {@link Supplier supplier}, {@link Function set function}, and {@link Serializer serializer}
      *
      * @param getSupplier the get supplier
@@ -82,18 +55,6 @@ public final class LinkedMutableValue<T> implements MutableValue<T> {
      */
     public static <T> LinkedMutableValue<T> fromFunction(Supplier<? extends T> getSupplier, Function<? super T, Boolean> setFunction, Serializer<T> serializer) {
         return new LinkedMutableValue<>(getSupplier, setFunction, serializer);
-    }
-
-    /**
-     * Creates a new linked value from the {@link Value sponge value}, and {@link CompositeValueStore sponge value store}
-     *
-     * @param value      the value
-     * @param valueStore the value store
-     * @param <T>        the value's generic type
-     * @return the new instance
-     */
-    public static <T> LinkedMutableValue<T> fromStore(Value<T> value, CompositeValueStore<?, ?> valueStore) {
-        return fromStore(value, valueStore, null);
     }
 
     /**
