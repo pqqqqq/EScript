@@ -3,7 +3,6 @@ package com.pqqqqq.escript.lang.phrase.phrases.action;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
-import com.pqqqqq.escript.lang.data.serializer.Serializer;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
@@ -58,10 +57,8 @@ public class SetPhrase implements Phrase {
         if (container instanceof DatumContainer.Value) {
             DatumContainer.Value valueContainer = (DatumContainer.Value) container;
             MutableValue mutableValue = valueContainer.resolveVariable(ctx);
-            Serializer<?> serializer = mutableValue.getSerializer();
 
-            Object value = (serializer == null ? literalValue.getValue().orElse(null) : (literalValue.isEmpty() ? null : serializer.deserialize(literalValue)));
-            mutableValue.setValue(value); // This may error
+            mutableValue.setValueFromLiteral(literalValue); // This may error
             return Result.success();
         }
 

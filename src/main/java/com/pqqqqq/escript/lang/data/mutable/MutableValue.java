@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.data.mutable;
 
+import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.serializer.Serializer;
 import com.pqqqqq.escript.lang.util.Copyable;
 
@@ -28,6 +29,25 @@ public interface MutableValue<T> extends Copyable<MutableValue<T>> {
      * @return true if the value was set successfully
      */
     boolean setValue(T value);
+
+    /**
+     * Attempts to set this mutable value's value from a {@link Literal literal}.
+     * If a {@link Serializer serializer} is specified for this mutable value, via {@link #getSerializer()}, then
+     * the literal will be {@link Serializer#deserialize(Literal) deserialized}.
+     * Otherwise, the nested {@link Literal#getValue() value} of the literal will be used, which may cause {@link ClassCastException errors}.
+     *
+     * @param literal the literal
+     * @return true if the value was set successfully
+     */
+    default boolean setValueFromLiteral(Literal literal) {
+        Serializer<T> serializer = getSerializer();
+        if (serializer != null) {
+            return setValue(serializer.deserialize(literal));
+        } else {
+            // We're doing it old school (may error)
+            return setValue((T) literal.getValue().orElse(null));
+        }
+    }
 
     /**
      * Sets the current value by offering a {@link MutableValue mutable value}, {@link Copyable#copy() copying} the value in the process.

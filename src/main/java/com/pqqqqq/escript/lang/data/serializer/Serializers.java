@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.data.serializer;
 
+import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.serializer.primitive.*;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
@@ -19,6 +20,8 @@ public class Serializers extends Registry<Serializer> {
     // REGISTRY \\
 
     // PRIMITIVES
+    public static final PrimitiveSerializer<Literal> SELF = SelfSerializer.instance();
+    public static final PrimitiveSerializer<Datum> DATUM = DatumSerializer.instance();
     public static final PrimitiveSerializer<Double> DOUBLE = DoubleSerializer.instance();
     public static final PrimitiveSerializer<Boolean> BOOLEAN = BooleanSerializer.instance();
     public static final PrimitiveSerializer<Float> FLOAT = FloatSerializer.instance();

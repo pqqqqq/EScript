@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
+import com.pqqqqq.escript.lang.data.serializer.Serializer;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 
 import java.util.Optional;
 
@@ -58,6 +60,11 @@ public class Variable implements MutableValue<Datum> {
     public boolean setValue(Datum value) {
         this.value = Optional.ofNullable(value).orElse(Literal.EMPTY); // Fixed unchecked cast? How?
         return true;
+    }
+
+    @Override
+    public Serializer<Datum> getSerializer() {
+        return Serializers.DATUM;
     }
 
     @Override
