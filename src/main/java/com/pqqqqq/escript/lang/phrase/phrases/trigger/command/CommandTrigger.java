@@ -10,7 +10,10 @@ import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.trigger.Trigger;
 import com.pqqqqq.escript.lang.trigger.cause.Causes;
 import org.apache.commons.lang3.StringUtils;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Cancellable;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 
@@ -80,47 +83,50 @@ public class CommandTrigger implements Phrase {
 
         // Run-time predicate
         Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
-            Optional<String> commandTest = properties.getVariable("Command", String.class);
-            Optional<String> argumentsTest = properties.getVariable("Arguments", String.class);
+            String commandTest = properties.getVariable("Command", String.class).orElse("").trim(); // It's fine to make these empty strings
+            String argumentsTest = properties.getVariable("Arguments", String.class).orElse("").trim(); // It's fine to make these empty strings
 
-            if (!commandTest.isPresent() || !argumentsTest.isPresent()) {
+            if (!command.equalsIgnoreCase(commandTest)) { // Check basic command
                 return false;
-            } else {
-                if (!command.equalsIgnoreCase(commandTest.get())) { // Check basic command
+            }
+
+            // Cancel the event, no matter what happens, this is the right code for this command
+            ((Cancellable) properties.getEvent()).setCancelled(true);
+
+            String[] splitTest = argumentsTest.isEmpty() ? new String[]{} : argumentsTest.split("\\s+");
+            Deque<String> testQueue = new ArrayDeque<>(Arrays.asList(splitTest)); // Turn split test into a queue
+
+            int optionalCount = 0; // Keep track of optionals, they cant pass the threshold
+            int optionalThreshold = testQueue.size() - finalRequiredCount; // The threshold
+
+            Map<String, Datum> variableBus = new HashMap<>();
+            for (CommandArgument argument : arguments) {
+                try {
+                    if (!argument.isRequired()) { // Optional
+                        if (++optionalCount > optionalThreshold) {
+                            variableBus.put(argument.getName(), Literal.EMPTY);
+                            continue; // No optional argument today
+                        }
+                    }
+
+                    String value = "";
+                    do { // Do-while loop, because it should do at least one iteration
+                        value += testQueue.removeFirst() + " "; // We use removeFirst instead of poll because of the error removeFirst throws
+                    } while (argument.isStrargs() && !testQueue.isEmpty());
+
+                    variableBus.put(argument.getName(), Literal.fromObject(value.trim())); // Put into variable bus
+                } catch (NoSuchElementException e) { // Thrown by poll when queue is empty
+                    // This happens when the syntax is messed up
+
+                    Player player = properties.getPlayer(); // TODO better to use commandsender as a property variable?
+                    player.sendMessage(Text.of(TextColors.RED, "Invalid syntax."));
+                    player.sendMessage(Text.of(TextColors.RED, "/" + fullCommand)); // Add back the slash here
                     return false;
                 }
-
-                String[] splitTest = argumentsTest.get().split("\\s+");
-                Deque<String> testQueue = new ArrayDeque<>(Arrays.asList(splitTest)); // Turn split test into a queue
-
-                int optionalCount = 0; // Keep track of optionals, they cant pass the threshold
-                int optionalThreshold = testQueue.size() - finalRequiredCount; // The threshold
-
-                Map<String, Datum> variableBus = new HashMap<>();
-                for (CommandArgument argument : arguments) {
-                    try {
-                        if (!argument.isRequired()) { // Optional
-                            if (++optionalCount > optionalThreshold) {
-                                variableBus.put(argument.getName(), Literal.EMPTY);
-                                continue; // No optional argument today
-                            }
-                        }
-
-                        String value = "";
-                        do { // Do-while loop, because it should do at least one iteration
-                            value += testQueue.poll() + " ";
-                        } while (argument.isStrargs() && !testQueue.isEmpty());
-
-                        variableBus.put(argument.getName(), Literal.fromObject(value.trim())); // Put into variable bus
-                    } catch (NoSuchElementException e) { // Thrown by poll when queue is empty
-                        return false;
-                    }
-                }
-
-                properties.getVariableBus().putAll(variableBus); // We're good to deploy our variable bus
-                ((Cancellable) properties.getEvent()).setCancelled(true); // Cancel if we've got one
-                return true;
             }
+
+            properties.getVariableBus().putAll(variableBus); // We're good to deploy our variable bus
+            return true;
         }, Causes.COMMAND);
         return Result.success();
     }
