@@ -21,32 +21,30 @@ import java.util.Optional;
  * Created by Kevin on 2016-08-31.
  * <p>
  * <pre>
- * The place trigger phrase, which fires when a player places a block.
+ * The interact block trigger phrase, which fires when a player interacts with a block (or the air).
  * Some ways of doing this:
  *
- *     <code>on place of stone:
- *     when stone is placed:
- *     if stone is placed:
- *     if placed stone:</code>
+ *     <code>on left click of "minecraft:stone":
+ *     when a block is right clicked:</code>
  * </pre>
  */
-public class PlaceTrigger implements Phrase {
-    private static final PlaceTrigger INSTANCE = new PlaceTrigger();
+public class InteractBlockTrigger implements Phrase {
+    private static final InteractBlockTrigger INSTANCE = new InteractBlockTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if $PlaceTypes is? place|placed:"),
-            Syntax.compile("on place|placed|placement of? $PlaceTypes:"),
+            Syntax.compile("on ^Click click of? a|an? $Blocks?:"),
+            Syntax.compile("when|if a|an? $Blocks is|are? ^Click click|clicked:"),
     };
 
     /**
-     * Gets the main place trigger instance
+     * Gets the main interact block trigger instance
      *
      * @return the instance
      */
-    public static PlaceTrigger instance() {
+    public static InteractBlockTrigger instance() {
         return INSTANCE;
     }
 
-    private PlaceTrigger() {
+    private InteractBlockTrigger() {
     }
 
     @Override
@@ -61,10 +59,12 @@ public class PlaceTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        LiteralStore placeTypes = ctx.getLiteral("PlaceTypes", (Object) null).asStore();
+        LiteralStore interactTypes = ctx.getLiteral("Blocks", (Object) null).asStore();
+        String click = ctx.getStrarg("Click");
+
         List<BlockType> blockTypes = new ArrayList<>();
 
-        placeTypes.getListModule().literalStream().forEach(type -> blockTypes.add(Sponge.getRegistry().getType(BlockType.class, type.asString()).
+        interactTypes.getListModule().literalStream().forEach(type -> blockTypes.add(Sponge.getRegistry().getType(BlockType.class, type.asString()).
                 orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", type.asString()))));
 
         Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
@@ -72,9 +72,15 @@ public class PlaceTrigger implements Phrase {
                 return true;
             } else {
                 Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
-                return block.isPresent() && blockTypes.contains(block.get().getState().getType());
+                Optional<String> interaction = properties.getVariable("Interaction", String.class);
+
+                if (!block.isPresent() || !interaction.isPresent()) {
+                    return false;
+                }
+
+                return interaction.get().equalsIgnoreCase(click) && blockTypes.contains(block.get().getState().getType());
             }
-        }, Causes.PLACE);
+        }, Causes.INTERACT_BLOCK);
         return Result.success();
     }
 }
