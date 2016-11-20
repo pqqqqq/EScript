@@ -11,6 +11,7 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.command.SendCommandEvent;
+import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.Optional;
@@ -59,6 +60,14 @@ public class MainEvents {
         Causes.INTERACT_BLOCK.trigger(Properties.builder().event(event).player(player)
                 .variable("Block", event.getTargetBlock())
                 .variable("Interaction", event instanceof InteractBlockEvent.Primary ? "Left" : "Right")
+                .build());
+    }
+
+    @Listener(order = Order.BEFORE_POST)
+    public void interactEntity(InteractEntityEvent event, @First Player player) {
+        Causes.INTERACT_ENTITY.trigger(Properties.builder().event(event).player(player)
+                .variable("Target", event.getTargetEntity())
+                .variable("Interaction", event instanceof InteractEntityEvent.Primary ? "Left" : "Right")
                 .build());
     }
 }

@@ -67,7 +67,7 @@ public class InteractBlockTrigger implements Phrase {
         interactTypes.getListModule().literalStream().forEach(type -> blockTypes.add(Sponge.getRegistry().getType(BlockType.class, type.asString()).
                 orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", type.asString()))));
 
-        Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
+        Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.INTERACT_BLOCK).predicate((properties) -> {
             if (blockTypes.isEmpty()) {
                 return true;
             } else {
@@ -80,7 +80,7 @@ public class InteractBlockTrigger implements Phrase {
 
                 return interaction.get().equalsIgnoreCase(click) && blockTypes.contains(block.get().getState().getType());
             }
-        }, Causes.INTERACT_BLOCK);
+        }).build();
         return Result.success();
     }
 }

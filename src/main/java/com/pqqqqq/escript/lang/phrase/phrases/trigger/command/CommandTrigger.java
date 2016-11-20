@@ -81,8 +81,7 @@ public class CommandTrigger implements Phrase {
 
         final int finalRequiredCount = requiredCount; // I have no idea why this is necessary (lambda)
 
-        // Run-time predicate
-        Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
+        Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.COMMAND).predicate((properties) -> {
             String commandTest = properties.getVariable("Command", String.class).orElse("").trim(); // It's fine to make these empty strings
             String argumentsTest = properties.getVariable("Arguments", String.class).orElse("").trim(); // It's fine to make these empty strings
 
@@ -127,7 +126,7 @@ public class CommandTrigger implements Phrase {
 
             properties.getVariableBus().putAll(variableBus); // We're good to deploy our variable bus
             return true;
-        }, Causes.COMMAND);
+        }).build();
         return Result.success();
     }
 }

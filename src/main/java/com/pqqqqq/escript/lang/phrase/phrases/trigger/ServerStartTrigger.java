@@ -51,7 +51,7 @@ public class ServerStartTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        Trigger.from(ctx.getScript().getRawScript(), Causes.SERVER_START);
+        Trigger.builder().script(ctx.getScript().getRawScript()).causes(Causes.SERVER_START).build();
         return Result.success();
     }
 }

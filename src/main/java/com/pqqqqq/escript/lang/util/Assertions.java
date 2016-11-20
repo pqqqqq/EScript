@@ -11,6 +11,34 @@ import java.util.function.Supplier;
 public class Assertions {
 
     /**
+     * Asserts that a given value is not null.
+     *
+     * @param value the value
+     * @param <T> the generic type for the value
+     * @return the value, if not null
+     */
+    public static <T> T assertNotNull(T value) {
+        return assertNotNull(value, "Assertion failed.");
+    }
+
+    /**
+     * Asserts that a given value is not null.
+     *
+     * @param value         the value
+     * @param assertMessage the assertion failure message
+     * @param args          arguments in the message (String format)
+     * @param <T>           the generic type for the value
+     * @return the value, if not null
+     */
+    public static <T> T assertNotNull(T value, String assertMessage, Object... args) {
+        if (value == null) {
+            throw new AssertionException(assertMessage, args);
+        }
+
+        return value;
+    }
+
+    /**
      * Asserts a given {@link Supplier supplier condition}
      *
      * @param condition the condition

@@ -70,14 +70,14 @@ public class MineTrigger implements Phrase {
         mineTypes.getListModule().literalStream().forEach(type -> blockTypes.add(Sponge.getRegistry().getType(BlockType.class, type.asString()).
                 orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", type.asString()))));
 
-        Trigger.from(ctx.getLine().getRawScript(), (properties) -> {
+        Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.MINE).predicate((properties) -> {
             if (blockTypes.isEmpty()) {
                 return true;
             } else {
                 Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
                 return block.isPresent() && blockTypes.contains(block.get().getState().getType());
             }
-        }, Causes.MINE);
+        }).build();
         return Result.success();
     }
 }
