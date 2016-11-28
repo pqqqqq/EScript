@@ -82,6 +82,12 @@ public class Sequencer {
             }
         }
 
+        // Check if it's a property
+        if (strarg.startsWith("<") && strarg.endsWith(">")) {
+            String propertyName = strarg.substring(1, strarg.length() - 1);
+            return (ctx) -> ctx.getScript().getProperties().getValue(propertyName).map(property -> property.resolve(ctx)).orElse(Literal.EMPTY); // Lambda expression here, or class?
+        }
+
         // Check if it's a list
         if (strarg.startsWith("{") && strarg.endsWith("}")) {
             String braceTrimmed = strarg.substring(1, strarg.length() - 1).trim();

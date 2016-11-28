@@ -4,6 +4,8 @@ import com.pqqqqq.escript.lang.data.Literal;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 
+import java.util.Optional;
+
 /**
  * Created by Kevin on 2016-09-28.
  * <pre>
@@ -20,6 +22,17 @@ public interface CatalogSerializer<T extends CatalogType> extends Serializer<T> 
 
     @Override
     default T deserialize(Literal value) {
-        return Sponge.getRegistry().getType(getCorrespondingClass(), value.asString()).orElse(null); // Simple, attempt to get from registry
+        String string = value.asString().trim();
+        Optional<T> returnValue = Sponge.getRegistry().getType(getCorrespondingClass(), string);
+
+        if (returnValue.isPresent()) {
+            return returnValue.get();
+        } else {
+            if (!string.startsWith("minecraft:")) { // If no minecraft:, add it
+                return Sponge.getRegistry().getType(getCorrespondingClass(), "minecraft:" + string).orElse(null);
+            } else { // Opposite, if there is a minecraft:, remove it
+                return Sponge.getRegistry().getType(getCorrespondingClass(), string.substring(10)).orElse(null);
+            }
+        }
     }
 }

@@ -7,11 +7,7 @@ import com.pqqqqq.escript.lang.line.Context;
 import java.util.Optional;
 
 /**
- * Created by Kevin on 2016-09-02.
- * <p>
- * <pre>
  * A {@link DatumContainer} that attempts to resolve a {@link Variable}
- * </pre>
  */
 public class VariableContainer implements DatumContainer.Value {
     private final DatumContainer variableName;
@@ -28,7 +24,7 @@ public class VariableContainer implements DatumContainer.Value {
     @Override
     public Literal resolve(Context ctx) {
         String name = variableName.resolve(ctx).asString();
-        Optional<Variable> variable = ctx.getScript().getVariable(name);
+        Optional<Variable> variable = ctx.getScript().getValue(name);
 
         if (variable.isPresent()) {
             return variable.get().getValue().resolve(ctx); // Resolve value if necessary

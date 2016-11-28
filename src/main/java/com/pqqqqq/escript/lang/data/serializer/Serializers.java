@@ -7,6 +7,7 @@ import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.registry.Registry;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.item.ItemType;
 
@@ -38,6 +39,7 @@ public class Serializers extends Registry<Serializer> {
     public static final CatalogSerializer<ItemType> ITEM_TYPE = () -> ItemType.class;
     public static final CatalogSerializer<BlockType> BLOCK_TYPE = () -> BlockType.class;
     public static final CatalogSerializer<HandType> HAND_TYPE = () -> HandType.class;
+    public static final CatalogSerializer<EntityType> ENTITY_TYPE = () -> EntityType.class;
 
     // END REGISTRY \\
 
@@ -57,13 +59,25 @@ public class Serializers extends Registry<Serializer> {
     }
 
     /**
+     * Attempts to find the corresponding serializer for the given object
+     * @param object the object
+     * @param <T> the object's generic type
+     * @return the serializer
+     */
+
+    @SuppressWarnings("unchecked")
+    public <T> Optional<Serializer<T>> getSerializer(T object) {
+        return registry().stream().filter((serializer) -> serializer.isApplicable(object)).findFirst().map(serializer -> (Serializer<T>) serializer);
+    }
+
+    /**
      * Attempts to {@link Serializer#serialize(Object) serialize} the object using the serializer registry
      *
      * @param object the object to serialize
      * @return the serialized {@link Literal literal}, or {@link Optional#empty()}
      */
-    @SuppressWarnings("unchecked")
+
     public Optional<Literal> serialize(Object object) {
-        return registry().stream().filter((serializer) -> serializer.isApplicable(object)).map((serializer) -> serializer.serialize(object)).findFirst();
+        return getSerializer(object).map(serializer -> serializer.serialize(object));
     }
 }

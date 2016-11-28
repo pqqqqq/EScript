@@ -3,51 +3,40 @@ package com.pqqqqq.escript.lang.data.mutable.variable;
 import com.google.common.base.Objects;
 import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.env.EnvironmentEntry;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 import com.pqqqqq.escript.lang.data.serializer.Serializer;
 import com.pqqqqq.escript.lang.data.serializer.Serializers;
 
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.pqqqqq.escript.lang.util.Assertions.assertNotNull;
 
 /**
- * Created by Kevin on 2016-09-02.
- * <p>
- * <pre>
- * A memory section that stores an instance of a {@link Datum}
- * </pre>
+ * A {@link MutableValue mutable value} that stores an instance of a {@link Datum}
  */
-public class Variable implements MutableValue<Datum> {
+public class Variable implements MutableValue<Datum>, EnvironmentEntry {
     private final String name;
-    private final Environment environment;
+    private final VariableEnvironment environment;
     private Datum value;
 
-    protected Variable(String name, Environment environment) {
+    protected Variable(String name, VariableEnvironment environment) {
         this(name, environment, null);
     }
 
-    protected Variable(String name, Environment environment, Datum value) {
-        this.name = checkNotNull(name, "Name cannot be null.");
-        this.environment = checkNotNull(environment, "Environment cannot be null.");
+    protected Variable(String name, VariableEnvironment environment, Datum value) {
+        this.name = assertNotNull(name, "Name cannot be null.");
+        this.environment = assertNotNull(environment, "Environment cannot be null.");
         setValue(value);
     }
 
-    /**
-     * Gets the name of this variable
-     *
-     * @return the name
-     */
+    @Override
     public String getName() {
         return name;
     }
 
-    /**
-     * Gets the containing {@link Environment} for this variable
-     *
-     * @return the environment
-     */
-    public Environment getEnvironment() {
+    @Override
+    public VariableEnvironment getEnvironment() {
         return environment;
     }
 

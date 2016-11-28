@@ -1,7 +1,7 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger;
 
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
-import com.pqqqqq.escript.lang.exception.UnknownRegistryTypeException;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
@@ -9,7 +9,6 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.trigger.Trigger;
 import com.pqqqqq.escript.lang.trigger.cause.Causes;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 
@@ -65,16 +64,15 @@ public class MineTrigger implements Phrase {
     @Override
     public Result execute(Context ctx) {
         LiteralStore mineTypes = ctx.getLiteral("MineTypes", (Object) null).asStore();
-        List<BlockType> blockTypes = new ArrayList<>();
 
-        mineTypes.getListModule().literalStream().forEach(type -> blockTypes.add(Sponge.getRegistry().getType(BlockType.class, type.asString()).
-                orElseThrow(() -> new UnknownRegistryTypeException("Unknown block type: %s", type.asString()))));
+        List<BlockType> blockTypes = new ArrayList<>();
+        mineTypes.getListModule().literalStream().map(Serializers.BLOCK_TYPE::deserialize).forEach(blockTypes::add);
 
         Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.MINE).predicate((properties) -> {
             if (blockTypes.isEmpty()) {
                 return true;
             } else {
-                Optional<BlockSnapshot> block = properties.getVariable("Block", BlockSnapshot.class);
+                Optional<BlockSnapshot> block = properties.getValue("Block", BlockSnapshot.class);
                 return block.isPresent() && blockTypes.contains(block.get().getState().getType());
             }
         }).build();

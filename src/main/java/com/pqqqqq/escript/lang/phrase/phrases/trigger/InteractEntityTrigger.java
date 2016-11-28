@@ -9,8 +9,8 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 import com.pqqqqq.escript.lang.script.Script;
 import com.pqqqqq.escript.lang.trigger.Trigger;
 import com.pqqqqq.escript.lang.trigger.cause.Causes;
-import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,30 +20,30 @@ import java.util.Optional;
  * Created by Kevin on 2016-08-31.
  * <p>
  * <pre>
- * The interact block trigger phrase, which fires when a player interacts with a block (or the air).
+ * The interact entity trigger phrase, which fires when a player interacts with an entity.
  * Some ways of doing this:
  *
- *     <code>on left click of "minecraft:stone":
- *     when a block is right clicked:</code>
+ *     <code>on left click of "minecraft:player":
+ *     when an entity is right clicked:</code>
  * </pre>
  */
-public class InteractBlockTrigger implements Phrase {
-    private static final InteractBlockTrigger INSTANCE = new InteractBlockTrigger();
+public class InteractEntityTrigger implements Phrase {
+    private static final InteractEntityTrigger INSTANCE = new InteractEntityTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("on ^Click click of? a|an? $Blocks?:"),
-            Syntax.compile("when|if a|an? $Blocks is|are? ^Click click|clicked:"),
+            Syntax.compile("on ^Click click of a|an? $Entity:"),
+            Syntax.compile("when|if a|an? $Entity is|are? ^Click click|clicked:"),
     };
 
     /**
-     * Gets the main interact block trigger instance
+     * Gets the main interact entity trigger instance
      *
      * @return the instance
      */
-    public static InteractBlockTrigger instance() {
+    public static InteractEntityTrigger instance() {
         return INSTANCE;
     }
 
-    private InteractBlockTrigger() {
+    private InteractEntityTrigger() {
     }
 
     @Override
@@ -58,27 +58,27 @@ public class InteractBlockTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
-        LiteralStore interactTypes = ctx.getLiteral("Blocks", (Object) null).asStore();
+        LiteralStore interactTypes = ctx.getLiteral("Entity", (Object) null).asStore();
         String click = ctx.getStrarg("Click");
 
-        List<BlockType> blockTypes = new ArrayList<>();
-        interactTypes.getListModule().literalStream().map(Serializers.BLOCK_TYPE::deserialize).forEach(blockTypes::add);
+        List<EntityType> entityTypes = new ArrayList<>();
+        interactTypes.getListModule().literalStream().map(Serializers.ENTITY_TYPE::deserialize).forEach(entityTypes::add);
 
-        Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.INTERACT_BLOCK).predicate((properties) -> {
+        Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.INTERACT_ENTITY).predicate((properties) -> {
             Optional<String> interaction = properties.getValue("Interaction", String.class);
             if (!interaction.isPresent() || !interaction.get().equalsIgnoreCase(click)) {
                 return false;
             }
 
-            if (blockTypes.isEmpty()) {
+            if (entityTypes.isEmpty()) { // Empty = any entity
                 return true;
             } else {
-                Optional<BlockSnapshot> block = properties.getValue("Block", BlockSnapshot.class);
-                if (!block.isPresent()) {
+                Optional<Entity> entity = properties.getValue("Target", Entity.class);
+                if (!entity.isPresent()) {
                     return false;
                 }
 
-                return blockTypes.contains(block.get().getState().getType());
+                return entityTypes.contains(entity.get().getType());
             }
         }).build();
         return Result.success();

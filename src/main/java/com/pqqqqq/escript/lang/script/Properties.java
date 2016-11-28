@@ -1,12 +1,12 @@
 package com.pqqqqq.escript.lang.script;
 
 import com.pqqqqq.escript.lang.data.Datum;
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyEnvironment;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by Kevin on 2016-09-02.
@@ -15,12 +15,11 @@ import java.util.Optional;
  * A list of {@link Script script} properties for generic scripts
  * </pre>
  */
-public class Properties {
+public class Properties extends PropertyEnvironment {
     private static final Properties EMPTY = builder().build();
     private final Event event; // Due to most triggers using events, this won't be optional (but can be null)
     private final Player player; // Due to most triggers using player, this won't be optional (but can be null)
 
-    private final Map<String, Object> variables;
     private final Map<String, Datum> variableBus = new HashMap<>();
 
     /**
@@ -33,10 +32,8 @@ public class Properties {
     }
 
     /**
-     * <pre>
      * Returns the empty properties instance.
      * Properties are immutable, and cannot be changed through this way, use {@link #builder()}
-     * </pre>
      *
      * @return the empty properties instance
      */
@@ -44,10 +41,9 @@ public class Properties {
         return EMPTY;
     }
 
-    private Properties(Event event, Player player, Map<String, Object> variables) {
+    private Properties(Event event, Player player) {
         this.event = event;
         this.player = player;
-        this.variables = variables;
     }
 
     /**
@@ -66,25 +62,6 @@ public class Properties {
      */
     public Player getPlayer() {
         return player;
-    }
-
-    /**
-     * Gets the variable only if it contains the given class type
-     *
-     * @param variable the variable name
-     * @param type the class type of the variable
-     * @param <T> the generic type fo teh variable
-     * @return the variable, or {@link Optional#empty()} if no variable with that name and type exists
-     */
-    public <T> Optional<T> getVariable(String variable, Class<T> type) {
-        Object var = this.variables.get(variable);
-        if (var == null) {
-            return Optional.empty();
-        } else if (!type.isInstance(var)) {
-            return Optional.empty();
-        } else {
-            return Optional.of(type.cast(var)); // Cast to it
-        }
     }
 
     /**
@@ -147,7 +124,10 @@ public class Properties {
          * @return the new instance
          */
         public Properties build() {
-            return new Properties(event, player, variables);
+            Properties newProperties = new Properties(event, player);
+            newProperties.createAll(variables);
+
+            return newProperties;
         }
     }
 }

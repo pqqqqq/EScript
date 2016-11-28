@@ -17,7 +17,12 @@ public enum Keyword {
     /**
      * The block keyword
      */
-    BLOCK(ctx -> Literal.EMPTY, "block"); // TODO Should this be empty?
+    BLOCK(ctx -> Literal.EMPTY, "block"), // TODO Should this be empty?
+
+    /**
+     * The entity keyword
+     */
+    ENTITY(ctx -> Literal.EMPTY, "entity"); // TODO Should this be empty?
 
     private final DatumContainer resolver;
     private final String[] aliases;
