@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger;
 
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.line.Context;
@@ -32,8 +33,8 @@ import java.util.Optional;
 public class MineTrigger implements Phrase {
     private static final MineTrigger INSTANCE = new MineTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if a|an? $MineTypes is|are? mine|mined|broken|break|breaked:"),
-            Syntax.compile("on mine|mining|brake|broken of? a|an? $MineTypes:")
+            Syntax.compile("when|if a|an? $MineTypes is|are? mine|mined|broken|break|breaked by? a|an? ^Player?:"),
+            Syntax.compile("on mine|mining|brake|broken of? a|an? $MineTypes by? a|an? ^Player?:")
 
             /*Pattern.compile("^(when|if)(\\s+?)(?<MineType>\\S+?)(\\s+?)(is(\\s*?))?mine(d)?:$", Pattern.CASE_INSENSITIVE),
             Pattern.compile("^on(\\s+?)(mine|mining)(\\s+?)(of(\\s*?))?(?<MineType>\\S+?):$", Pattern.CASE_INSENSITIVE)*/
@@ -63,16 +64,22 @@ public class MineTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
+        boolean player = "player".equalsIgnoreCase(ctx.getOptionalStrarg("Player").orElse(""));
         LiteralStore mineTypes = ctx.getLiteral("MineTypes", (Object) null).asStore();
 
         List<BlockType> blockTypes = new ArrayList<>();
         mineTypes.getListModule().literalStream().map(Serializers.BLOCK_TYPE::deserialize).forEach(blockTypes::add);
 
         Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.MINE).predicate((properties) -> {
+            // Check player
+            if (player && properties.getPlayer() == null) {
+                return false;
+            }
+
             if (blockTypes.isEmpty()) {
                 return true;
             } else {
-                Optional<BlockSnapshot> block = properties.getValue("Block", BlockSnapshot.class);
+                Optional<BlockSnapshot> block = properties.getValue(PropertyType.BLOCK, BlockSnapshot.class);
                 return block.isPresent() && blockTypes.contains(block.get().getState().getType());
             }
         }).build();

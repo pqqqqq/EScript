@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger;
 
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.line.Context;
@@ -65,7 +66,7 @@ public class InteractBlockTrigger implements Phrase {
         interactTypes.getListModule().literalStream().map(Serializers.BLOCK_TYPE::deserialize).forEach(blockTypes::add);
 
         Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.INTERACT_BLOCK).predicate((properties) -> {
-            Optional<String> interaction = properties.getValue("Interaction", String.class);
+            Optional<String> interaction = properties.getValue(PropertyType.INTERACTION, String.class);
             if (!interaction.isPresent() || !interaction.get().equalsIgnoreCase(click)) {
                 return false;
             }
@@ -73,7 +74,7 @@ public class InteractBlockTrigger implements Phrase {
             if (blockTypes.isEmpty()) {
                 return true;
             } else {
-                Optional<BlockSnapshot> block = properties.getValue("Block", BlockSnapshot.class);
+                Optional<BlockSnapshot> block = properties.getValue(PropertyType.BLOCK, BlockSnapshot.class);
                 if (!block.isPresent()) {
                     return false;
                 }

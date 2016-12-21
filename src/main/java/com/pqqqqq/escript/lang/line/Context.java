@@ -3,17 +3,16 @@ package com.pqqqqq.escript.lang.line;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
 import com.pqqqqq.escript.lang.data.serializer.Serializer;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.exception.MissingGroupException;
 import com.pqqqqq.escript.lang.exception.SerializationException;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Component;
 import com.pqqqqq.escript.lang.script.Script;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -171,20 +170,8 @@ public class Context {
      * @return the player (see above description)
      */
     public Optional<Player> getOptionalPlayer(String group) {
-        Optional<Literal> playerLiteral = getOptionalLiteral(group);
-        if (playerLiteral.isPresent() && !playerLiteral.get().isEmpty()) {
-            String playerString = playerLiteral.get().asString();
-            Optional<Player> player = Sponge.getServer().getPlayer(playerString); // Try by name first
-
-            try {
-                player = Sponge.getServer().getPlayer(UUID.fromString(playerString)); // Try by uuid otherwise
-            } catch (IllegalArgumentException e) { // Ignore this
-            }
-
-            return player;
-        }
-
-        return Optional.ofNullable(script.getProperties().getPlayer()); // Otherwise, get the triggerer (which may be null)
+        Literal playerLiteral = getOptionalLiteral(group).orElse(Literal.EMPTY);
+        return Optional.ofNullable(Optional.ofNullable(Serializers.PLAYER.deserialize(playerLiteral)).orElse(script.getProperties().getPlayer())); // This is pretty ugly
     }
 
     /**

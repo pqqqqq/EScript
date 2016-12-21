@@ -2,6 +2,7 @@ package com.pqqqqq.escript.lang.phrase.phrases.trigger.command;
 
 import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.line.Context;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Result;
@@ -82,8 +83,8 @@ public class CommandTrigger implements Phrase {
         final int finalRequiredCount = requiredCount; // I have no idea why this is necessary (lambda)
 
         Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.COMMAND).predicate((properties) -> {
-            String commandTest = properties.getValue("Command", String.class).orElse("").trim(); // It's fine to make these empty strings
-            String argumentsTest = properties.getValue("Arguments", String.class).orElse("").trim(); // It's fine to make these empty strings
+            String commandTest = properties.getValue(PropertyType.COMMAND, String.class).orElse("").trim(); // It's fine to make these empty strings
+            String argumentsTest = properties.getValue(PropertyType.ARGUMENTS, String.class).orElse("").trim(); // It's fine to make these empty strings
 
             if (!command.equalsIgnoreCase(commandTest)) { // Check basic command
                 return false;

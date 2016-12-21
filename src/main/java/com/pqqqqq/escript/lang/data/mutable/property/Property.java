@@ -19,16 +19,16 @@ import static com.pqqqqq.escript.lang.util.Assertions.assertNotNull;
  *
  * @param <T> the property's raw type
  */
-public class Property<T> implements EnvironmentEntry, Datum {
-    private final String name;
+public class Property<T> implements EnvironmentEntry<PropertyType>, Datum {
+    private final PropertyType type;
     private final PropertyEnvironment environment;
 
     private final T rawValue;
     private final Serializer<T> serializer;
     private final Literal value;
 
-    protected Property(String name, PropertyEnvironment environment, T value) {
-        this.name = assertNotNull(name, "Name cannot be null.");
+    protected Property(PropertyType type, PropertyEnvironment environment, T value) {
+        this.type = assertNotNull(type, "Type cannot be null.");
         this.environment = assertNotNull(environment, "Environment cannot be null.");
         this.rawValue = assertNotNull(value, "Property value cannot be null.");
 
@@ -37,8 +37,8 @@ public class Property<T> implements EnvironmentEntry, Datum {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public PropertyType getId() {
+        return type;
     }
 
     @Override

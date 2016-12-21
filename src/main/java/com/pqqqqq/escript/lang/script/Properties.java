@@ -2,6 +2,7 @@ package com.pqqqqq.escript.lang.script;
 
 import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.mutable.property.PropertyEnvironment;
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 
@@ -79,7 +80,7 @@ public class Properties extends PropertyEnvironment {
     public static class Builder {
         private Event event = null;
         private Player player = null;
-        private Map<String, Object> variables = new HashMap<>();
+        private Map<PropertyType, Object> properties = new HashMap<>();
 
         private Builder() {
         }
@@ -97,24 +98,44 @@ public class Properties extends PropertyEnvironment {
 
         /**
          * Sets the {@link Player player} of the script properties
+         * Also sets the "Player" property
          *
          * @param player the player
          * @return this builder, for chaining
          */
         public Builder player(Player player) {
             this.player = player;
+            if (player != null) {
+                property(PropertyType.PLAYER, player);
+            }
+
             return this;
         }
 
         /**
-         * Adds a variable K,V value
+         * Adds a property K,V value
          *
          * @param key the key
          * @param value the value
          * @return this builder, for chaining
          */
-        public Builder variable(String key, Object value) {
-            this.variables.put(key, value);
+        public Builder property(String key, Object value) {
+            this.properties.put(PropertyType.fromString(key).orElse(null), value);
+            return this;
+        }
+
+        /**
+         * Adds a property K,V value
+         *
+         * @param type the type
+         * @param value the value
+         * @return this builder, for chaining
+         */
+        public Builder property(PropertyType type, Object value) {
+            if (type != null) {
+                this.properties.put(type, value);
+            }
+
             return this;
         }
 
@@ -125,7 +146,7 @@ public class Properties extends PropertyEnvironment {
          */
         public Properties build() {
             Properties newProperties = new Properties(event, player);
-            newProperties.createAll(variables);
+            newProperties.createAll(properties);
 
             return newProperties;
         }

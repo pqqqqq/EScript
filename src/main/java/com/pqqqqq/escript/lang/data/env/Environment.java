@@ -7,60 +7,61 @@ import java.util.Optional;
  * Environments link string keys (or names) to each value in a K,V map fashion.
  *
  * @param <T> the type of the value
+ * @param <I> the identifier type
  * @param <V> the environment entry type
  */
-public interface Environment<T, V extends EnvironmentEntry> {
+public interface Environment<T, I, V extends EnvironmentEntry<I>> {
 
     /**
-     * Retrieves the {@link EnvironmentEntry entry} with the given name
+     * Retrieves the {@link EnvironmentEntry entry} with the given ID
      *
-     * @param name the name
+     * @param id the id
      * @return the value
      */
-    Optional<V> getValue(String name);
+    Optional<V> getValue(I id);
 
     /**
-     * Checks a {@link EnvironmentEntry entry} with the given name is in this environment
+     * Checks a {@link EnvironmentEntry entry} with the given id is in this environment
      *
-     * @param name the name
-     * @return true if a value exists with the name
+     * @param id the id
+     * @return true if a value exists with the id
      */
-    boolean contains(String name);
+    boolean contains(I id);
 
     /**
-     * Removes the {@link EnvironmentEntry entry} with the given name from this environment
+     * Removes the {@link EnvironmentEntry entry} with the given id from this environment
      *
-     * @param name the name of the value
+     * @param id the id of the value
      * @return true if a value was found and removed
      */
-    boolean remove(String name);
+    boolean remove(I id);
 
     /**
-     * Creates a new {@link EnvironmentEntry entry} with the given name
+     * Creates a new {@link EnvironmentEntry entry} with the given id
      *
-     * @param name the name
+     * @param id the id
      * @return the new value
      */
-    default V create(String name) {
-        return create(name, null);
+    default V create(I id) {
+        return create(id, null);
     }
 
     /**
-     * Creates a new {@link EnvironmentEntry entry} with the given name and value
+     * Creates a new {@link EnvironmentEntry entry} with the given id and value
      *
-     * @param name  the name
+     * @param id the id
      * @param value the value
      * @return the new value
      */
-    V create(String name, T value);
+    V create(I id, T value);
 
     /**
-     * Creates a {@link EnvironmentEntry entry}, or gets one if the given name if it already exists
+     * Creates a {@link EnvironmentEntry entry}, or gets one if the given id if it already exists
      *
-     * @param name the name
+     * @param id the id
      * @return the value
      */
-    default V createOrGet(String name) {
-        return getValue(name).orElseGet(() -> create(name));
+    default V createOrGet(I id) {
+        return getValue(id).orElseGet(() -> create(id));
     }
 }

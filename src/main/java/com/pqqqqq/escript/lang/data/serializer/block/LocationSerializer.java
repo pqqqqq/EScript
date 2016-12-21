@@ -1,7 +1,8 @@
-package com.pqqqqq.escript.lang.data.serializer;
+package com.pqqqqq.escript.lang.data.serializer.block;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.serializer.Serializer;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.data.store.map.MapModule;
 import com.pqqqqq.escript.lang.exception.SerializationException;
@@ -46,11 +47,6 @@ public class LocationSerializer implements Serializer<Location> {
 
     @Override
     public Location<World> deserialize(Literal value) {
-        // Locations can be deserialized by lists or strings
-        if (value.isString()) {
-            return deserialize(Literal.fromObject(value.asString().split(","))); // Strings will just separate them by commas
-        }
-
         LiteralStore store = value.asStore().collapseMap(MAPPER);
         MapModule mapModule = store.getMapModule();
 

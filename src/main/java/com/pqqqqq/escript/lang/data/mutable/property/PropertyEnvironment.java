@@ -13,39 +13,39 @@ import java.util.Set;
  * <p>
  * <p>Properties are NOT case-sensitive.
  */
-public abstract class PropertyEnvironment implements Environment<Object, Property> {
-    private final Set<Property> properties = new HashSet<>();
+public abstract class PropertyEnvironment implements Environment<Object, PropertyType, Property<?>> {
+    private final Set<Property<?>> properties = new HashSet<>();
 
     @Override
-    public Optional<Property> getValue(String name) {
-        return properties.stream().filter(property -> property.getName().equals(name)).findFirst();
+    public Optional<Property<?>> getValue(PropertyType id) {
+        return properties.stream().filter(property -> property.getId().equals(id)).findFirst();
     }
 
     /**
-     * Retrieves the {@link Property property}'s value with the given name
+     * Retrieves the {@link Property property}'s value with the given id
      *
-     * @param name the name
+     * @param id the id
      * @param <T>  the property value's generic type
      * @return the value
      */
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> getValue(String name, Class<T> clazz) {
-        return properties.stream().filter(property -> property.getName().equalsIgnoreCase(name)).findFirst().filter(property -> clazz.isInstance(property.getRawValue())).map(clazz::cast);
+    public <T> Optional<T> getValue(PropertyType id, Class<T> clazz) {
+        return properties.stream().filter(property -> property.getId().equals(id)).findFirst().filter(property -> clazz.isInstance(property.getRawValue())).map(Property::getRawValue).map(clazz::cast);
     }
 
     @Override
-    public boolean contains(String name) {
-        return properties.stream().anyMatch(property -> property.getName().equalsIgnoreCase(name));
+    public boolean contains(PropertyType id) {
+        return properties.stream().anyMatch(property -> property.getId().equals(id));
     }
 
     @Override
-    public boolean remove(String name) {
-        return properties.removeIf(property -> property.getName().equalsIgnoreCase(name));
+    public boolean remove(PropertyType id) {
+        return properties.removeIf(property -> property.getId().equals(id));
     }
 
     @Override
-    public Property create(String name, Object value) {
-        Property property = new Property(name, this, value);
+    public Property create(PropertyType id, Object value) {
+        Property property = new Property(id, this, value);
         this.properties.add(property);
         return property;
     }
@@ -55,7 +55,7 @@ public abstract class PropertyEnvironment implements Environment<Object, Propert
      *
      * @param propertyBus the property bus
      */
-    public void createAll(Map<String, Object> propertyBus) {
+    public void createAll(Map<PropertyType, Object> propertyBus) {
         propertyBus.forEach(this::create);
     }
 }

@@ -15,7 +15,7 @@ import static com.pqqqqq.escript.lang.util.Assertions.assertNotNull;
 /**
  * A {@link MutableValue mutable value} that stores an instance of a {@link Datum}
  */
-public class Variable implements MutableValue<Datum>, EnvironmentEntry {
+public class Variable implements MutableValue<Datum>, EnvironmentEntry<String> {
     private final String name;
     private final VariableEnvironment environment;
     private Datum value;
@@ -31,7 +31,7 @@ public class Variable implements MutableValue<Datum>, EnvironmentEntry {
     }
 
     @Override
-    public String getName() {
+    public String getId() {
         return name;
     }
 
@@ -63,7 +63,7 @@ public class Variable implements MutableValue<Datum>, EnvironmentEntry {
         }
 
         Variable other = (Variable) obj;
-        return other.getName().equals(name) && other.getEnvironment().equals(environment); // Variables in different environments can have the same name
+        return other.getId().equals(name) && other.getEnvironment().equals(environment); // Variables in different environments can have the same name
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Variable implements MutableValue<Datum>, EnvironmentEntry {
     @Override
     public String toString() {
         return Objects.toStringHelper(this) // Easy toString
-                .add("Name", getName())
+                .add("Name", getId())
                 .add("Environment", getEnvironment().getClass().getName())
                 .add("Value", value.toString())
                 .toString();

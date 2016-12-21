@@ -76,6 +76,18 @@ public interface Module<K> {
     }
 
     /**
+     * Adds a new K,V pair according to {@link #add(Object, Literal)}
+     * This runs {@link Literal#fromObject(Object)} on the object given
+     *
+     * @param key the key
+     * @param object the object
+     * @return the value that was added
+     */
+    default MutableValue<Literal> add(K key, Object object) {
+        return add(key, Literal.fromObject(object));
+    }
+
+    /**
      * Attempts to remove a K,V pair with the given key
      *
      * @param key the key

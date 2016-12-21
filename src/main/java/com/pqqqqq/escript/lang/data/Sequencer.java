@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.data;
 
 import com.pqqqqq.escript.lang.data.container.*;
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.line.Line;
@@ -82,12 +83,6 @@ public class Sequencer {
             }
         }
 
-        // Check if it's a property
-        if (strarg.startsWith("<") && strarg.endsWith(">")) {
-            String propertyName = strarg.substring(1, strarg.length() - 1);
-            return (ctx) -> ctx.getScript().getProperties().getValue(propertyName).map(property -> property.resolve(ctx)).orElse(Literal.EMPTY); // Lambda expression here, or class?
-        }
-
         // Check if it's a list
         if (strarg.startsWith("{") && strarg.endsWith("}")) {
             String braceTrimmed = strarg.substring(1, strarg.length() - 1).trim();
@@ -112,12 +107,6 @@ public class Sequencer {
             return new EntryReplicateContainer(entrySplit.get(0).trim(), sequence(entrySplit.get(1)));
         }
 
-        // Check for keyword
-        Optional<Keyword> keyword = Keyword.fromString(strarg);
-        if (keyword.isPresent()) {
-            return keyword.get().getResolver();
-        }
-
         // Check plain data
         Optional<Literal> literal = Literal.fromSequence(strarg);
         if (literal.isPresent()) {
@@ -127,6 +116,20 @@ public class Sequencer {
         // Check if it's a variable
         if (strarg.startsWith("$")) {
             return new VariableContainer(Literal.fromObject(strarg.substring(1)));
+        }
+
+        // Check for property
+        Optional<PropertyType> propertyType = PropertyType.fromString(strarg);
+        if (propertyType.isPresent()) {
+            // We have to check if we're at runtime or compile time.
+            // Compile time would mean the script is null, and we'll return an empty literal
+            return (ctx) -> {
+                if (ctx.getScript() == null) {
+                    return Literal.EMPTY;
+                } else {
+                    return ctx.getScript().getProperties().getValue(propertyType.get()).map(property -> property.resolve(ctx)).orElse(Literal.EMPTY); // Lambda expression here, or class?
+                }
+            };
         }
 
         // Otherwise, throw an error

@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger;
 
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.line.Context;
@@ -65,7 +66,7 @@ public class InteractEntityTrigger implements Phrase {
         interactTypes.getListModule().literalStream().map(Serializers.ENTITY_TYPE::deserialize).forEach(entityTypes::add);
 
         Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.INTERACT_ENTITY).predicate((properties) -> {
-            Optional<String> interaction = properties.getValue("Interaction", String.class);
+            Optional<String> interaction = properties.getValue(PropertyType.INTERACTION, String.class);
             if (!interaction.isPresent() || !interaction.get().equalsIgnoreCase(click)) {
                 return false;
             }
@@ -73,7 +74,7 @@ public class InteractEntityTrigger implements Phrase {
             if (entityTypes.isEmpty()) { // Empty = any entity
                 return true;
             } else {
-                Optional<Entity> entity = properties.getValue("Target", Entity.class);
+                Optional<Entity> entity = properties.getValue(PropertyType.ENTITY, Entity.class);
                 if (!entity.isPresent()) {
                     return false;
                 }

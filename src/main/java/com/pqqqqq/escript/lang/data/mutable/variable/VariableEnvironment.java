@@ -13,22 +13,22 @@ import java.util.Set;
  * An {@link Environment environment}, where {@link Variable variables} can be stored.
  * Variable environments are abstract, and therefore must be a superclass of some other class.
  */
-public abstract class VariableEnvironment implements Environment<Datum, Variable> {
+public abstract class VariableEnvironment implements Environment<Datum, String, Variable> {
     private final Set<Variable> variables = new HashSet<>();
 
     @Override
     public Optional<Variable> getValue(String name) {
-        return variables.stream().filter(variable -> variable.getName().equals(name)).findFirst();
+        return variables.stream().filter(variable -> variable.getId().equals(name)).findFirst();
     }
 
     @Override
     public boolean contains(String name) {
-        return variables.stream().anyMatch(variable -> variable.getName().equals(name)); // getVariable(name).isPresent() is possible, but may be more expensive
+        return variables.stream().anyMatch(variable -> variable.getId().equals(name)); // getVariable(name).isPresent() is possible, but may be more expensive
     }
 
     @Override
     public boolean remove(String name) {
-        return variables.removeIf(variable -> variable.getName().equals(name));
+        return variables.removeIf(variable -> variable.getId().equals(name));
     }
 
     @Override

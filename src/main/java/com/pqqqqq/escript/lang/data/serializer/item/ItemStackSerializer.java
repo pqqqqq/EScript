@@ -1,6 +1,8 @@
-package com.pqqqqq.escript.lang.data.serializer;
+package com.pqqqqq.escript.lang.data.serializer.item;
 
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.serializer.Serializer;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.data.store.map.MapModule;
 import com.pqqqqq.escript.lang.exception.SerializationException;
@@ -42,11 +44,6 @@ public class ItemStackSerializer implements Serializer<ItemStack> {
 
     @Override
     public ItemStack deserialize(Literal value) {
-        // ItemStacks can be deserialized by lists, maps or strings
-        if (value.isString()) {
-            return deserialize(Literal.fromObject(value.asString().split(","))); // Strings will just separate them by commas
-        }
-
         LiteralStore store = value.asStore().collapseMap(MAPPER);
         MapModule mapModule = store.getMapModule();
 

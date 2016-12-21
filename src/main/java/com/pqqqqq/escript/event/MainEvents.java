@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.event;
 
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.script.Properties;
 import com.pqqqqq.escript.lang.trigger.cause.Causes;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -14,8 +15,6 @@ import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import java.util.Optional;
-
 /**
  * Created by Kevin on 2016-09-02.
  */
@@ -23,21 +22,19 @@ public class MainEvents {
 
     @Listener(order = Order.BEFORE_POST)
     public void blockChange(ChangeBlockEvent event) {
-        Optional<Player> player = event.getCause().first(Player.class);
+        Player player = event.getCause().first(Player.class).orElse(null); // Null = still null in properties
 
-        if (player.isPresent()) {
-            if (event instanceof ChangeBlockEvent.Break) {
-                for (Transaction<BlockSnapshot> block : event.getTransactions()) {
-                    Causes.MINE.trigger(Properties.builder().event(event).player(player.get())
-                            .variable("Block", block.getOriginal()) // TODO more variable stuff!!
-                            .build());
-                }
-            } else if (event instanceof ChangeBlockEvent.Place) {
-                for (Transaction<BlockSnapshot> block : event.getTransactions()) {
-                    Causes.PLACE.trigger(Properties.builder().event(event).player(player.get())
-                            .variable("Block", block.getFinal()) // TODO more variable stuff!!
-                            .build());
-                }
+        if (event instanceof ChangeBlockEvent.Break) {
+            for (Transaction<BlockSnapshot> block : event.getTransactions()) {
+                Causes.MINE.trigger(Properties.builder().event(event).player(player)
+                        .property(PropertyType.BLOCK, block.getOriginal()) // TODO more properties!!
+                        .build());
+            }
+        } else if (event instanceof ChangeBlockEvent.Place) {
+            for (Transaction<BlockSnapshot> block : event.getTransactions()) {
+                Causes.PLACE.trigger(Properties.builder().event(event).player(player)
+                        .property(PropertyType.BLOCK, block.getFinal()) // TODO more properties!!
+                        .build());
             }
         }
     }
@@ -49,8 +46,8 @@ public class MainEvents {
 
         if (source instanceof Player) {
             Causes.COMMAND.trigger(Properties.builder().event(event).player((Player) source)
-                    .variable("Command", command)
-                    .variable("Arguments", arguments)
+                    .property(PropertyType.COMMAND, command)
+                    .property(PropertyType.ARGUMENTS, arguments)
                     .build());
         }
     }
@@ -58,16 +55,16 @@ public class MainEvents {
     @Listener(order = Order.BEFORE_POST)
     public void interactBlock(InteractBlockEvent event, @First Player player) {
         Causes.INTERACT_BLOCK.trigger(Properties.builder().event(event).player(player)
-                .variable("Block", event.getTargetBlock())
-                .variable("Interaction", event instanceof InteractBlockEvent.Primary ? "Left" : "Right")
+                .property(PropertyType.BLOCK, event.getTargetBlock())
+                .property(PropertyType.INTERACTION, event instanceof InteractBlockEvent.Primary ? "Left" : "Right")
                 .build());
     }
 
     @Listener(order = Order.BEFORE_POST)
     public void interactEntity(InteractEntityEvent event, @First Player player) {
         Causes.INTERACT_ENTITY.trigger(Properties.builder().event(event).player(player)
-                .variable("Target", event.getTargetEntity())
-                .variable("Interaction", event instanceof InteractEntityEvent.Primary ? "Left" : "Right")
+                .property(PropertyType.ENTITY, event.getTargetEntity())
+                .property(PropertyType.INTERACTION, event instanceof InteractEntityEvent.Primary ? "Left" : "Right")
                 .build());
     }
 }

@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger;
 
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.line.Context;
@@ -32,8 +33,8 @@ import java.util.Optional;
 public class PlaceTrigger implements Phrase {
     private static final PlaceTrigger INSTANCE = new PlaceTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("when|if a|an? $PlaceTypes is|are? place|placed:"),
-            Syntax.compile("on place|placed|placement of? a|an? $PlaceTypes:"),
+            Syntax.compile("when|if a|an? $PlaceTypes is|are? place|placed by? a|an? ^Player?:"),
+            Syntax.compile("on place|placed|placement of? a|an? $PlaceTypes by? a|an? ^Player?:"),
     };
 
     /**
@@ -60,16 +61,22 @@ public class PlaceTrigger implements Phrase {
 
     @Override
     public Result execute(Context ctx) {
+        boolean player = "player".equalsIgnoreCase(ctx.getOptionalStrarg("Player").orElse(""));
         LiteralStore placeTypes = ctx.getLiteral("PlaceTypes", (Object) null).asStore();
 
         List<BlockType> blockTypes = new ArrayList<>();
         placeTypes.getListModule().literalStream().map(Serializers.BLOCK_TYPE::deserialize).forEach(blockTypes::add);
 
         Trigger.builder().script(ctx.getLine().getRawScript()).causes(Causes.PLACE).predicate((properties) -> {
+            // Check player
+            if (player && properties.getPlayer() == null) {
+                return false;
+            }
+
             if (blockTypes.isEmpty()) {
                 return true;
             } else {
-                Optional<BlockSnapshot> block = properties.getValue("Block", BlockSnapshot.class);
+                Optional<BlockSnapshot> block = properties.getValue(PropertyType.BLOCK, BlockSnapshot.class);
                 return block.isPresent() && blockTypes.contains(block.get().getState().getType());
             }
         }).build();

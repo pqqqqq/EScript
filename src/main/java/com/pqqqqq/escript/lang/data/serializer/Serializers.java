@@ -2,6 +2,11 @@ package com.pqqqqq.escript.lang.data.serializer;
 
 import com.pqqqqq.escript.lang.data.Datum;
 import com.pqqqqq.escript.lang.data.Literal;
+import com.pqqqqq.escript.lang.data.serializer.block.BlockSnapshotSerializer;
+import com.pqqqqq.escript.lang.data.serializer.block.BlockStateSerializer;
+import com.pqqqqq.escript.lang.data.serializer.block.LocationSerializer;
+import com.pqqqqq.escript.lang.data.serializer.entity.PlayerSerializer;
+import com.pqqqqq.escript.lang.data.serializer.item.ItemStackSerializer;
 import com.pqqqqq.escript.lang.data.serializer.primitive.*;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.registry.Registry;
@@ -33,6 +38,11 @@ public class Serializers extends Registry<Serializer> {
 
     public static final LocationSerializer LOCATION = LocationSerializer.instance();
     public static final ItemStackSerializer ITEM_STACK = ItemStackSerializer.instance();
+
+    public static final BlockStateSerializer BLOCK_STATE = BlockStateSerializer.instance();
+    public static final BlockSnapshotSerializer BLOCK_SNAPSHOT = BlockSnapshotSerializer.instance();
+
+    public static final PlayerSerializer PLAYER = PlayerSerializer.instance();
 
     // CATALOG TYPES
     public static final CatalogSerializer<GameMode> GAME_MODE = () -> GameMode.class;

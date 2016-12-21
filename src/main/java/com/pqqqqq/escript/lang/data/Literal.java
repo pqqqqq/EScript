@@ -404,6 +404,10 @@ public final class Literal implements Datum {
             return LiteralStore.emptyLiteral().get();
         }
 
+        if (isString()) { // Split each, put into store
+            return Literal.fromObject(asString().split(",")); // TODO Should it just create a singleton?
+        }
+
         return Literal.fromObject(Collections.singletonList(this)); // Create a singleton
     }
 
