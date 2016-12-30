@@ -3,6 +3,7 @@ package com.pqqqqq.escript.lang.data.store;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 import com.pqqqqq.escript.lang.data.mutable.SimpleMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 
 /**
  * An interface, denoting a storage module. In general there are two modules: maps and list modules
@@ -42,7 +43,7 @@ public interface Module<K> {
     default MutableValue<Literal> getOrCreate(K key, Literal def) {
         MutableValue<Literal> value = get(key);
         if (value == null) {
-            value = SimpleMutableValue.from(def);
+            value = SimpleMutableValue.from(def, Serializers.SELF);
             add(key, value);
         }
 
@@ -72,7 +73,7 @@ public interface Module<K> {
      * @return the value that was added
      */
     default MutableValue<Literal> add(K key, Literal value) {
-        return add(key, SimpleMutableValue.from(value));
+        return add(key, SimpleMutableValue.from(value, Serializers.SELF));
     }
 
     /**

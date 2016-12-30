@@ -22,8 +22,8 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class SetPhrase implements Phrase {
     private static final SetPhrase INSTANCE = new SetPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("set|change|modify #Name to $Value"),
-            Syntax.compile("create #Name with? value* $Value*")
+            Syntax.compile("set|change|modify $#Name to ${*}Value"),
+            Syntax.compile("create $#Name with? value* ${*}Value*")
 
             /*Pattern.compile("^(send(\\s+?))?(message|msg)(\\s+?)(?<Message>\\S+?)$", Pattern.CASE_INSENSITIVE),
             Pattern.compile("^(send(\\s+?))?(message|msg)(\\s+?)(?<Message>\\S+?)(\\s+?)" +

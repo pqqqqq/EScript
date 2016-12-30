@@ -19,6 +19,7 @@ import com.pqqqqq.escript.lang.phrase.phrases.getters.math.RoundPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.math.statistics.SamplePhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.math.statistics.TrialPhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.MOTDPhrase;
+import com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.block.BlockType;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.sponge.player.*;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.string.LowercasePhrase;
 import com.pqqqqq.escript.lang.phrase.phrases.getters.string.SubstringPhrase;
@@ -118,6 +119,9 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase PLAYER_CHEST_PLATE = PlayerChestplate.instance();
     public static final Phrase PLAYER_LEGGINGS = PlayerLeggings.instance();
     public static final Phrase PLAYER_BOOTS = PlayerBoots.instance();
+
+    // Block
+    public static final Phrase BLOCK_TYPE = BlockType.instance();
 
     public static final Phrase CONTAINS = ContainsPhrase.instance();
 

@@ -24,8 +24,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerBoots implements ValuePhrase {
     private static final PlayerBoots INSTANCE = new PlayerBoots();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player boots|feet|shoes"),
-            Syntax.compile("the? boots|feet|shoes of $Player")
+            Syntax.compile("${player}Player boots|feet|shoes"),
+            Syntax.compile("the? boots|feet|shoes of ${player}Player")
     };
 
     /**

@@ -104,7 +104,7 @@ public final class Literal implements Datum {
             Collection<?> collection = (Collection<?>) value;
             List<MutableValue<Literal>> list = new ArrayList<>();
 
-            collection.stream().map(Literal::fromObject).map(SimpleMutableValue::from).forEach(list::add);
+            collection.stream().map(Literal::fromObject).map(literal -> SimpleMutableValue.from(literal, Serializers.SELF)).forEach(list::add);
             return new Literal(LiteralStore.builder().listMV(list).build()); // Literal store
         } else if (value instanceof Map) { // Map formatting
             Map<?, ?> map = (Map<?, ?>) value;

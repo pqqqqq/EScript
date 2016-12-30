@@ -24,8 +24,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerFood implements ValuePhrase {
     private static final PlayerFood INSTANCE = new PlayerFood();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player food|hunger|starvation level|lvl?"),
-            Syntax.compile("the? food|hunger|starvation level|lvl? of $Player")
+            Syntax.compile("${player}Player food|hunger|starvation level|lvl?"),
+            Syntax.compile("the? food|hunger|starvation level|lvl? of ${player}Player")
     };
 
     /**

@@ -3,6 +3,7 @@ package com.pqqqqq.escript.lang.data.store.list;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 import com.pqqqqq.escript.lang.data.mutable.SimpleMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.data.store.Module;
 import com.pqqqqq.escript.lang.data.store.map.SimpleMapModule;
@@ -64,7 +65,7 @@ public final class SimpleListModule implements ListModule {
      */
     public static SimpleListModule fromLiterals(Collection<Literal> col) {
         SimpleListModule list = from();
-        col.stream().map(SimpleMutableValue::from).forEach(list::add); // EVERY value has to go through this
+        col.stream().map(literal -> SimpleMutableValue.from(literal, Serializers.SELF)).forEach(list::add); // EVERY value has to go through this
         return list;
     }
 
@@ -98,7 +99,7 @@ public final class SimpleListModule implements ListModule {
 
         if (--key >= size()) { // Account for base-1
             for (int i = size(); i <= key; i++) {
-                list.add(SimpleMutableValue.from(Literal.EMPTY));
+                list.add(SimpleMutableValue.from(Literal.EMPTY, Serializers.SELF));
             }
         }
 

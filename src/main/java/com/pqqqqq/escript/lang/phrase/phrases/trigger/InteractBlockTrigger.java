@@ -31,8 +31,8 @@ import java.util.Optional;
 public class InteractBlockTrigger implements Phrase {
     private static final InteractBlockTrigger INSTANCE = new InteractBlockTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("on ^Click click of? a|an? $Blocks?:"),
-            Syntax.compile("when|if a|an? $Blocks is|are? ^Click click|clicked:"),
+            Syntax.compile("on $^Click click of? a|an? ${block}Blocks?:"),
+            Syntax.compile("when|if a|an? ${block}Blocks is|are? $^Click click|clicked:"),
     };
 
     /**

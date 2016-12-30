@@ -23,7 +23,7 @@ import org.spongepowered.api.text.Text;
 public class PlayerMessage implements Phrase {
     private static final PlayerMessage INSTANCE = new PlayerMessage();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("send? message|msg $Message to? $Player*")
+            Syntax.compile("send? message|msg ${*}Message to? $Player*")
 
             /*Pattern.compile("^(send(\\s+?))?(message|msg)(\\s+?)(?<Message>\\S+?)$", Pattern.CASE_INSENSITIVE),
             Pattern.compile("^(send(\\s+?))?(message|msg)(\\s+?)(?<Message>\\S+?)(\\s+?)" +

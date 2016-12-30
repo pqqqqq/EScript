@@ -3,7 +3,7 @@ package com.pqqqqq.escript.lang.file;
 import com.pqqqqq.escript.lang.exception.handler.ExceptionHandler;
 import com.pqqqqq.escript.lang.exception.state.ESCompileTimeException;
 import com.pqqqqq.escript.lang.line.Line;
-import com.pqqqqq.escript.lang.util.string.StringLibrary;
+import com.pqqqqq.escript.lang.util.string.StringTransformer;
 import com.pqqqqq.escript.lang.util.string.StringUtilities;
 
 import java.io.BufferedReader;
@@ -101,9 +101,9 @@ public class FileLexer {
         try {
             for (String lineContents : checkNotNull(lines, "Lines haven't been lexed yet.")) {
                 // Remove any comments
-                StringLibrary.Result commentResult = StringLibrary.from(lineContents).removeComments(blockComment);
-                lineContents = commentResult.getResult(); // Set the line's contents to whatever after comments
-                blockComment = commentResult.isSuccessful(); // Set new block comment state
+                StringTransformer transformer = StringTransformer.from(lineContents);
+                blockComment = transformer.removeComments(blockComment); // Set new block comment state
+                lineContents = transformer.getCurrentResult(); // Set the line's contents to whatever after comments
 
                 String trimmed = lineContents.trim();
                 lineNumber++; // Incr line number

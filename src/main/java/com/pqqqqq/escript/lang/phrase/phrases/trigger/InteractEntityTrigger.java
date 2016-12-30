@@ -31,8 +31,8 @@ import java.util.Optional;
 public class InteractEntityTrigger implements Phrase {
     private static final InteractEntityTrigger INSTANCE = new InteractEntityTrigger();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("on ^Click click of a|an? $Entity:"),
-            Syntax.compile("when|if a|an? $Entity is|are? ^Click click|clicked:"),
+            Syntax.compile("on $^Click click of a|an? ${entity, player}Entity:"),
+            Syntax.compile("when|if a|an? ${entity, player}Entity is|are? $^Click click|clicked:"),
     };
 
     /**

@@ -3,6 +3,7 @@ package com.pqqqqq.escript.lang.data.store.list;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 import com.pqqqqq.escript.lang.data.mutable.SimpleMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.Module;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public interface ListModule extends Module<Integer>, Iterable<MutableValue<Liter
      * @return the value that was added
      */
     default MutableValue<Literal> add(Literal value) {
-        return add(SimpleMutableValue.from(value));
+        return add(SimpleMutableValue.from(value, Serializers.SELF));
     }
 
     /**

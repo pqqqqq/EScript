@@ -22,7 +22,7 @@ import org.spongepowered.api.text.Text;
 public class BroadcastPhrase implements Phrase {
     private static final BroadcastPhrase INSTANCE = new BroadcastPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("send? broadcast to? server* $Message")
+            Syntax.compile("send? broadcast to? server* ${*}Message")
     };
 
     /**

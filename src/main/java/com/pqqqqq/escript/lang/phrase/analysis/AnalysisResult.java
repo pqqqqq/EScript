@@ -3,6 +3,9 @@ package com.pqqqqq.escript.lang.phrase.analysis;
 import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.Sequencer;
 import com.pqqqqq.escript.lang.data.container.DatumContainer;
+import com.pqqqqq.escript.lang.data.container.PropertyTypeContainer;
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
+import com.pqqqqq.escript.lang.exception.FormatException;
 import com.pqqqqq.escript.lang.exception.UnknownSymbolException;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.analysis.syntax.Component;
@@ -108,7 +111,22 @@ public class AnalysisResult {
          */
         public Optional<AnalysisResult> build() throws UnknownSymbolException {
             Map<Component.ArgumentComponent, DatumContainer> containers = new HashMap<>();
-            checkNotNull(this.strargs, "Strargs cannot be null").forEach((k, v) -> containers.put(k, k.doSequence() ? Sequencer.instance().sequence(v) : Literal.EMPTY)); // Populate containers
+            checkNotNull(this.strargs, "Strargs cannot be null").forEach((k, v) -> {
+                if (k.doSequence()) {
+                    DatumContainer sequenced = Sequencer.instance().sequence(v);
+                    if (sequenced instanceof PropertyTypeContainer) {
+                        PropertyType type = ((PropertyTypeContainer) sequenced).getType();
+
+                        if (!k.getPropertyTypes().contains(type) && !k.getPropertyTypes().contains(PropertyType.WILDCARD)) { // Can either be wildcard or the actual type
+                            throw new FormatException("Argument '%s' with value: '%s' can't be used with the property: '%s'", k.getName(), v, type.toString());
+                        }
+                    }
+
+                    containers.put(k, sequenced);
+                } else {
+                    containers.put(k, Literal.EMPTY);
+                }
+            }); // Populate containers
 
             return Optional.of(new AnalysisResult(checkNotNull(this.phrase, "Phrase cannot be null"), this.strargs, containers));
         }

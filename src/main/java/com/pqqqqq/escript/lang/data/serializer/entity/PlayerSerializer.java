@@ -5,7 +5,6 @@ import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.serializer.Serializer;
 import com.pqqqqq.escript.lang.data.store.LiteralStore;
 import com.pqqqqq.escript.lang.data.store.map.MapModule;
-import com.pqqqqq.escript.lang.exception.SerializationException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
@@ -49,7 +48,7 @@ public class PlayerSerializer implements Serializer<Player> {
         MapModule mapModule = store.getMapModule();
 
         if (mapModule.size() < 1) { // We'll allow lenience with having more
-            throw new SerializationException("Value \"%s\" has incorrect number of arguments for a Player (<1)", value.asString());
+            return null; // We do not throw an error, Player's are special and usually have a default value!
         }
 
         // Even though it's supposed to be a uuid, we'll allow a name as well

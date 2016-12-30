@@ -24,8 +24,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerHelmet implements ValuePhrase {
     private static final PlayerHelmet INSTANCE = new PlayerHelmet();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player helmet"),
-            Syntax.compile("the? helmet of $Player")
+            Syntax.compile("${player}Player helmet"),
+            Syntax.compile("the? helmet of ${player}Player")
     };
 
     /**

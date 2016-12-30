@@ -1,5 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.analysis;
 
+import com.pqqqqq.escript.lang.exception.EScriptException;
 import com.pqqqqq.escript.lang.line.Line;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.Phrases;
@@ -94,14 +95,24 @@ public class Analysis {
      * @return an {@link Optional optional} phrase
      */
     public Optional<AnalysisResult> analyze(Predicate<Phrase> predicate) {
+        EScriptException exception = null;
+
         for (Phrase phrase : Phrases.instance().registry()) { // We don't use stream here because we're going to return the method from within the forEach loop
             if (predicate == null || predicate.test(phrase)) {
-                Optional<AnalysisResult> analysis = phrase.matches(this);
+                try {
+                    Optional<AnalysisResult> analysis = phrase.matches(this);
 
-                if (analysis.isPresent()) {
-                    return analysis;
+                    if (analysis.isPresent()) {
+                        return analysis;
+                    }
+                } catch (EScriptException e) {
+                    exception = e;
                 }
             }
+        }
+
+        if (exception != null) {
+            throw exception; // Throw the exception here if there is one
         }
 
         return Optional.empty();

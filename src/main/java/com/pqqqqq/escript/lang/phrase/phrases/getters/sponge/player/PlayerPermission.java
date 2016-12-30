@@ -18,8 +18,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerPermission implements ValuePhrase {
     private static final PlayerPermission INSTANCE = new PlayerPermission();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("the? $Player has? the? perm|permission $Permission"),
-            Syntax.compile("$Player has? perm|permission $Permission")
+            Syntax.compile("the? ${player}Player has? the? perm|permission $Permission"),
+            Syntax.compile("${player}Player has? perm|permission $Permission")
     };
 
     /**

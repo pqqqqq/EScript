@@ -22,7 +22,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class ForEachPhrase implements Phrase {
     private static final ForEachPhrase INSTANCE = new ForEachPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("for each? ^Name in $Array:")
+            Syntax.compile("for each? $^Name in $Array:")
 
     };
 

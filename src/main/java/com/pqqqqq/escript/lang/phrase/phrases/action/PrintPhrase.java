@@ -21,7 +21,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class PrintPhrase implements Phrase {
     private static final PrintPhrase INSTANCE = new PrintPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("print|console $Message")
+            Syntax.compile("print|console ${*}Message")
     };
 
     /**

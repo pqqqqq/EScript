@@ -1,12 +1,17 @@
 package com.pqqqqq.escript.lang.phrase.analysis.syntax;
 
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.exception.SyntaxMatchingException;
 import com.pqqqqq.escript.lang.phrase.Phrase;
 import com.pqqqqq.escript.lang.phrase.analysis.Analysis;
 import com.pqqqqq.escript.lang.phrase.analysis.AnalysisResult;
+import com.pqqqqq.escript.lang.util.string.StringTransformer;
+import com.pqqqqq.escript.lang.util.string.StringUtilities;
+import com.pqqqqq.escript.lang.util.string.TrackerProperties;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 /**
@@ -17,6 +22,10 @@ import java.util.stream.IntStream;
  * </pre>
  */
 public class Syntax {
+    private static final Pattern TYPE_PATTERN = Pattern.compile("\\{(?<Type>.+?)\\}");
+    private static final String[] PREFIXES = {"$", "^", "#", "@"};
+    private static final String[] SUFFIXES = {"?", "*"};
+
     private final Component[] components;
     private final boolean colon;
 
@@ -53,32 +62,47 @@ public class Syntax {
             string = StringUtils.removeEnd(string, ":");
         }
 
-        String[] split = string.split("\\s"); // Normal split
+        List<String> split = StringUtilities.from(string).parseSplit(TrackerProperties.builder().brackets(true).quotes(false).build(), " "); // We care about brackets, but not quotes
         List<Component> components = new ArrayList<>();
 
         for (String stringComponent : split) {
+            StringTransformer transformer = StringTransformer.from(stringComponent);
             Component.Wrap wrap = Component.Wrap.NONE;
+            List<PropertyType> propertyTypes = new ArrayList<>();
 
-            if (stringComponent.endsWith("?")) {
-                wrap = Component.Wrap.OPTIONAL; // Make optional
-                stringComponent = stringComponent.substring(0, stringComponent.length() - 1); // Trim question mark
+            // First we have to remove any property types
+            String typesRaw = transformer.remove(TYPE_PATTERN, "Type");
+            if (typesRaw != null && !typesRaw.isEmpty()) {
+                String[] types = typesRaw.split(","); // Split by comma
+
+                for (String type : types) {
+                    Optional<PropertyType> propertyType = PropertyType.fromString(type.trim()); // Trim & get property type
+                    if (propertyType.isPresent()) { // Doesn't really matter if it isn't present, just make sure it is
+                        propertyTypes.add(propertyType.get());
+                    }
+                }
             }
 
-            if (stringComponent.endsWith("*")) {
-                wrap = Component.Wrap.IF; // Make if
-                stringComponent = stringComponent.substring(0, stringComponent.length() - 1); // Trim asterisk
+            // Remove suffixes first (for wrapping and such)
+            Set<String> suffixSet = transformer.removeEnd(SUFFIXES);
+            if (suffixSet.contains("?")) {
+                wrap = Component.Wrap.OPTIONAL;
+            } else if (suffixSet.contains("*")) {
+                wrap = Component.Wrap.IF;
             }
 
-            if (stringComponent.startsWith("$")) { // $ = argument
-                components.add(wrap.wrap(Component.ArgumentComponent.builder().name(stringComponent.substring(1)).build()));
-            } else if (stringComponent.startsWith("^")) { // ^ = argument no sequence
-                components.add(wrap.wrap(Component.ArgumentComponent.builder().name(stringComponent.substring(1)).resolve(false).sequence(false).build()));
-            } else if (stringComponent.startsWith("#")) { // # = argument no resolve
-                components.add(wrap.wrap(Component.ArgumentComponent.builder().name(stringComponent.substring(1)).resolve(false).build()));
-            } else if (stringComponent.startsWith("@")) { // @ = argument tentative
-                components.add(wrap.wrap(Component.ArgumentComponent.builder().name(stringComponent.substring(1)).tentative(true).build()));
-            } else {
-                components.add(wrap.wrap(Component.TextComponent.from(stringComponent.split("\\|")))); // Split by pipe (ors)
+            // Remove prefixes
+            Set<String> prefixSet = transformer.removeStart(PREFIXES);
+            if (prefixSet.contains("$")) { // Argument?
+                Component.ArgumentComponent.Builder builder = Component.ArgumentComponent.builder().name(transformer.getCurrentResult())
+                        .types(propertyTypes) // Set property types
+                        .sequence(!prefixSet.contains("^")) // ^ = NO sequence
+                        .resolve(!prefixSet.contains("#")) // # = NO resolve
+                        .tentative(prefixSet.contains("@")); // @ = tentative
+
+                components.add(wrap.wrap(builder.build()));
+            } else { // Nope
+                components.add(wrap.wrap(Component.TextComponent.from(transformer.getCurrentResult().split("\\|")))); // Split by pipe (ors)
             }
         }
 

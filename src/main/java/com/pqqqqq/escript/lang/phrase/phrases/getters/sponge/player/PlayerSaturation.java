@@ -24,8 +24,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerSaturation implements ValuePhrase {
     private static final PlayerSaturation INSTANCE = new PlayerSaturation();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player saturation level|lvl?"),
-            Syntax.compile("the? saturation level|lvl? of $Player")
+            Syntax.compile("${player}Player saturation level|lvl?"),
+            Syntax.compile("the? saturation level|lvl? of ${player}Player")
     };
 
     /**

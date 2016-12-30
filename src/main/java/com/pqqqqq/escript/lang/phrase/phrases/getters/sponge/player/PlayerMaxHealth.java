@@ -24,8 +24,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerMaxHealth implements ValuePhrase {
     private static final PlayerMaxHealth INSTANCE = new PlayerMaxHealth();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player max|maximum health|hp|hitpoints"),
-            Syntax.compile("the? max|maximum health|hp|hitpoints of $Player")
+            Syntax.compile("${player}Player max|maximum health|hp|hitpoints"),
+            Syntax.compile("the? max|maximum health|hp|hitpoints of ${player}Player")
     };
 
     /**

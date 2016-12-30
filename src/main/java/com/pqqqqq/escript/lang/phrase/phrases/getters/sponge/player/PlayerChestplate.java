@@ -24,8 +24,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerChestplate implements ValuePhrase {
     private static final PlayerChestplate INSTANCE = new PlayerChestplate();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player chestplate|chest|body"),
-            Syntax.compile("the? chestplate|chest|body of $Player")
+            Syntax.compile("${player}Player chestplate|chest|body"),
+            Syntax.compile("the? chestplate|chest|body of ${player}Player")
     };
 
     /**

@@ -1,6 +1,7 @@
 package com.pqqqqq.escript.lang.data.mutable;
 
 import com.pqqqqq.escript.lang.data.serializer.Serializer;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 
 /**
  * Created by Kevin on 2016-10-12.
@@ -21,7 +22,7 @@ public final class SimpleMutableValue<T> implements MutableValue<T> {
      * @return the new instance
      */
     public static <T> SimpleMutableValue<T> from(T value) {
-        return from(value, null);
+        return from(value, Serializers.instance().getSerializer(value).orElse(null));
     }
 
     /**

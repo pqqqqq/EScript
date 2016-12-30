@@ -24,8 +24,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerExhaustion implements ValuePhrase {
     private static final PlayerExhaustion INSTANCE = new PlayerExhaustion();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player exhaust|exhaustion level|lvl?"),
-            Syntax.compile("the? exhaust|exhaustion level|lvl? of $Player")
+            Syntax.compile("${player}Player exhaust|exhaustion level|lvl?"),
+            Syntax.compile("the? exhaust|exhaustion level|lvl? of ${player}Player")
     };
 
     /**

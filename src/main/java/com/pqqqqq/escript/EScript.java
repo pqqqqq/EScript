@@ -7,11 +7,11 @@ import com.pqqqqq.escript.lang.Main;
 import com.pqqqqq.escript.lang.trigger.cause.Causes;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -50,7 +50,7 @@ public class EScript {
     private Logger logger;
 
     // Final variables
-    private final Cause pluginCause = Cause.of(NamedCause.of("plugin", this));
+    private Cause pluginCause;
 
     @Inject
     public EScript(Logger logger) {
@@ -61,6 +61,7 @@ public class EScript {
     public void init(GameInitializationEvent event) {
         // Instancing
         INSTANCE = this;
+        pluginCause = Cause.source(Sponge.getPluginManager().fromInstance(this).get()).build();
 
         // Initialisation
         Main.instance().init();

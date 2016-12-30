@@ -1,8 +1,11 @@
 package com.pqqqqq.escript.lang.phrase.analysis.syntax;
 
+import com.pqqqqq.escript.lang.data.mutable.property.PropertyType;
 import com.pqqqqq.escript.lang.line.Line;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -128,6 +131,8 @@ public interface Component {
         private final boolean sequence;
         private final boolean tentative;
 
+        private final List<PropertyType> propertyTypes;
+
         /**
          * Creates a new builder
          *
@@ -137,11 +142,12 @@ public interface Component {
             return new Builder();
         }
 
-        private ArgumentComponent(String name, boolean resolve, boolean sequence, boolean tentative) {
+        private ArgumentComponent(String name, boolean resolve, boolean sequence, boolean tentative, List<PropertyType> propertyTypes) {
             this.name = name;
             this.resolve = resolve;
             this.sequence = sequence;
             this.tentative = tentative;
+            this.propertyTypes = propertyTypes;
         }
 
         /**
@@ -180,6 +186,15 @@ public interface Component {
             return tentative;
         }
 
+        /**
+         * Gets the list of property types, or an empty list if none are specified
+         *
+         * @return the property types
+         */
+        public List<PropertyType> getPropertyTypes() {
+            return propertyTypes;
+        }
+
         @Override
         public boolean matches(String s) {
             return true; // Should always be fine
@@ -198,6 +213,8 @@ public interface Component {
             private boolean resolve = true;
             private boolean sequence = true;
             private boolean tentative = false;
+
+            private List<PropertyType> propertyTypes = new ArrayList<>(); // Default empty array
 
             private Builder() {
             }
@@ -247,12 +264,23 @@ public interface Component {
             }
 
             /**
+             * Sets the list of property types
+             *
+             * @param propertyTypes the new property types
+             * @return this builder, for chaining
+             */
+            public Builder types(List<PropertyType> propertyTypes) {
+                this.propertyTypes = propertyTypes;
+                return this;
+            }
+
+            /**
              * Builds the argument component
              *
              * @return the new built component
              */
             public ArgumentComponent build() {
-                return new ArgumentComponent(checkNotNull(name, "Name cannot be null"), resolve, sequence, tentative);
+                return new ArgumentComponent(checkNotNull(name, "Name cannot be null"), resolve, sequence, tentative, propertyTypes);
             }
         }
     }

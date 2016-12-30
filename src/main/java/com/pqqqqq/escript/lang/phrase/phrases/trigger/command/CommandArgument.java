@@ -1,6 +1,6 @@
 package com.pqqqqq.escript.lang.phrase.phrases.trigger.command;
 
-import com.pqqqqq.escript.lang.util.string.StringLibrary;
+import com.pqqqqq.escript.lang.util.string.StringTransformer;
 
 /**
  * A command argument, which specifies optionality, and whether to continue through the entire rest of the arguments (strargs)
@@ -11,26 +11,17 @@ public class CommandArgument {
     private final boolean strargs;
 
     public static CommandArgument from(String argument) {
-        StringLibrary libraryInstance = StringLibrary.from(argument);
-        boolean strarg = false;
-
-        // Check strargs
-        StringLibrary.Result strargResult = libraryInstance.removeEnd("...");
-        if (strargResult.isSuccessful()) {
-            libraryInstance = StringLibrary.from(strargResult.getResult()); // Renew library instance
-            strarg = true;
-        }
+        StringTransformer transformer = StringTransformer.from(argument);
+        boolean strarg = transformer.removeEnd("..."); // Check strargs first
 
         // Try required
-        StringLibrary.Result requiredResult = libraryInstance.remove("<", ">");
-        if (requiredResult.isSuccessful()) {
-            return new CommandArgument(requiredResult.getResult(), true, strarg);
+        if (transformer.remove("<", ">")) {
+            return new CommandArgument(transformer.getCurrentResult(), true, strarg);
         }
 
         // Try optional
-        StringLibrary.Result optionalResult = libraryInstance.remove("[", "]");
-        if (optionalResult.isSuccessful()) {
-            return new CommandArgument(optionalResult.getResult(), false, strarg);
+        if (transformer.remove("[", "]")) {
+            return new CommandArgument(transformer.getCurrentResult(), false, strarg);
         }
 
         throw new IllegalArgumentException(String.format("Invalid argument '%s', must be wrapped in <> or [].", argument));

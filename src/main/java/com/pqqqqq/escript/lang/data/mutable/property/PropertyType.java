@@ -18,6 +18,11 @@ public enum PropertyType {
     BLOCK("block"),
 
     /**
+     * The location property
+     */
+    LOCATION("location"),
+
+    /**
      * The entity property
      */
     ENTITY("entity"),
@@ -35,7 +40,12 @@ public enum PropertyType {
     /**
      * The arguments property
      */
-    ARGUMENTS("argument", "arguments");
+    ARGUMENTS("argument", "arguments"),
+
+    /**
+     * The wildcard property (any)
+     */
+    WILDCARD("*");
 
     private final String[] aliases;
 

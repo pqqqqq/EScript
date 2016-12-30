@@ -4,6 +4,7 @@ import com.pqqqqq.escript.lang.data.Literal;
 import com.pqqqqq.escript.lang.data.Pointer;
 import com.pqqqqq.escript.lang.data.mutable.MutableValue;
 import com.pqqqqq.escript.lang.data.mutable.SimpleMutableValue;
+import com.pqqqqq.escript.lang.data.serializer.Serializers;
 import com.pqqqqq.escript.lang.data.store.list.ListModule;
 import com.pqqqqq.escript.lang.data.store.list.SimpleListModule;
 import com.pqqqqq.escript.lang.data.store.map.EntryReplicate;
@@ -270,7 +271,7 @@ public class LiteralStore implements Copyable<LiteralStore> {
          * @return this builder, for chaining
          */
         public Builder listL(Iterable<Literal> literals) {
-            literals.forEach(literal -> list.add(SimpleMutableValue.from(literal)));
+            literals.forEach(literal -> list.add(SimpleMutableValue.from(literal, Serializers.SELF)));
             return this;
         }
 
@@ -292,7 +293,7 @@ public class LiteralStore implements Copyable<LiteralStore> {
          * @return this builder, for chaining
          */
         public Builder mapL(Map<String, Literal> literals) {
-            literals.forEach((k, v) -> map.put(k, SimpleMutableValue.from(v)));
+            literals.forEach((k, v) -> map.put(k, SimpleMutableValue.from(v, Serializers.SELF)));
             return this;
         }
 

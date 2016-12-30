@@ -26,8 +26,8 @@ import org.spongepowered.api.entity.living.player.Player;
 public class PlayerItemHand implements ValuePhrase {
     private static final PlayerItemHand INSTANCE = new PlayerItemHand();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Player item? in* @HandType hand"), // TODO allow "hand item"?
-            Syntax.compile("the? item? in* @HandType hand of $Player")
+            Syntax.compile("${player}Player item? in* $@HandType hand"), // TODO allow "hand item"?
+            Syntax.compile("the? item? in* $@HandType hand of ${player}Player")
     };
 
     /**

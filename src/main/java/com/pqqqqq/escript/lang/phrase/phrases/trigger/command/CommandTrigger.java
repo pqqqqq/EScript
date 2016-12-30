@@ -72,12 +72,14 @@ public class CommandTrigger implements Phrase {
 
         List<CommandArgument> arguments = new ArrayList<>();
         for (String argument : split) {
-            CommandArgument arg = CommandArgument.from(argument);
-            if (arg.isRequired()) {
-                requiredCount++; // Update required count
-            }
+            if (!argument.trim().isEmpty()) {
+                CommandArgument arg = CommandArgument.from(argument);
+                if (arg.isRequired()) {
+                    requiredCount++; // Update required count
+                }
 
-            arguments.add(arg);
+                arguments.add(arg);
+            }
         }
 
         final int finalRequiredCount = requiredCount; // I have no idea why this is necessary (lambda)

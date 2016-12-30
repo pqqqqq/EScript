@@ -121,15 +121,7 @@ public class Sequencer {
         // Check for property
         Optional<PropertyType> propertyType = PropertyType.fromString(strarg);
         if (propertyType.isPresent()) {
-            // We have to check if we're at runtime or compile time.
-            // Compile time would mean the script is null, and we'll return an empty literal
-            return (ctx) -> {
-                if (ctx.getScript() == null) {
-                    return Literal.EMPTY;
-                } else {
-                    return ctx.getScript().getProperties().getValue(propertyType.get()).map(property -> property.resolve(ctx)).orElse(Literal.EMPTY); // Lambda expression here, or class?
-                }
-            };
+            return new PropertyTypeContainer(propertyType.get());
         }
 
         // Otherwise, throw an error

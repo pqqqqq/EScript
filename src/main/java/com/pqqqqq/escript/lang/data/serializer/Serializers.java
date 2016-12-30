@@ -77,6 +77,10 @@ public class Serializers extends Registry<Serializer> {
 
     @SuppressWarnings("unchecked")
     public <T> Optional<Serializer<T>> getSerializer(T object) {
+        if (object == null) {
+            return Optional.empty();
+        }
+
         return registry().stream().filter((serializer) -> serializer.isApplicable(object)).findFirst().map(serializer -> (Serializer<T>) serializer);
     }
 
