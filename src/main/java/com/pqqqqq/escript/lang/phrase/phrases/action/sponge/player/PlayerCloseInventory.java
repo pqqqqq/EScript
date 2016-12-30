@@ -21,8 +21,8 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class PlayerCloseInventory implements Phrase {
     private static final PlayerCloseInventory INSTANCE = new PlayerCloseInventory();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("close|exit player's|person's|player|person inventory|inv"),
-            Syntax.compile("close|exit inventory|inv of|for $Player")
+            Syntax.compile("close|exit ${player}Player inventory|inv"),
+            Syntax.compile("close|exit inventory|inv of|for ${player}Player")
     };
 
     /**

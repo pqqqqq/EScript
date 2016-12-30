@@ -23,8 +23,8 @@ import org.spongepowered.api.text.Text;
 public class PlayerKick implements Phrase {
     private static final PlayerKick INSTANCE = new PlayerKick();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("kick player? $Player? for|reason? $Reason*"),
-            Syntax.compile("kick player? $Player? for reason $Reason")
+            Syntax.compile("kick player? ${player}Player? for|reason? $Reason*"),
+            Syntax.compile("kick player? ${player}Player? for reason $Reason")
     };
 
     /**

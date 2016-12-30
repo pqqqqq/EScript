@@ -18,7 +18,7 @@ import com.pqqqqq.escript.lang.phrase.analysis.syntax.Syntax;
 public class AndPhrase implements ConditionalPhrase {
     private static final AndPhrase INSTANCE = new AndPhrase();
     private static final Syntax[] SYNTAXES = {
-            Syntax.compile("$Literal1 or $Literal2")
+            Syntax.compile("$Literal1 and $Literal2")
     };
 
     /**
