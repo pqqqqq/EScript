@@ -42,6 +42,7 @@ public class Phrases extends SortedRegistry<Phrase> {
     public static final Phrase COMMAND_TRIGGER = CommandTrigger.instance();
     public static final Phrase INTERACT_BLOCK_TRIGGER = InteractBlockTrigger.instance();
     public static final Phrase INTERACT_ENTITY_TRIGGER = InteractEntityTrigger.instance();
+    public static final Phrase SPAWN_ENTITY = EntitySpawnTrigger.instance();
 
     public static final Phrase SERVER_START = ServerStartTrigger.instance();
     public static final Phrase SERVER_STOP = ServerStopTrigger.instance();

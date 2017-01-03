@@ -43,6 +43,11 @@ public enum PropertyType {
     ARGUMENTS("argument", "arguments"),
 
     /**
+     * The world property
+     */
+    WORLD("world"),
+
+    /**
      * The wildcard property (any)
      */
     WILDCARD("*");

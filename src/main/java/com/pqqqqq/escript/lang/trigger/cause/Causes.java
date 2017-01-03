@@ -16,6 +16,7 @@ public class Causes extends Registry<Cause> {
     public static final Cause COMMAND = new Cause("command");
     public static final Cause INTERACT_BLOCK = new Cause("interactblock");
     public static final Cause INTERACT_ENTITY = new Cause("interactentity");
+    public static final Cause SPAWN_ENTITY = new Cause("entityspawn");
 
     public static final Cause SERVER_START = new Cause("serverstart");
     public static final Cause SERVER_STOP = new Cause("serverstop");

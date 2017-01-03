@@ -6,6 +6,7 @@ import com.pqqqqq.escript.lang.trigger.cause.Causes;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -13,6 +14,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 /**
@@ -66,5 +68,16 @@ public class MainEvents {
                 .property(PropertyType.ENTITY, event.getTargetEntity())
                 .property(PropertyType.INTERACTION, event instanceof InteractEntityEvent.Primary ? "Left" : "Right")
                 .build());
+    }
+
+    @Listener(order = Order.BEFORE_POST)
+    public void entitySpawn(SpawnEntityEvent event) {
+        for (Entity entity : event.getEntities()) {
+            Causes.SPAWN_ENTITY.trigger(Properties.builder().event(event)
+                    .property(PropertyType.ENTITY, entity)
+                    .property(PropertyType.LOCATION, entity.getLocation())
+                    .property(PropertyType.WORLD, event.getTargetWorld())
+                    .build());
+        }
     }
 }
